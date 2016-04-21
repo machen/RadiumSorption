@@ -1,0 +1,54 @@
+#Template file for PHRREQC/Python interactions.
+#Parameters to vary should be bracketed with a name, which then gets put into the python script
+#Make sure that your output file reports what you want to report. Namely, pH and Ra, which only reports solution avaialble radium
+GAS_PHASE 1
+    -fixed_pressure
+    -pressure 1
+    -volume 1
+    -temperature 25
+    CO2(g)    0.00033
+    O2(g)     0.26
+SURFACE_MASTER_SPECIES
+    Fhy           FhyOH        
+SURFACE_SPECIES
+FhyOH + H+ = FhyOH2+
+    log_k     7.29
+FhyOH = FhyOH
+    log_k     0
+FhyOH = FhyO- + H+
+    log_k     -8.93
+FhyOH + Ra+2 = FhyOHRa+2
+    log_k     $k1
+FhyOH + Ra+2 = FhyORa+ + H+
+    log_k     $k2
+SURFACE 1
+    FhyOH      $sites
+    -no_edl
+END
+SOLUTION 1
+    units     mol/kgw
+    density   1
+    Ra        $totRa
+    Cl        0.01
+    Na        0.01
+    -water    1 # kg
+END
+PHASES
+NaCl
+    NaCl = Na+ + Cl-
+    log_k     -20
+PHASES
+pH_set
+    H+=H+
+    log_k     0.0
+END
+USE solution 1; USE GAS_PHASE 1; USE surface 1
+EQUILIBRIUM_PHASES 1
+NaCl 0 10.0
+pH_set          -$pH HCl 10.0
+SELECTED_OUTPUT
+#IF YOU CHANGE THIS YOU WILL NEED TO FIX simulation.generateData() in the python script. (Assumes 2 columns of data, in the order (pH, radium))
+    -reset                false
+    -totals               Ra
+    -pH                   true
+END

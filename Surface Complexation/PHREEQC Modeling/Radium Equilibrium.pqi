@@ -1,0 +1,55 @@
+DATABASE C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat
+GAS_PHASE 1
+    -fixed_pressure
+    -pressure 1
+    -volume 1
+    -temperature 25
+    CO2(g)    0.00033
+    O2(g)     0.26
+END
+SOLUTION 1
+    units     mol/kgw
+    density   1
+    Ra        5.979e-010
+    Cl        0.01
+    Na        0.01
+    -water    1 # kg
+SELECTED_OUTPUT
+    -file                 RaEqTest
+    -reset                false
+USER_PUNCH
+    -headings 
+    -start
+10 FOR i = 2 to 10 STEP 0.1
+20 a$ = EOL$ + "USE solution 1" +CHR$(59)+" USE gas_phase 1" + EOL$
+30 a$ = a$ + "EQUILIBRIUM_PHASES 1" + EOL$
+40 a$ = a$ + "NaCl 0 10.0" + EOL$
+50 a$ = a$ + "pH_set" + STR$(-i) + " HCl 10.0"+EOL$
+60 a$ = a$ + "END" + EOL$
+70 PUNCH a$
+80 NEXT i
+    -end
+END
+PHASES
+NaCl
+    NaCl = Na+ + Cl-
+    log_k     -20
+PHASES
+pH_set
+    H+=H+
+    log_k     0.0
+END
+SELECTED_OUTPUT
+    -file                 RaEqTestOUTPUT
+    -reset                true
+    -state                false
+    -solution             false
+    -distance             false
+    -time                 false
+    -step                 false
+    -reaction             false
+    -temperature          false
+    -molalities           Ra(CO3)  Ra(HCO3)+  Ra(OH)+  Ra(OH)2
+                          Ra+2  RaCl+  RaCl2
+INCLUDE$ RaEqTest
+END

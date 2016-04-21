@@ -1,0 +1,9 @@
+"Calibration data collected 6/23 - 6/17/2015, using 2 ml sample and 8 ml Ultima Gold XR",,
+Ra226 (DPM),CPM,CPM error
+50000,25818.5,0.88
+25000,11666,1.31
+10000,4616,2.08
+5000,2293.5,2.95
+0,46,20.85
+5000,2346,2.92
+50000,24189.5,0.91

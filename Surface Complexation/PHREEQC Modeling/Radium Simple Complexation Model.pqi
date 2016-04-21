@@ -1,0 +1,74 @@
+DATABASE C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat
+GAS_PHASE 1
+    -fixed_pressure
+    -pressure 1
+    -volume 1
+    -temperature 25
+    CO2(g)    0.00033
+    O2(g)     0.26
+SURFACE_MASTER_SPECIES
+    Fhy           FhyOH        
+SURFACE_SPECIES
+FhyOH + H+ = FhyOH2+
+    log_k     7.29
+FhyOH = FhyOH
+    log_k     0
+FhyOH = FhyO- + H+
+    log_k     -8.93
+FhyOH + Ra+2 = FhyOHRa+2
+    log_k     6.66
+FhyOH + Ra+2 = FhyORa+ + H+
+    log_k     -5.67
+SURFACE 1
+    FhyOH      0.674     600       0.3
+END
+SOLUTION 1
+    units     mol/kgw
+    density   1
+    Ra        5.979e-010
+    Cl        0.01
+    Na        0.01
+    -water    1 # kg
+SELECTED_OUTPUT
+    -file                 RaEqTest
+    -reset                false
+USER_PUNCH
+    -headings 
+    -start
+10 FOR i = 2 to 10 STEP 0.1
+20 a$ = EOL$ + "USE solution 1" +CHR$(59)+" USE gas_phase 1" +CHR$(59) + "USE surface 1"+ EOL$
+30 a$ = a$ + "EQUILIBRIUM_PHASES 1" + EOL$
+40 a$ = a$ + "NaCl 0 10.0" + EOL$
+50 a$ = a$ + "pH_set" + STR$(-i) + " HCl 10.0"+EOL$
+60 a$ = a$ + "END" + EOL$
+70 PUNCH a$
+80 NEXT i
+    -end
+END
+PHASES
+NaCl
+    NaCl = Na+ + Cl-
+    log_k     -20
+PHASES
+pH_set
+    H+=H+
+    log_k     0.0
+END
+SELECTED_OUTPUT 1
+    -file                 RaEqTestOUTPUT
+    -reset                true
+    -state                false
+    -solution             false
+    -distance             false
+    -time                 false
+    -step                 false
+    -reaction             false
+    -temperature          false
+    -totals               Ra  Fhy
+    -molalities           Ra(CO3)  Ra(HCO3)+  Ra(OH)+  Ra(OH)2
+                          Ra+2  RaCl+  RaCl2  FhyOHRa+2
+                          FhyORa+
+USER_PUNCH
+10
+INCLUDE$ RaEqTest
+END

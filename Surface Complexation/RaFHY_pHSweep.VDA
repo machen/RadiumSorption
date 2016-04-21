@@ -1,0 +1,27 @@
+"Visual MINTEQ 3.1 input file "
+"Problem no.",1
+"Databases:","C:\Users\Michael\Desktop\Vminteq31\thermo.vdb","C:\Users\Michael\Desktop\Vminteq31\type6.vdb","C:\Users\Michael\Desktop\Vminteq31\comp_2008.vdb","C:\Users\Michael\Desktop\Vminteq31\gaussian.vdb"
+25,"Molal",0.001,0
+0,0,1,0,3,0,0,0,1,1,1,0,0
+"MULTI / SWEEP","Sweep - increment",50
+1,50,"ACTIVITY",0,0,0
+330,0
+1,10
+"Selected sweep results:",2,"pH"
+"Ra+2","Total sorbed"
+4,1,7
+0.3,600,0,0,1,"Plane",1,"C:\Users\Michael\Documents\Vminteq31\SajihRaTetradentate.VDB",0,0,"",0,"2-pK DLM"
+"No. of components",6
+330,6.45814E-12,-2,"y","n","H+1"
+500,0.01,-2,"y","n","Na+1"
+610,6.45814E-12,-11.1898925445514,"y","n","Ra+2"
+180,0.01,-2,"y","n","Cl-1"
+1611,0.0006741587,-4.1712378565488,"y","n","=SOH(1)"
+1601,1E-16,-3,"y","n","PSIo(1)"
+""
+3,1
+330,2,0,"H+1"
+6,1
+1601,0,0,"PSIo(1)"
+""
+"END"
