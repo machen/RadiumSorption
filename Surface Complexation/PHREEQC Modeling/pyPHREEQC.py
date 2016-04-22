@@ -100,7 +100,7 @@ k1 = 6.66
 k2 = -5.67
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat"
 tmp = "FHY Single site model NoElectroStatics.txt"
-titleString = "Single site model, No Electrostatics, K1 = 0, K2 = -5.67, 0.1-10 mol of sites"
+titleString = "Single site model, No Electrostatics, Ferrihydrite"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
@@ -117,11 +117,11 @@ ax = f1.add_subplot(111)
 labelStr = "1 site model, K1: {k1} K2: {k2} Sites (mol): {sites}"
 K2val = np.array([-4])
 #K2val = np.arange(-7,-4,0.1)
-K1val = np.arange(-1,4,0.01)
-#K1val = np.array([3])
+#K1val = np.arange(4,5,0.1)
+K1val = np.array([4.4])
 #siteMolVal = np.logspace(-3,0,num=4,endpoint=True, base=10)
-#siteMolVal = np.arange(0.0001,0.001,0.0001)
-siteMolVal = np.array([0.00015])
+#siteMolVal = np.arange(0.0001,0.001,0.0005)
+siteMolVal = np.array([0.0001])
 ncol = np.size(K1val)*np.size(K2val)*np.size(siteMolVal)
 cmap = sns.cubehelix_palette(n_colors=ncol,dark=0.3,rot=0.4,light=0.8,gamma=1.3)
 palette = itertools.cycle(cmap)
