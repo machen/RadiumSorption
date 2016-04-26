@@ -100,7 +100,7 @@ k1 = 6.66
 k2 = -5.67
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat"
 tmp = "GOE DDL Results\GOE Single site model DDL.txt"
-titleString = "Single site model, Double Diffuse Layer, Ferrihydrite"
+titleString = "Single site model, Double Diffuse Layer, Goethite"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
@@ -108,14 +108,14 @@ sns.set_palette("deep",n_colors = 6)
 #Find experimental data to use
 expData = extractData('..\..\Sorption Experiments\Sorption Experiment Master Table.xlsx')
 expData = expData.ix[expData.ix[:,'Include?']==True,:] #Select only data that's been vetted
-expData = expData.ix[expData.ix[:,'Mineral']=="Ferrihydrite"]
+expData = expData.ix[expData.ix[:,'Mineral']=="Goethite"]
 
 f1 = plt.figure(num=1,figsize=(10,8))
 f1.clf()
 ax = f1.add_subplot(111)
 
 labelStr = "1 site model, K1: {k1} K2: {k2} Sites (mol): {sites}"
-K2val = np.array([-1])
+#K2val = np.array([-1])
 K2val = np.arange(-7,-4,1)
 K1val = np.arange(7,10,1)
 #K1val = np.array([8.1])

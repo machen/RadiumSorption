@@ -22,7 +22,7 @@ FhyOH + Ra+2 = FhyOHRa+2
 FhyOH + Ra+2 = FhyORa+ + H+
     log_k     $k2
 SURFACE 1
-    FhyOH      $sites 600 0.03
+    FhyOH      $sites 25 0.03
 END
 SOLUTION 1
     units     mol/kgw
