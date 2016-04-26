@@ -99,7 +99,7 @@ totRa = 5.979e-010
 k1 = 6.66
 k2 = -5.67
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat"
-tmp = "FHY DDL Results\FHY Single site model DDL.txt"
+tmp = "GOE DDL Results\GOE Single site model DDL.txt"
 titleString = "Single site model, Double Diffuse Layer, Ferrihydrite"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
@@ -115,13 +115,13 @@ f1.clf()
 ax = f1.add_subplot(111)
 
 labelStr = "1 site model, K1: {k1} K2: {k2} Sites (mol): {sites}"
-#K2val = np.array([-4])
-K2val = np.arange(-7,-3,1)
+K2val = np.array([-1])
+K2val = np.arange(-7,-4,1)
 K1val = np.arange(7,10,1)
-#K1val = np.array([3.4])
-siteMolVal = np.logspace(-9,-3,num=7,endpoint=True, base=10)
-#siteMolVal = np.arange(0.0001,0.0011,0.0001)
-#siteMolVal = np.array([0.0001])
+#K1val = np.array([8.1])
+siteMolVal = np.logspace(-9,-5,num=5,endpoint=True, base=10)
+#siteMolVal = np.arange(1E-9,2E-8,1E-9)
+#siteMolVal = np.array([3E-9])
 ncol = np.size(K1val)*np.size(K2val)*np.size(siteMolVal)
 cmap = sns.cubehelix_palette(n_colors=ncol,dark=0.3,rot=0.4,light=0.8,gamma=1.3)
 palette = itertools.cycle(cmap)
