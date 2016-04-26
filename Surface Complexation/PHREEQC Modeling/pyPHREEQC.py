@@ -99,8 +99,8 @@ totRa = 5.979e-010
 k1 = 6.66
 k2 = -5.67
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat"
-tmp = "GOE NEM Results\GOE Single site model NoElectroStatics.txt"
-titleString = "Single site model, No Electrostatics, Goethite"
+tmp = "FHY DDL Results\FHY Single site model DDL.txt"
+titleString = "Single site model, Double Diffuse Layer, Ferrihydrite"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
@@ -108,20 +108,20 @@ sns.set_palette("deep",n_colors = 6)
 #Find experimental data to use
 expData = extractData('..\..\Sorption Experiments\Sorption Experiment Master Table.xlsx')
 expData = expData.ix[expData.ix[:,'Include?']==True,:] #Select only data that's been vetted
-expData = expData.ix[expData.ix[:,'Mineral']=="Goethite"]
+expData = expData.ix[expData.ix[:,'Mineral']=="Ferrihydrite"]
 
 f1 = plt.figure(num=1,figsize=(10,8))
 f1.clf()
 ax = f1.add_subplot(111)
 
 labelStr = "1 site model, K1: {k1} K2: {k2} Sites (mol): {sites}"
-K2val = np.array([-4])
-#K2val = np.arange(-7,-4,0.1)
-#K1val = np.arange(3,4.5,0.1)
-K1val = np.array([3.4])
-#siteMolVal = np.logspace(-3,0,num=4,endpoint=True, base=10)
+#K2val = np.array([-4])
+K2val = np.arange(-7,-3,1)
+K1val = np.arange(7,10,1)
+#K1val = np.array([3.4])
+siteMolVal = np.logspace(-9,-3,num=7,endpoint=True, base=10)
 #siteMolVal = np.arange(0.0001,0.0011,0.0001)
-siteMolVal = np.array([0.0001])
+#siteMolVal = np.array([0.0001])
 ncol = np.size(K1val)*np.size(K2val)*np.size(siteMolVal)
 cmap = sns.cubehelix_palette(n_colors=ncol,dark=0.3,rot=0.4,light=0.8,gamma=1.3)
 palette = itertools.cycle(cmap)
