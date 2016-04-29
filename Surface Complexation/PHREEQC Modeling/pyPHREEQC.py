@@ -99,9 +99,10 @@ totRa = 5.979e-010
 k1 = 6.66
 k2 = -5.67
 totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
+
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat"
-tmp = "FHY NEM Results\FHY Single Site Model NoElectroStatics.txt"
-titleString = "Single site model, No Electrostatics, Ferrihydrite"
+tmp = "GOE NEM Results\GOE Single Site Model NoElectroStatics.txt"
+titleString = "Single site model, No Electrostatics, Goethite"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
@@ -109,7 +110,7 @@ sns.set_palette("deep",n_colors = 6)
 #Find experimental data to use
 expData = extractData('..\..\Sorption Experiments\Sorption Experiment Master Table.xlsx')
 expData = expData.ix[expData.ix[:,'Include?']==True,:] #Select only data that's been vetted
-expData = expData.ix[expData.ix[:,'Mineral']=="Ferrihydrite"]
+expData = expData.ix[expData.ix[:,'Mineral']=="Goethite"]
 
 f1 = plt.figure(num=1,figsize=(10,8))
 f1.clf()
@@ -118,7 +119,7 @@ ax = f1.add_subplot(111)
 
 labelStr = "Single site model, K1: {k1} Sites: {sites}"
 
-siteVal = np.array([5.98E-5]) #mol
+siteVal = np.array([6.23E-6]) #mol
 Kval = np.arange(0,10.1,0.1)
 
 ncol = np.size(siteVal)*np.size(Kval)
