@@ -20,7 +20,7 @@ FhyOH = FhyO- + H+
 FhyOH + Ra+2 = FhyOHRa+2
     log_k     $k1
 SURFACE 1
-    FhyOH      $sites
+    FhyOH     $sites
     -no_edl
 END
 SOLUTION 1
