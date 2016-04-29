@@ -100,8 +100,8 @@ k1 = 6.66
 k2 = -5.67
 totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat"
-tmp = "FHY SSM DDL Results\FHY Single Site Model DDL.txt"
-titleString = "Single site model, Double Diffuse Layer, Ferrihydrite"
+tmp = "FHY NEM Results\FHY Single Site Model NoElectroStatics.txt"
+titleString = "Single site model, No Electrostatics, Ferrihydrite"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
