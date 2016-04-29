@@ -100,7 +100,7 @@ k1 = 6.66
 k2 = -5.67
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat"
 tmp = "FHY StrongWeak DDL\FHY StrongWeak DDL.txt"
-titleString = "Single site model, Double Diffuse Layer, Ferrihydrite"
+titleString = "Two site model, Double Diffuse Layer, Ferrihydrite"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
