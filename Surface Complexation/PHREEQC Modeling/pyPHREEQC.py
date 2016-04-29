@@ -57,7 +57,7 @@ class simulation:
         #Assumes your template is saved with some kind of extension of the form ".xxx", and loads the master table into the simulation
         #Loads a master table into the simulation that can be used to see if a simulation has been run or not
         masterTabPath = self.templFile[:-4]+'.csv' #Mastertable name is just the template name as a .csv
-        if os.path.isfile(masterTabPath): #Tries to find the table in the current directory ONLY (NEED TO SEE IF THIS WORKS WITH A FOLDER STRUCTURE) IT DOESN'T!!!!
+        if os.path.isfile(masterTabPath): #Tries to find the table in the current directory ONLY 
             masterTab= pd.read_csv(masterTabPath,header=0) #Load the table as a csv, which is how the table is saved
             return masterTab
         else:
@@ -98,9 +98,10 @@ def extractData(path):
 totRa = 5.979e-010
 k1 = 6.66
 k2 = -5.67
+totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat"
-tmp = "FHY StrongWeak DDL\FHY StrongWeak DDL.txt"
-titleString = "Two site model, Double Diffuse Layer, Ferrihydrite"
+tmp = "FHY SSM DDL Results\FHY Single Site Model DDL.txt"
+titleString = "Single site model, Double Diffuse Layer, Ferrihydrite"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
@@ -115,31 +116,23 @@ f1.clf()
 ax = f1.add_subplot(111)
 
 
-labelStr = "Dzombak and Morel, Ks: {ks} Sites: {siteS}, Kw: {kw} Sites: {siteW}"
+labelStr = "Single site model, K1: {k1} Sites: {sites}"
 
-#Ksval = np.array([6.66])
-Ksval = np.arange(0,10,0.1)
-Kwval = np.array([-5.67])
-#Kwval = np.arange(-7,-6,0.1)
+siteVal = np.array([5.98E-5]) #mol
+Kval = np.arange(0,10.1,0.1)
 
-siteSVal = np.array([1.4E-6])
-#siteSVal = np.arange(1E-6,2E-6,1E-7)
-siteWVal = np.array([5.6E-5])
-#siteWVal = np.arange(5E-5,6E-5,1E-6)
-ncol = np.size(Ksval)*np.size(Kwval)*np.size(siteSVal)*np.size(siteWVal)
+ncol = np.size(siteVal)*np.size(Kval)
 cmap = sns.cubehelix_palette(n_colors=ncol,dark=0.3,rot=0.4,light=0.8,gamma=1.3)
 palette = itertools.cycle(cmap)
 
-for Ks in Ksval:
-    for Kw in Kwval:
-        for siteS in siteSVal:
-            for siteW in siteWVal:
-                x = simulation({'totRa':totRa,'ks':Ks,'kw':Kw,'siteS':siteS,'siteW':siteW},tmp,db)
-                x.generateData()
-                x.addDataToMaster(writeMaster=True)
-                simRes = x.getData()
-                ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(ks=Ks,kw=Kw,siteS=siteS,siteW=siteW),color=next(palette))
-                print Ks, siteS, Kw, siteW
+for K in Kval:
+    for sites in siteVal:
+        x = simulation({'totRa':totRa,'k1':K,'sites':sites},tmp,db)
+        x.generateData()
+        x.addDataToMaster(writeMaster=True)
+        simRes = x.getData()
+        ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(k1=K,sites=sites),color=next(palette))
+        print K, sites
 
         
 #Plot all of the data without differentiation

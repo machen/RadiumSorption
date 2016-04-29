@@ -1,0 +1,342 @@
+   Input file: C:\Users\Michael\Dropbox (Personal)\work\MIT Graduate Work\Research\RadiumSorption\Surface Complexation\PHREEQC Modeling\TestFile.pqi
+  Output file: C:\Users\Michael\Dropbox (Personal)\work\MIT Graduate Work\Research\RadiumSorption\Surface Complexation\PHREEQC Modeling\TestFile.pqo
+Database file: C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat
+
+------------------
+Reading data base.
+------------------
+
+	SOLUTION_MASTER_SPECIES
+	SIT
+WARNING: Redefinition of parameter, NO3- Na+
+
+	SOLUTION_SPECIES
+	PHASES
+------------------------------------
+Reading input data for simulation 1.
+------------------------------------
+
+	DATABASE C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat
+	GAS_PHASE 1
+	    fixed_pressure
+	    pressure 1
+	    volume 1
+	    temperature 25
+	    CO2(g)    0.00033
+	    O2(g)     0.26
+	SURFACE_MASTER_SPECIES
+	    Fhy           FhyOH        
+	SURFACE_SPECIES
+	FhyOH + H+ = FhyOH2+
+	    log_k     7.29
+	FhyOH = FhyOH
+	    log_k     0
+	FhyOH = FhyO- + H+
+	    log_k     -8.93
+	FhyOH + Ra+2 = FhyOHRa+2
+	    log_k     7.0
+	SURFACE 1
+	    FhyOH      5.98E-5 600 0.03
+	END
+------------------
+End of simulation.
+------------------
+
+------------------------------------
+Reading input data for simulation 2.
+------------------------------------
+
+	SOLUTION 1
+	    temp      25
+	    units     mol/l
+	    density   1
+	    Ra        5.979e-010
+	    Cl        0.01
+	    Na        0.01
+	    water    0.1 # kg
+	END
+-------------------------------------------
+Beginning of initial solution calculations.
+-------------------------------------------
+
+Initial solution 1.	
+
+-----------------------------Solution composition------------------------------
+
+	Elements           Molality       Moles
+
+	Cl                1.001e-02   1.001e-03
+	Na                1.001e-02   1.001e-03
+	Ra                5.982e-10   5.982e-11
+
+----------------------------Description of solution----------------------------
+
+                                       pH  =   7.000    
+                                       pe  =   4.000    
+                        Activity of water  =   1.000
+                           Ionic strength  =   1.001e-02
+                       Mass of water (kg)  =   1.000e-01
+                 Total alkalinity (eq/kg)  =  -1.115e-11
+                    Total carbon (mol/kg)  =   0.000e+00
+                       Total CO2 (mol/kg)  =   0.000e+00
+                         Temperature (°C)  =  25.00
+                  Electrical balance (eq)  =   1.208e-10
+ Percent error, 100*(Cat-|An|)/(Cat+|An|)  =   0.00
+                               Iterations  =   6
+                         Gamma iterations  =   3
+                      Osmotic coefficient  =   0.96864
+                                  Total H  = 1.110198e+01
+                                  Total O  = 5.550991e+00
+
+----------------------------Distribution of species----------------------------
+
+                                               Log       Log       Log    mole V
+   Species          Molality    Activity  Molality  Activity     Gamma   cm³/mol
+
+   OH-             1.106e-07   9.997e-08    -6.956    -7.000    -0.044     (0)  
+   H+              1.104e-07   1.000e-07    -6.957    -7.000    -0.043      0.00
+   H2O             5.551e+01   9.997e-01     1.744    -0.000     0.000     18.07
+Cl            1.001e-02
+   Cl-             1.001e-02   9.041e-03    -2.000    -2.044    -0.044     (0)  
+   HCl             1.763e-10   1.763e-10    -9.754    -9.754     0.000     (0)  
+   RaCl+           3.145e-12   2.840e-12   -11.502   -11.547    -0.044     (0)  
+   RaCl2           2.568e-14   2.568e-14   -13.590   -13.590     0.000     (0)  
+   Cl2             0.000e+00   0.000e+00   -43.298   -43.298     0.000     (0)  
+   ClO4-           0.000e+00   0.000e+00  -102.134  -102.134     0.000     (0)  
+H(0)          1.664e-25
+   H2              8.318e-26   8.318e-26   -25.080   -25.080     0.000     (0)  
+Na            1.001e-02
+   Na+             1.001e-02   9.041e-03    -2.000    -2.044    -0.044     (0)  
+O(0)          0.000e+00
+   O2              0.000e+00   0.000e+00   -41.980   -41.980     0.000     (0)  
+Ra            5.982e-10
+   Ra+2            5.951e-10   3.955e-10    -9.225    -9.403    -0.177     (0)  
+   RaCl+           3.145e-12   2.840e-12   -11.502   -11.547    -0.044     (0)  
+   RaCl2           2.568e-14   2.568e-14   -13.590   -13.590     0.000     (0)  
+   Ra(OH)+         1.417e-16   1.279e-16   -15.849   -15.893    -0.044     (0)  
+   Ra(OH)2         3.364e-24   3.364e-24   -23.473   -23.473     0.000     (0)  
+
+------------------------------Saturation indices-------------------------------
+
+  Phase               SI** log IAP   log K(298 K,   1 atm)
+
+  Cl2(g)          -42.07      3.91   45.98  Cl2
+  H2(g)           -22.00    -22.00    0.00  H2
+  H2O(g)           -1.50    -42.99  -41.49  H2O
+  Halite           -5.68     -4.09    1.59  NaCl
+  HCl(g)          -15.33     -9.04    6.29  HCl
+  Na(cr)          -51.93     -6.04   45.89  Na
+  Na2O(cr)        -57.55      9.91   67.46  Na2O
+  O2(g)           -39.08    -41.98   -2.90  O2
+  Ra(cr)         -115.84    -17.40   98.44  Ra
+  Ra(OH)2(s)      -26.39      4.60   30.99  Ra(OH)2
+  RaCl2:2H2O(s)   -12.76    -13.49   -0.73  RaCl2:2H2O
+
+**For a gas, SI = log10(fugacity). Fugacity = pressure * phi / 1 atm.
+  For ideal gases, phi = 1.
+
+------------------
+End of simulation.
+------------------
+
+------------------------------------
+Reading input data for simulation 3.
+------------------------------------
+
+	PHASES
+	NaCl
+	    NaCl = Na+ + Cl-
+	    log_k     -20
+	PHASES
+	pH_set
+	    H+=H+
+	    log_k     0.0
+	END
+------------------
+End of simulation.
+------------------
+
+------------------------------------
+Reading input data for simulation 4.
+------------------------------------
+
+	USE solution 1
+	 USE GAS_PHASE 1
+	 USE surface 1
+	EQUILIBRIUM_PHASES 1
+	NaCl 0 10.0
+	pH_set          -7 HCl 10.0
+	SELECTED_OUTPUT
+	    reset                false
+	    totals               Ra Fhy
+	    ph                   true
+	END
+-----------------------------------------
+Beginning of batch-reaction calculations.
+-----------------------------------------
+
+Reaction step 1.
+
+Using solution 1.	
+Using surface 1.	
+Using pure phase assemblage 1.	
+Using gas phase 1.	
+
+-----------------------------------Gas phase-----------------------------------
+
+Total pressure:  1.00      atmospheres 
+    Gas volume:   2.57e-01 liters
+  Molar volume:   2.45e+01 liters/mole
+
+                                                        Moles in gas
+                                            ----------------------------------
+Component                log P           P     Initial       Final       Delta
+
+CO2(g)                   -3.34   4.622e-04   1.349e-05   4.855e-06  -8.633e-06
+O2(g)                    -0.00   9.995e-01   1.063e-02   1.050e-02  -1.258e-04
+
+-------------------------------Phase assemblage--------------------------------
+
+                                                      Moles in assemblage
+Phase               SI  log IAP  log K(T, P)   Initial       Final       Delta
+
+NaCl              0.00   -20.00    -20.00    1.000e+01   1.000e+01   9.938e-04
+pH_set           -7.00    -7.00      0.00
+	 HCl                is reactant       1.000e+01   1.000e+01   6.772e-06
+
+------------------------------Surface composition------------------------------
+
+Fhy           
+	  2.979e-07  Surface charge, eq
+	  1.597e-03  sigma, C/m²
+	  6.511e-02  psi, V
+	 -2.534e+00  -F*psi/RT
+	  7.931e-02  exp(-F*psi/RT)
+	  6.000e+02  specific area, m²/g
+	  1.800e+01  m² for   3.000e-02 g
+
+
+Fhy           
+	  5.980e-05  moles
+	                                   Mole                     Log
+	Species               Moles    Fraction    Molality    Molality
+
+	FhyOH             4.590e-05       0.768   4.590e-04      -3.338
+	FhyOH2+           7.098e-06       0.119   7.098e-05      -4.149
+	FhyO-             6.800e-06       0.114   6.800e-05      -4.167
+	FhyOHRa+2         5.775e-11       0.000   5.775e-10      -9.238
+
+-----------------------------Solution composition------------------------------
+
+	Elements           Molality       Moles
+
+	C                 8.633e-05   8.633e-06
+	Cl                1.505e-16   1.505e-17
+	Na                6.772e-05   6.772e-06
+	Ra                2.080e-11   2.080e-12
+
+----------------------------Description of solution----------------------------
+
+                                       pH  =   7.000      Charge balance
+                                       pe  =  13.770      Adjusted to redox equilibrium
+                        Activity of water  =   1.000
+                           Ionic strength  =   6.934e-05
+                       Mass of water (kg)  =   1.000e-01
+                 Total alkalinity (eq/kg)  =   7.070e-05
+                       Total CO2 (mol/kg)  =   8.633e-05
+                         Temperature (°C)  =  25.00
+                  Electrical balance (eq)  =  -2.978e-07
+ Percent error, 100*(Cat-|An|)/(Cat+|An|)  =  -2.15
+                               Iterations  =  42
+                         Gamma iterations  =   2
+                      Osmotic coefficient  =   0.99969
+                                  Total H  = 1.110198e+01
+                                  Total O  = 5.551260e+00
+
+----------------------------Distribution of species----------------------------
+
+                                               Log       Log       Log    mole V
+   Species          Molality    Activity  Molality  Activity     Gamma   cm³/mol
+
+   H+              1.010e-07   1.000e-07    -6.996    -7.000    -0.004      0.00
+   OH-             1.010e-07   1.000e-07    -6.996    -7.000    -0.004     (0)  
+   H2O             5.551e+01   1.000e+00     1.744    -0.000     0.000     18.07
+C(-4)         0.000e+00
+   CH4             0.000e+00   0.000e+00  -149.455  -149.455     0.000     (0)  
+C(4)          8.633e-05
+   HCO3-           7.063e-05   6.995e-05    -4.151    -4.155    -0.004     (0)  
+   CO2             1.566e-05   1.566e-05    -4.805    -4.805     0.000     (0)  
+   CO3-2           3.401e-08   3.272e-08    -7.468    -7.485    -0.017     (0)  
+   Na(HCO3)        2.638e-09   2.638e-09    -8.579    -8.579     0.000     (0)  
+   Na(CO3)-        4.126e-11   4.086e-11   -10.385   -10.389    -0.004     (0)  
+   Ra(HCO3)+       5.496e-15   5.443e-15   -14.260   -14.264    -0.004     (0)  
+   Ra(CO3)         2.069e-16   2.069e-16   -15.684   -15.684     0.000     (0)  
+   CO              0.000e+00   0.000e+00   -51.425   -51.425     0.000     (0)  
+Cl            1.505e-16
+   Cl-             1.505e-16   1.491e-16   -15.822   -15.827    -0.004     (0)  
+   HCl             2.907e-24   2.907e-24   -23.537   -23.537     0.000     (0)  
+   RaCl+           2.369e-27   2.369e-27   -26.625   -26.625    -0.000     (0)  
+   ClO4-           1.750e-38   1.750e-38   -37.757   -37.757     0.000     (0)  
+   RaCl2           0.000e+00   0.000e+00   -42.452   -42.452     0.000     (0)  
+   Cl2             0.000e+00   0.000e+00   -51.323   -51.323     0.000     (0)  
+H(0)          0.000e+00
+   H2              0.000e+00   0.000e+00   -44.620   -44.620     0.000     (0)  
+Na            6.772e-05
+   Na+             6.772e-05   6.707e-05    -4.169    -4.173    -0.004     (0)  
+   Na(HCO3)        2.638e-09   2.638e-09    -8.579    -8.579     0.000     (0)  
+   Na(CO3)-        4.126e-11   4.086e-11   -10.385   -10.389    -0.004     (0)  
+O(0)          2.517e-03
+   O2              1.258e-03   1.258e-03    -2.900    -2.900     0.000     (0)  
+Ra            2.080e-11
+   Ra+2            2.079e-11   2.000e-11   -10.682   -10.699    -0.017     (0)  
+   Ra(HCO3)+       5.496e-15   5.443e-15   -14.260   -14.264    -0.004     (0)  
+   Ra(CO3)         2.069e-16   2.069e-16   -15.684   -15.684     0.000     (0)  
+   Ra(OH)+         6.535e-18   6.472e-18   -17.185   -17.189    -0.004     (0)  
+   Ra(OH)2         1.702e-25   1.702e-25   -24.769   -24.769     0.000     (0)  
+   RaCl+           2.369e-27   2.369e-27   -26.625   -26.625    -0.000     (0)  
+   RaCl2           0.000e+00   0.000e+00   -42.452   -42.452     0.000     (0)  
+
+------------------------------Saturation indices-------------------------------
+
+  Phase               SI** log IAP   log K(298 K,   1 atm)
+
+  C(cr)           -72.42   -104.57  -32.15  C
+  CH4(g)         -146.59   -187.64  -41.05  CH4
+  Cl2(g)          -50.09     -4.11   45.98  Cl2
+  CO(g)           -48.39    -63.03  -14.64  CO
+  CO2(g)           -3.34    -21.49  -18.15  CO2
+  H2(g)           -41.54    -41.54    0.00  H2
+  H2O(g)           -1.50    -42.99  -41.49  H2O
+  Halite          -21.59    -20.00    1.59  NaCl
+  HCl(g)          -29.12    -22.83    6.29  HCl
+  Na(cr)          -63.83    -17.94   45.89  Na
+  Na2(CO3)(cr)    -16.95    -15.83    1.12  Na2(CO3)
+  Na2CO3:7H2O(s)  -15.37    -15.83   -0.46  Na2CO3:7H2O
+  Na2O(cr)        -61.81      5.65   67.46  Na2O
+  NaCl              0.00    -20.00  -20.00  NaCl
+  Nahcolite        -7.92    -18.66  -10.74  Na(HCO3)
+  Natron          -15.00    -15.83   -0.83  Na2(CO3):10H2O
+  O2(g)            -0.00     -2.90   -2.90  O2
+  pH_set           -7.00     -7.00    0.00  H+
+  Ra(CO3)(s)       -9.88    -18.18   -8.30  Ra(CO3)
+  Ra(cr)         -136.68    -38.24   98.44  Ra
+  Ra(OH)2(s)      -27.69      3.30   30.99  Ra(OH)2
+  RaCl2:2H2O(s)   -41.62    -42.35   -0.73  RaCl2:2H2O
+  Thermonatrite   -16.31    -15.83    0.48  Na2(CO3):H2O
+  Trona           -23.11    -34.49  -11.38  Na3H(CO3)2:2H2O
+
+**For a gas, SI = log10(fugacity). Fugacity = pressure * phi / 1 atm.
+  For ideal gases, phi = 1.
+
+------------------
+End of simulation.
+------------------
+
+------------------------------------
+Reading input data for simulation 5.
+------------------------------------
+
+-------------------------------
+End of Run after 0.497 Seconds.
+-------------------------------
+
