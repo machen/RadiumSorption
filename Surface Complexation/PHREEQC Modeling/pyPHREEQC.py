@@ -26,7 +26,7 @@ class simulation:
             self.masterTable = masterTable #Can preload the master table, and keep it updated during execution instead of having to read/write each time
         else:
             self.masterTable = self.loadMaster() #Loads master table into memory
-        self.data = [] #Should only contian data that are specified by the parameters and pH range
+        self.data = pd.DataFrame() #Should only contian data that are specified by the parameters and pH range
 
     def runPHREEQC(self,inputStr):
         """inputStr: String that you want PHREEQC to run, should have valid PHRREQC syntax"""
@@ -35,7 +35,7 @@ class simulation:
         dbase.LoadDatabase(self.db)
         dbase.RunString(inputStr)
         out = dbase.GetSelectedOutputArray()
-        res = out[1]
+        res = out
         return res
     
     def generateData(self):
@@ -47,12 +47,12 @@ class simulation:
             chk = self.checkMaster(inputParam) #Calls chkMaster() to see if the data is in the table already or not
             if chk.empty:
                 subRes = self.runPHREEQC(self.templStr.substitute(inputParam)) #Run phreeqc with the parameters if the data is not yet there
+                subRes = pd.DataFrame([subRes[1]],columns=subRes[0])
+                fSorb = (inputParam['totRa']-subRes.ix[:,'Ra(mol/kgw)'].values)/inputParam['totRa']
+                subRes['fSorb'] = pd.Series(fSorb,index=subRes.index)
             else:
-                subRes = chk.loc[:,['pH','Ra']].values[0] #If the data is there, append the result that would have come out of running PHRREQC instead. Note that I assume that a given simulation instance may have both already run and unrun data
-            self.data.append(subRes) #Note that self.data is still just a list of lists at this point
-        self.data = pd.DataFrame(self.data,columns=['pH','Ra']) #Convert the results from a list of lists to a DataFrame
-        fSorb = (inputParam['totRa']-self.data.ix[:,'Ra'].values)/inputParam['totRa'] #Calculate the fraction sorbed using the appropriate parameters
-        self.data['fSorb'] = pd.Series(fSorb,index=self.data.index) #Write fraction sorbed to data
+                subRes = chk #If the data is there, append the result that would have come out of running PHRREQC instead. Note that I assume that a given simulation instance may have both already run and unrun data
+            self.data = self.data.append(subRes,ignore_index=True) #Note that self.data is a pandas dataframe containing ALL of the results from selected output
     def loadMaster(self):
         #Assumes your template is saved with some kind of extension of the form ".xxx", and loads the master table into the simulation
         #Loads a master table into the simulation that can be used to see if a simulation has been run or not

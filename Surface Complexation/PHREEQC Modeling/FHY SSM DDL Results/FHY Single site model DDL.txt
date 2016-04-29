@@ -48,5 +48,6 @@ SELECTED_OUTPUT
 #IF YOU CHANGE THIS YOU WILL NEED TO FIX simulation.generateData() in the python script. (Assumes 2 columns of data, in the order (pH, radium))
     -reset                false
     -totals               Ra
+    -molalities           Ra+2 RaCl+ RaCl2 Ra(OH)+ Ra(OH)2 Ra(HCO3)+ Ra(CO3) FhyOHRa+2
     -pH                   true
 END
