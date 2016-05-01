@@ -82,7 +82,25 @@ class simulation:
         self.masterTable = newMaster
         if writeMaster:
             newMaster.to_csv(self.templFile[:-4]+'.csv',index=False)
-            
+    def plotSpeciation(self,titleStr):
+        f2 = plt.figure(2)
+        f2.clf()
+        ax2 = f2.add_subplot(111)
+        totRa = x.param['totRa']
+        cmap = sns.color_palette("hls",n_colors=16)
+        color = itertools.cycle(cmap)
+        for colName in self.data.columns:
+            if colName.startswith("m_Fhy"): #m_Fhy is a marker for solid species
+                ax2.plot(self.data.ix[:,'pH'].values,self.data.ix[:,colName].values/totRa,'--',label=colName,color=next(color))
+            elif colName.startswith("m_Ra"): #m_Ra is a marker for solution species
+                ax2.plot(self.data.ix[:,'pH'].values,self.data.ix[:,colName].values/totRa,'-',label=colName,color=next(color))
+            else: #Do not plot things that are not part of the speciation
+                continue
+        #ax2.plot(self.data.ix[:,'pH'],self.data.ix[:,'fSorb'],'-k',label='Fraction Sorbed')
+        plt.legend(loc=0)
+        plt.title(titleStr+" Speciation")
+        plt.xlabel("pH")
+        plt.ylabel("Fractional Abundance")
     def getData(self):
         return self.data
     def getMaster(self):
@@ -100,9 +118,10 @@ k1 = 6.66
 k2 = -5.67
 totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 
-db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat"
-tmp = "GOE NEM Results\GOE Single Site Model NoElectroStatics.txt"
-titleString = "Single site model, No Electrostatics, Goethite"
+#db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
+db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
+tmp = "FHY NEM Results\FHY Single Site Model NoElectroStatics.txt"
+titleString = "Single site model, No Electrostatics, Ferrihydrite"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
@@ -110,7 +129,7 @@ sns.set_palette("deep",n_colors = 6)
 #Find experimental data to use
 expData = extractData('..\..\Sorption Experiments\Sorption Experiment Master Table.xlsx')
 expData = expData.ix[expData.ix[:,'Include?']==True,:] #Select only data that's been vetted
-expData = expData.ix[expData.ix[:,'Mineral']=="Goethite"]
+expData = expData.ix[expData.ix[:,'Mineral']=="Ferrihydrite"]
 
 f1 = plt.figure(num=1,figsize=(10,8))
 f1.clf()
@@ -119,8 +138,8 @@ ax = f1.add_subplot(111)
 
 labelStr = "Single site model, K1: {k1} Sites: {sites}"
 
-siteVal = np.array([6.23E-6]) #mol
-Kval = np.arange(0,10.1,0.1)
+siteVal = np.array([5.98E-5]) #mol
+Kval = np.array([6])
 
 ncol = np.size(siteVal)*np.size(Kval)
 cmap = sns.cubehelix_palette(n_colors=ncol,dark=0.3,rot=0.4,light=0.8,gamma=1.3)
