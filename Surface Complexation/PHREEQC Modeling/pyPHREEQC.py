@@ -89,11 +89,12 @@ class simulation:
         totRa = x.param['totRa']
         cmap = sns.color_palette("hls",n_colors=16)
         color = itertools.cycle(cmap)
+        color2 = itertools.cycle(cmap)
         for colName in self.data.columns:
             if colName.startswith("m_Fhy"): #m_Fhy is a marker for solid species
                 ax2.plot(self.data.ix[:,'pH'].values,self.data.ix[:,colName].values/totRa,'--',label=colName,color=next(color))
             elif colName.startswith("m_Ra"): #m_Ra is a marker for solution species
-                ax2.plot(self.data.ix[:,'pH'].values,self.data.ix[:,colName].values/totRa,'-',label=colName,color=next(color))
+                ax2.plot(self.data.ix[:,'pH'].values,self.data.ix[:,colName].values/totRa,'-',label=colName,color=next(color2))
             else: #Do not plot things that are not part of the speciation
                 continue
         #ax2.plot(self.data.ix[:,'pH'],self.data.ix[:,'fSorb'],'-k',label='Fraction Sorbed')
@@ -101,6 +102,7 @@ class simulation:
         plt.title(titleStr+" Speciation")
         plt.xlabel("pH")
         plt.ylabel("Fractional Abundance")
+        plt.ylim([-0.01,1.0])
     def getData(self):
         return self.data
     def getMaster(self):
@@ -120,8 +122,8 @@ totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
 #db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
-tmp = "No mineral Results\No mineral.txt"
-titleString = "No mineral"
+tmp = "FHY StrongWeak DDL\FHY StrongWeak DDL.txt"
+titleString = "Single site model, DDL, Goethite"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
@@ -136,54 +138,69 @@ f1.clf()
 ax = f1.add_subplot(111)
 
 
-labelStr = "Single site model, K1: {k1} Sites: {sites}"
+labelStr = "Single site model, Ks: {ks} {siteS} mol, Kw: {kw} {siteW} mol"
 
-siteVal = np.array([5.98E-5]) #mol
-Kval = np.array([6])
+siteSVal = np.array([1.4E-6]) #mol
+siteWVal = np.array([5.6E-5])
+Ksval = np.arange(0,10.1,0.1)
+Ksval = np.array([7])
+Kwval = np.array([-5.67])
+#Kval = np.arange(5.5,6.1,0.1)
 
-ncol = np.size(siteVal)*np.size(Kval)
+#siteVal = np.array([1.92E-6])
+#Kval = np.array([5.6])
+#Kval = np.arange(0,10.1,0.1)
+#ncol = np.size(Kval)*np.size(siteVal)
+
+
+ncol = np.size(siteSVal)*np.size(Ksval)*np.size(Kwval)*np.size(siteWVal)
 cmap = sns.cubehelix_palette(n_colors=ncol,dark=0.3,rot=0.4,light=0.8,gamma=1.3)
 palette = itertools.cycle(cmap)
-
+#
 #for K in Kval:
-#    for sites in siteVal:
-#        x = simulation({'totRa':totRa,'k1':K,'sites':sites},tmp,db)
+#    for site in siteVal:
+#        x = simulation({'totRa':totRa,'k1':K,'sites':site},tmp,db)
 #        x.generateData()
 #        x.addDataToMaster(writeMaster=True)
 #        simRes = x.getData()
-#        ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(k1=K,sites=sites),color=next(palette))
-#        print K, sites
+#        ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(k=K,site=site),color=next(palette))
 
-x = simulation({'totRa':totRa},tmp,db)
-x.generateData()
-x.addDataToMaster(writeMaster=True)
-simRes = x.getData()
-x.plotSpeciation(titleString)
+for Ks in Ksval:
+    for Kw in Kwval:
+        for siteW in siteWVal:
+            for siteS in siteSVal:
+                x = simulation({'totRa':totRa,'ks':Ks,'kw':Kw,'siteS':siteS,'siteW':siteW},tmp,db)
+                x.generateData()
+                x.addDataToMaster(writeMaster=True)
+                simRes = x.getData()
+                ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(ks=Ks,kw=Kw,siteS=siteS,siteW=siteW),color=next(palette))
+
+
         
 #Plot all of the data without differentiation
 #expPlot = ax.errorbar(expData.ix[:,'pH'],expData.ix[:,'fSorb'],xerr=expData.ix[:,'spH'],yerr=expData.ix[:,'sfSorb'],fmt='o',label='Experimental Data')
 
-#exp5 = expData.ix[expData['Total Activity']==5,:]
-#exp10 = expData.ix[expData['Total Activity']==10,:]
-#exp50 = expData.ix[expData['Total Activity']==50,:]
-#exp100 = expData.ix[expData['Total Activity']==100,:]
-#exp500 = expData.ix[expData['Total Activity']==500,:]
-#
-#if not exp5.empty:
-#    exp5Plot = ax.errorbar(exp5.ix[:,'pH'].values,exp5.ix[:,'fSorb'].values,xerr=exp5.ix[:,'spH'].values,yerr=exp5.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 5 Bq Total')
-#if not exp10.empty:
-#    exp10Plot = ax.errorbar(exp10.ix[:,'pH'].values,exp10.ix[:,'fSorb'].values,xerr=exp10.ix[:,'spH'].values,yerr=exp10.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 10 Bq Total')
-#if not exp50.empty:
-#    exp50Plot = ax.errorbar(exp50.ix[:,'pH'].values,exp50.ix[:,'fSorb'].values,xerr=exp50.ix[:,'spH'].values,yerr=exp50.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 50 Bq Total')
-#if not exp100.empty:
-#    exp100Plot = ax.errorbar(exp100.ix[:,'pH'].values,exp100.ix[:,'fSorb'].values,xerr=exp100.ix[:,'spH'].values,yerr=exp100.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 100 Bq Total')
-#if not exp500.empty:
-#    exp500Plot = ax.errorbar(exp500.ix[:,'pH'].values,exp500.ix[:,'fSorb'].values,xerr=exp500.ix[:,'spH'].values,yerr=exp500.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 500 Bq Total')
-#
-#
-#ax.legend(loc=0)
-#ax.set_title(titleString)
-#ax.set_xlabel('pH')
-#ax.set_ylabel('Fraction Sorbed')
-#ax.set_ylim([-0.01,1.0])
-#plt.show()
+exp5 = expData.ix[expData['Total Activity']==5,:]
+exp10 = expData.ix[expData['Total Activity']==10,:]
+exp50 = expData.ix[expData['Total Activity']==50,:]
+exp100 = expData.ix[expData['Total Activity']==100,:]
+exp500 = expData.ix[expData['Total Activity']==500,:]
+
+if not exp5.empty:
+    exp5Plot = ax.errorbar(exp5.ix[:,'pH'].values,exp5.ix[:,'fSorb'].values,xerr=exp5.ix[:,'spH'].values,yerr=exp5.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 5 Bq Total')
+if not exp10.empty:
+    exp10Plot = ax.errorbar(exp10.ix[:,'pH'].values,exp10.ix[:,'fSorb'].values,xerr=exp10.ix[:,'spH'].values,yerr=exp10.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 10 Bq Total')
+if not exp50.empty:
+    exp50Plot = ax.errorbar(exp50.ix[:,'pH'].values,exp50.ix[:,'fSorb'].values,xerr=exp50.ix[:,'spH'].values,yerr=exp50.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 50 Bq Total')
+if not exp100.empty:
+    exp100Plot = ax.errorbar(exp100.ix[:,'pH'].values,exp100.ix[:,'fSorb'].values,xerr=exp100.ix[:,'spH'].values,yerr=exp100.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 100 Bq Total')
+if not exp500.empty:
+    exp500Plot = ax.errorbar(exp500.ix[:,'pH'].values,exp500.ix[:,'fSorb'].values,xerr=exp500.ix[:,'spH'].values,yerr=exp500.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 500 Bq Total')
+
+
+ax.legend(loc=0)
+ax.set_title(titleString)
+ax.set_xlabel('pH')
+ax.set_ylabel('Fraction Sorbed')
+ax.set_ylim([-0.01,1.0])
+plt.show()
