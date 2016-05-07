@@ -9,36 +9,21 @@ GAS_PHASE 1
     CO2(g)    0.00033
     O2(g)     0.26
 SURFACE_MASTER_SPECIES
-    Clay_i   Clay_iNa #Inner layer
-    Clay_s   Clay_sOH #Surface Strong
-    Clay_w1  Clay_w1OH #Surface weak
-    Clay_w2  Clay_w2OH #Surface weak
+    Clay_s   Clay_sOH #Surface site
 SURFACE_SPECIES
+
+Clay_sOH = Clay_sOH
+     log_k  0.0
 
 Clay_sOH + H+ = Clay_sOH2+
      log_k    4.5
 Clay_sOH = Clay_sO- + H+
      log_k -7.9
-Clay_w1OH + H+ = Clay_w1OH2+
-     log_k    4.5
-Clay_w1OH = Clay_w1O- + H+
-     log_k -7.9
-Clay_w2OH + H+ = Clay_w2OH2+
-     log_k    6
-Clay_w2OH = Clay_w2O- + H+
-     log_k -10.5
-
-
-2 Clay_iNa + Ra+2 = (Clay_i)2Ra + 2 Na+ #Intrinsic K, we're assuming it's constant because we're at trace Ra levels
-    log_k     $kInt
-Clay_sOH + Ra+2 = Fhy_sOHRa+2
-    log_k     $ks
-Clay_w1OH + Ra+2 = Fhy_wORa+ + H+
-    log_k     $kw
+Clay_sOH + Ra+2 = Clay_sOHRa+2
+    log_k     $Ks
 
 SURFACE 1
-    Fhy_sOH      $siteS 600 0.03
-    Fhy_wOH	 $siteW 
+    Clay_s 2.5E-6 83.79 0.03
 END
 SOLUTION 1
     temp      25
@@ -58,7 +43,22 @@ pH_set
     H+=H+
     log_k     0.0
 END
-USE solution 1; USE GAS_PHASE 1; USE surface 1
+EXCHANGE_MASTER_SPECIES
+Clay_i	Clay_i-
+
+EXCHANGE_SPECIES
+Clay_i- = Clay_i-
+    log_k 0.0
+Clay_i- + Na+ = NaClay_i
+    log_k 0.0
+2Clay_i- + Ra+2 = Clay_i2Ra
+    log_k $K_int
+EXCHANGE 1
+   NaClay_i 2.53E-5
+
+END
+
+USE solution 1; USE GAS_PHASE 1; USE surface 1; USE EXCHANGE 1
 EQUILIBRIUM_PHASES 1
 NaCl 0 10.0
 pH_set          -$pH HCl 10.0
@@ -66,6 +66,6 @@ SELECTED_OUTPUT
 #IF YOU CHANGE THIS YOU WILL NEED TO FIX simulation.generateData() in the python script. (Assumes 2 columns of data, in the order (pH, radium))
     -reset                false
     -totals               Ra 
-    -molalities 	  Ra+2 RaCl+ RaCl2 Ra(OH)+ Ra(OH)2 Ra(HCO3)+ Ra(CO3) Fhy_sOHRa+2 Fhy_wORa+
+    -molalities 	  Ra+2 RaCl+ RaCl2 Ra(OH)+ Ra(OH)2 Ra(HCO3)+ Ra(CO3) Clay_sOHRa+2 Clay_i2Ra
     -pH                   true
 END
