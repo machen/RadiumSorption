@@ -82,7 +82,7 @@ class simulation:
         self.masterTable = newMaster
         if writeMaster:
             newMaster.to_csv(self.templFile[:-4]+'.csv',index=False)
-    def plotSpeciation(self,titleStr):
+    def plotSpeciation(self,titleStr='',solidTag="m_Fhy"):
         f2 = plt.figure(2)
         f2.clf()
         ax2 = f2.add_subplot(111)
@@ -91,7 +91,7 @@ class simulation:
         color = itertools.cycle(cmap)
         color2 = itertools.cycle(cmap)
         for colName in self.data.columns:
-            if colName.startswith("m_Fhy"): #m_Fhy is a marker for solid species
+            if colName.startswith(solidTag): #m_Fhy is a marker for solid species
                 ax2.plot(self.data.ix[:,'pH'].values,self.data.ix[:,colName].values/totRa,'--',label=colName,color=next(color))
             elif colName.startswith("m_Ra"): #m_Ra is a marker for solution species
                 ax2.plot(self.data.ix[:,'pH'].values,self.data.ix[:,colName].values/totRa,'-',label=colName,color=next(color2))
@@ -155,6 +155,8 @@ labelStr = "Single site model, Ks: {Ks} , Kint: {Kint}"
 
 KsVal = np.arange(-10,11,1)
 KintVal = np.arange(-10,11,1)
+#KsVal = np.array([-1])
+#KintVal = np.array([-3])
 ncol = np.size(KsVal)*np.size(KintVal)
 
 cmap = sns.cubehelix_palette(n_colors=ncol,dark=0.3,rot=0.4,light=0.8,gamma=1.3)
