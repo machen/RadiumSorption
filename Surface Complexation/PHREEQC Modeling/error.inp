@@ -1,38 +1,56 @@
 SOLUTION_RAW                 1 
   -temp                      25
   -pressure                  1
-  -total_h                   111.01982836254
-  -total_o                   55.509914181264
-  -cb                        1.206952239352e-009
-  -density                   0.99762571072599
+  -total_h                   11.101982836254
+  -total_o                   5.5509914181267
+  -cb                        1.3079992609274e-011
+  -density                   0.9976260513466
   -totals
-    Cl                       0.010000000000005
-    H(0)                     1.6635275422053e-025
-    Na                       0.010000000000005
-    Ra                       5.9790000000127e-010
+    Cl                       0.0010005847668665
+    Na                       0.0010005847668665
+    Ra                       5.9824963211042e-012
   -pH                        7
   -pe                        4
-  -mu                        0.010000111629915
-  -ah2o                      0.99965104683861
-  -mass_water                1
-  -soln_vol                  1.0029657579691
-  -total_alkalinity          -1.1152019843885e-011
+  -mu                        0.010005958230838
+  -ah2o                      0.99965084543204
+  -mass_water                0.1
+  -soln_vol                  0.10029657579691
+  -total_alkalinity          -1.1149784641368e-012
   -activities
-    Cl                       -2.044050191475
+    Cl                       -2.0438074007323
     E                        -4
     H(0)                     -25.08
-    Na                       -2.0440501925195
-    O(0)                     -41.98030314976
-    Ra                       -9.4030793936426
+    Na                       -2.043807401902
+    O(0)                     -41.980303324761
+    Ra                       -10.402871710655
   -gammas
-    Cl-                      -0.044050183685255
-    ClO4-                    -0.044250181476334
-    H+                       -0.043150196960306
-    Na+                      -0.044050192519719
-    OH-                      -0.043950196938781
-    Ra(OH)+                  -0.044350196938781
-    Ra+2                     -0.17740078775513
-    RaCl+                    -0.044350196938781
+    Cl-                      -0.044061279865619
+    ClO4-                    -0.044261394610018
+    H+                       -0.04316076685048
+    Na+                      -0.044061288700211
+    OH-                      -0.043961234642781
+    Ra(OH)+                  -0.044361468549528
+    Ra+2                     -0.17744587419811
+    RaCl+                    -0.044361468549528
+EXCHANGE_RAW                 1 Exchange assemblage after simulation 3.
+  # EXCHANGE_MODIFY candidate identifiers #
+  -exchange_gammas           1
+  -component                 NaClay_i
+    # EXCHANGE_MODIFY candidate identifiers #
+    -totals
+      Clay_i                 1.0000000068901e-010
+      Na                     3.3458908393218e-011
+      Ra                     3.3270546147894e-011
+    -charge_balance          0
+    -la                      1.5242578810731
+    -phase_proportion        0
+    -formula_z               0
+  # EXCHANGE_MODIFY candidates with new_def=true #
+  -new_def                   0
+  -solution_equilibria       0
+  -n_solution                -999
+  # Exchange workspace variables #
+  -totals
 GAS_PHASE_RAW                1 
   # GAS_PHASE_MODIFY candidate identifiers #
   -type                      0
@@ -80,13 +98,13 @@ EQUILIBRIUM_PHASES_RAW       1
   -component                 pH_set
       # EQUILIBRIUM_PHASES_MODIFY candidate identifiers #
       -add_formula           HCl
-      -si                    -9.9
+      -si                    -2.2
       -moles                 10
       -force_equality        0
       -dissolve_only         0
       -precipitate_only      0
       # PPassemblage workspace variables #
-      -si_org                -9.9
+      -si_org                -2.2
       -delta                 0
       -initial_moles         0
       -totals                
@@ -96,49 +114,3 @@ EQUILIBRIUM_PHASES_RAW       1
     Na                       1
   # PPassemblage workspace variables #
   -assemblage_totals
-SURFACE_RAW                  1 
-  # SURFACE_MODIFY candidate identifiers #
-  -type                      1
-  -dl_type                   0
-  -only_counter_ions         0
-  -thickness                 1e-008
-  -debye_lengths             0
-  -DDL_viscosity             1
-  -DDL_limit                 0.8
-  -component                 FhyOH
-    # SURFACE_MODIFY candidate identifiers #
-    -formula_z               0
-    -moles                   11.1
-    -la                      0
-    -charge_balance          0
-    -phase_proportion        0
-    -Dw                      0
-    -charge_name             Fhy
-    -master_element          Fhy
-    -totals
-      Fhy                    11.1
-      H                      11.1
-      O                      11.1
-  -charge_component          Fhy
-    # SURFACE_MODIFY candidate identifiers #
-    -specific_area           600
-    -grams                   0
-    -charge_balance          0
-    -mass_water              0
-    -la_psi                  0
-    -capacitance0            1
-    -capacitance1            5
-    -diffuse_layer_totals
-    # Surface workspace variables #
-    -sigma0                  0
-    -sigma1                  0
-    -sigma2                  0
-    -sigmaddl                0
-  # SURFACE_MODIFY candidates with new_def=true #
-  -new_def                   1
-  -sites_units               0
-  -solution_equilibria       0
-  -n_solution                -999
-  # Surface workspace variables #
-  -transport                 0
-  -totals                    

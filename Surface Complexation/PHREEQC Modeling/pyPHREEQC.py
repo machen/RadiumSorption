@@ -115,14 +115,14 @@ def extractData(path):
     data = pd.read_excel(fileLoc)
     return data
              
-totRa = 5.979e-010
+totRa = 5.979e-11
 k1 = 6.66
 k2 = -5.67
 totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
 #db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
-tmp = "Montmorillonite 1 site CEC model\Montmorillonite 1 site CEC model.txt"
+tmp = "Montmorillonite No sorption CEC Only\Montmorillonite CEC model.txt"
 titleString = "Single site model with Catio Exchange, DDL, Na Mont. STX-1"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
@@ -138,7 +138,7 @@ f1.clf()
 ax = f1.add_subplot(111)
 
 
-labelStr = "Single site model, Ks: {Ks} , Kint: {Kint}"
+labelStr = "Cation exchange only, Kint: {Kint}, {sitei} mol exchange sites"
 
 #siteSVal = np.array([1.4E-6]) #mol
 #siteWVal = np.array([5.6E-5])
@@ -153,11 +153,12 @@ labelStr = "Single site model, Ks: {Ks} , Kint: {Kint}"
 #Kval = np.arange(0,10.1,0.1)
 #ncol = np.size(Kval)*np.size(siteVal)
 
-KsVal = np.arange(-10,11,1)
+#KsVal = np.arange(-10,11,1)
 KintVal = np.arange(-10,11,1)
+siteiVal = np.logspace(-8,0,num=9,endpoint=True)
 #KsVal = np.array([-1])
 #KintVal = np.array([-3])
-ncol = np.size(KsVal)*np.size(KintVal)
+ncol = np.size(KintVal)*np.size(siteiVal)
 
 cmap = sns.cubehelix_palette(n_colors=ncol,dark=0.3,rot=0.4,light=0.8,gamma=1.3)
 palette = itertools.cycle(cmap)
@@ -170,13 +171,13 @@ palette = itertools.cycle(cmap)
 #        simRes = x.getData()
 #        ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(k=K,site=site),color=next(palette))
 pos = 0.0
-for Ks in KsVal:
-    for Kint in KintVal:
-        x = simulation({'totRa':totRa,'K_int':Kint,'Ks':Ks},tmp,db)
+for Kint in KintVal:
+    for sitei in siteiVal:
+        x = simulation({'totRa':totRa,'K_int':Kint,'sitei':sitei},tmp,db)
         x.generateData()
         x.addDataToMaster(writeMaster=True)
         simRes = x.getData()
-        ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(Ks=Ks,Kint=Kint),color=next(palette))
+        ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(Kint=Kint,sitei=sitei),color=next(palette))
         pos = pos+1
         per = pos/ncol
         print '{:.2%}'.format(per)
