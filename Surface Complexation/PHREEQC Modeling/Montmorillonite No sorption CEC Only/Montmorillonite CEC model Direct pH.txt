@@ -13,19 +13,11 @@ SOLUTION 1
     temp      25
     units     mol/l
     density   1
+    pH        $pH
     Ra        $totRa
-    Cl        0.01
-    Na        0.01
+    Cl        0.01 charge
+    Na        0.01 
     -water    0.1 # kg
-END
-PHASES
-KCl
-    KCl = K+ + Cl-
-    log_k     -20
-PHASES
-pH_set
-    H+=H+
-    log_k     0.0
 END
 EXCHANGE_MASTER_SPECIES
 Clay_i	Clay_i-
@@ -44,9 +36,6 @@ EXCHANGE 1
 END
 
 USE solution 1; USE GAS_PHASE 1; USE EXCHANGE 1
-EQUILIBRIUM_PHASES 1
-KCl 0 10.0
-pH_set          -$pH HCl 10.0
 SELECTED_OUTPUT
 #Make sure you get the output columns you want
     -reset                false

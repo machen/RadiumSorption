@@ -204,7 +204,7 @@ if not exp500.empty:
     exp500Plot = ax.errorbar(exp500.ix[:,'pH'].values,exp500.ix[:,'fSorb'].values,xerr=exp500.ix[:,'spH'].values,yerr=exp500.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 500 Bq Total')
 
 
-ax.legend(loc=0)
+#ax.legend(loc=0)
 ax.set_title(titleString)
 ax.set_xlabel('pH')
 ax.set_ylabel('Fraction Sorbed')

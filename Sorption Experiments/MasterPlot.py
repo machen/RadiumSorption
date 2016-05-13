@@ -6,6 +6,7 @@ Created on Wed Apr 06 16:47:14 2016
 """
 
 import pandas as pd, numpy as np, matplotlib as mpl, matplotlib.pyplot as plt, seaborn as sns
+from scipy.stats import linregress
 sns.set_context('talk')
 data = pd.read_excel("Sorption Experiment Master Table.xlsx",header=0)
 data = data.ix[data.ix[:,"Include?"]==True,:] #Toggle if you only want to plot data flagged to include
@@ -20,9 +21,9 @@ goeData = data.ix[data.ix[:,'Mineral']=='Goethite']
 f1 = plt.figure(1)
 f1.clf()
 ax = f1.add_subplot(111)
-fhyP = ax.errorbar(FHYdata.ix[:,'pH'],FHYdata.ix[:,'fSorb'],xerr=FHYdata.ix[:,'spH'],yerr=FHYdata.ix[:,'sfSorb'],fmt='o',label='Ferrihydrite')
-montP = ax.errorbar(montData.ix[:,'pH'],montData.ix[:,'fSorb'],xerr=montData.ix[:,'spH'],yerr=montData.ix[:,'sfSorb'],fmt='o',label='Na Montmorillonite')
-goeP = ax.errorbar(goeData.ix[:,'pH'],goeData.ix[:,'fSorb'],xerr=goeData.ix[:,'spH'],yerr=goeData.ix[:,'sfSorb'],fmt='o',label='Goethite')
+fhyP = ax.errorbar(FHYdata.ix[:,'pH'].values,FHYdata.ix[:,'fSorb'].values,xerr=FHYdata.ix[:,'spH'].values,yerr=FHYdata.ix[:,'sfSorb'].values,fmt='o',label='Ferrihydrite')
+montP = ax.errorbar(montData.ix[:,'pH'].values,montData.ix[:,'fSorb'].values,xerr=montData.ix[:,'spH'].values,yerr=montData.ix[:,'sfSorb'].values,fmt='o',label='Na Montmorillonite')
+goeP = ax.errorbar(goeData.ix[:,'pH'].values,goeData.ix[:,'fSorb'].values,xerr=goeData.ix[:,'spH'].values,yerr=goeData.ix[:,'sfSorb'].values,fmt='o',label='Goethite')
 plt.xlabel('pH')
 plt.ylabel('Fraction Sorbed')
 plt.title('Sorption Envelopes')
@@ -35,14 +36,16 @@ plt.show()
 f2 = plt.figure(2)
 f2.clf()
 ax2 = f2.add_subplot(111)
-fhyP = ax2.errorbar(FHYdata.ix[:,'Cw (Bq/mL)'],FHYdata.ix[:,'Cs (Bq/g)'],xerr=FHYdata.ix[:,'sCw (Bq/mL)'],yerr=FHYdata.ix[:,'sCs (Bq/g)'],fmt='o',label='Ferrihydrite')
-montP = ax2.errorbar(montData.ix[:,'Cw (Bq/mL)'],montData.ix[:,'Cs (Bq/g)'],xerr=montData.ix[:,'sCw (Bq/mL)'],yerr=montData.ix[:,'sCs (Bq/g)'],fmt='o',label='Na Montmorillonite')
-goeP = ax2.errorbar(goeData.ix[:,'Cw (Bq/mL)'],goeData.ix[:,'Cs (Bq/g)'],xerr=goeData.ix[:,'sCw (Bq/mL)'],yerr=goeData.ix[:,'sCs (Bq/g)'],fmt='o',label='Goethite')
+fhyP = ax2.errorbar(FHYdata.ix[:,'Cw (Bq/mL)'].values,FHYdata.ix[:,'Cs (Bq/g)'].values,xerr=FHYdata.ix[:,'sCw (Bq/mL)'].values,yerr=FHYdata.ix[:,'sCs (Bq/g)'].values,fmt='o',label='Ferrihydrite')
+montP = ax2.errorbar(montData.ix[:,'Cw (Bq/mL)'].values,montData.ix[:,'Cs (Bq/g)'].values,xerr=montData.ix[:,'sCw (Bq/mL)'].values,yerr=montData.ix[:,'sCs (Bq/g)'].values,fmt='o',label='Na Montmorillonite')
+goeP = ax2.errorbar(goeData.ix[:,'Cw (Bq/mL)'].values,goeData.ix[:,'Cs (Bq/g)'].values,xerr=goeData.ix[:,'sCw (Bq/mL)'].values,yerr=goeData.ix[:,'sCs (Bq/g)'].values,fmt='o',label='Goethite')
 plt.xlabel('Cw (Bq/mL)')
 plt.ylabel('Cs (Bq/g)')
 plt.title('Sorption Isotherms')
 plt.legend(loc=0)
 plt.show()
+
+#Plot of Isotherms separated by pH, along with isotherm fits
 
 f3 = plt.figure(3)
 f3.clf()
@@ -58,11 +61,29 @@ for i in range(4):
     montSub = montData.ix[abs(montData.ix[:,'pH']-pH)<0.1,:]
     goeSub = goeData.ix[abs(goeData.ix[:,'pH']-pH)<0.1,:]
     if not fhySub.empty:
-        ax3.errorbar(fhySub.ix[:,'Cw (Bq/mL)'].values,fhySub.ix[:,'Cs (Bq/g)'].values,xerr=fhySub.ix[:,'sCw (Bq/mL)'].values,yerr=fhySub.ix[:,'sCs (Bq/g)'].values,fmt='o',label='FHY pH: {0}'.format(str(pH)),color=fhyPal[i])
+        Cw = fhySub.ix[:,'Cw (Bq/mL)'].values
+        Cs = fhySub.ix[:,'Cs (Bq/g)'].values
+        sCw = fhySub.ix[:,'sCw (Bq/mL)'].values
+        sCs = fhySub.ix[:,'sCs (Bq/g)'].values
+        [slope,inter,rval,pval,stdErr] = linregress(Cw,Cs)  
+        ax3.plot(Cw,np.polyval([slope,inter],Cw),ls='-',label=None,color=fhyPal[i])
+        ax3.errorbar(Cw,Cs,xerr=sCw,yerr=sCs,fmt='o',label='FHY pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),color=fhyPal[i])
     if not montSub.empty:
-        ax3.errorbar(montSub.ix[:,'Cw (Bq/mL)'].values,montSub.ix[:,'Cs (Bq/g)'].values,xerr=montSub.ix[:,'sCw (Bq/mL)'].values,yerr=montSub.ix[:,'sCs (Bq/g)'].values,fmt='o',label='Na Mont. pH: {0}'.format(str(pH)),color=montPal[i])
+        Cw = montSub.ix[:,'Cw (Bq/mL)'].values
+        Cs = montSub.ix[:,'Cs (Bq/g)'].values
+        sCw = montSub.ix[:,'sCw (Bq/mL)'].values
+        sCs = montSub.ix[:,'sCs (Bq/g)'].values
+        [slope,inter,rval,pval,stdErr] = linregress(Cw,Cs)  
+        ax3.plot(Cw,np.polyval([slope,inter],Cw),ls='-',label=None,color=montPal[i])
+        ax3.errorbar(Cw,Cs,xerr=sCw,yerr=sCs,fmt='o',label='Montmorillonite pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),color=montPal[i])
     if not goeSub.empty:
-        ax3.errorbar(goeSub.ix[:,'Cw (Bq/mL)'].values,goeSub.ix[:,'Cs (Bq/g)'].values,xerr=goeSub.ix[:,'sCw (Bq/mL)'].values,yerr=goeSub.ix[:,'sCs (Bq/g)'].values,fmt='o',label='GOE pH: {0}'.format(str(pH)),color=goePal[i])
+        Cw = goeSub.ix[:,'Cw (Bq/mL)'].values
+        Cs = goeSub.ix[:,'Cs (Bq/g)'].values
+        sCw = goeSub.ix[:,'sCw (Bq/mL)'].values
+        sCs = goeSub.ix[:,'sCs (Bq/g)'].values
+        [slope,inter,rval,pval,stdErr] = linregress(Cw,Cs)  
+        ax3.plot(Cw,np.polyval([slope,inter],Cw),ls='-',label=None,color=goePal[i])
+        ax3.errorbar(Cw,Cs,xerr=sCw,yerr=sCs,fmt='o',label='Goethite pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),color=goePal[i])
 plt.xlabel('Cw (Bq/mL)')
 plt.ylabel('Cs (Bq/g)')
 plt.title('Sorption Isotherms')
