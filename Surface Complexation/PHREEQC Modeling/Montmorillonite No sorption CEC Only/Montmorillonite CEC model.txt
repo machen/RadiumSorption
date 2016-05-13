@@ -10,6 +10,13 @@ GAS_PHASE 1
     O2(g)     0.26
 
 SOLUTION 1
+   temp       25
+   units      mol/l
+    density   1
+    Cl        0.01
+    Na        0.01
+    -water    0.1 # kg
+SOLUTION 2
     temp      25
     units     mol/l
     density   1
@@ -39,19 +46,20 @@ Clay_i- + Na+ = NaClay_i
     log_k $K_int
 EXCHANGE 1
    NaClay_i $sitei #Calculated from the CEC listed by Clays.org for STX-1b CaMont
+   Clay_iRa 0 #Start with no mol of radium exchanged
    -equilibrate with solution 1
 
 END
 
-USE solution 1; USE GAS_PHASE 1; USE EXCHANGE 1
+USE solution 2; USE GAS_PHASE 1; USE EXCHANGE 1
 EQUILIBRIUM_PHASES 1
 KCl 0 10.0
 pH_set          -$pH HCl 10.0
 SELECTED_OUTPUT
 #Make sure you get the output columns you want
     -reset                false
-    -totals               Ra 
-    -molalities 	  Ra+2 RaCl+ RaCl2 Ra(OH)+ Ra(OH)2 Ra(HCO3)+ Ra(CO3) Clay_i2Ra
+    -totals               Ra Clay_i
+    -molalities 	  Ra+2 RaCl+ RaCl2 Ra(OH)+ Ra(OH)2 Ra(HCO3)+ Ra(CO3) Clay_i2Ra NaClay_i
     -percent_error        true
     -pH                   true
 END

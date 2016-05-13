@@ -115,7 +115,7 @@ def extractData(path):
     data = pd.read_excel(fileLoc)
     return data
              
-totRa = 5.979e-11
+totRa = 5.979e-10
 k1 = 6.66
 k2 = -5.67
 totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
@@ -154,8 +154,9 @@ labelStr = "Cation exchange only, Kint: {Kint}, {sitei} mol exchange sites"
 #ncol = np.size(Kval)*np.size(siteVal)
 
 #KsVal = np.arange(-10,11,1)
-KintVal = np.arange(-10,11,1)
-siteiVal = np.logspace(-8,0,num=9,endpoint=True)
+KintVal = np.arange(3,11,0.1)
+#siteiVal = np.logspace(-8,0,num=9,endpoint=True)
+siteiVal = np.array([2.53E-5]) #Clay value
 #KsVal = np.array([-1])
 #KintVal = np.array([-3])
 ncol = np.size(KintVal)*np.size(siteiVal)
