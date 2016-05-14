@@ -24,9 +24,17 @@ Clay_sOH + Ra+2 = Clay_sOHRa+2
     log_k     $Ks
 
 SURFACE 1
-    Clay_s 2.5E-6 83.79 0.03 #STX-1 has an N2 surface area of 83.79 +/- 0.22 m^2/g. Number of sites based on 82E-3 mol sites/kg
+    Clay_s 2.5E-6 83.79 0.03 #STX-1 has an N2 surface area of 83.79 +/- 0.22 m^2/g. Number of sites based on 8.2E-3 mol sites/kg
 END
 SOLUTION 1
+    temp      25
+    units     mol/l
+    density   1
+    Cl        0.01
+    Na        0.01
+    -water    0.1 # kg
+END
+SOLUTION 2
     temp      25
     units     mol/l
     density   1
@@ -36,8 +44,8 @@ SOLUTION 1
     -water    0.1 # kg
 END
 PHASES
-NaCl
-    NaCl = Na+ + Cl-
+KCl
+    KCl = K+ + Cl-
     log_k     -20
 PHASES
 pH_set
@@ -50,7 +58,7 @@ Clay_i	Clay_i-
 EXCHANGE_SPECIES
 Clay_i- = Clay_i-
     log_k 0.0
-Clay_i- + Na+ = NaClay_i
+Clay_i- + Na+ = Clay_iNa
     log_k 0.0
 2Clay_i- + Ra+2 = Clay_i2Ra
     log_k $K_int
@@ -60,14 +68,14 @@ EXCHANGE 1
 
 END
 
-USE solution 1; USE GAS_PHASE 1; USE surface 1; USE EXCHANGE 1
+USE solution 2; USE GAS_PHASE 1; USE surface 1; USE EXCHANGE 1
 EQUILIBRIUM_PHASES 1
-NaCl 0 10.0
+KCl 0 10.0
 pH_set          -$pH HCl 10.0
 SELECTED_OUTPUT
 #Make sure you get the output columns you want
     -reset                false
     -totals               Ra 
-    -molalities 	  Ra+2 RaCl+ RaCl2 Ra(OH)+ Ra(OH)2 Ra(HCO3)+ Ra(CO3) Clay_sOHRa+2 Clay_i2Ra
+    -molalities 	  Ra+2 RaCl+ RaCl2 Ra(OH)+ Ra(OH)2 Ra(HCO3)+ Ra(CO3) Clay_sOHRa+2 Clay_i2Ra Clay_i- Clay_iNa
     -pH                   true
 END
