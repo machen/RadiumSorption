@@ -1,0 +1,91 @@
+#Template file for PHRREQC/Python interactions.
+#Parameters to vary should be bracketed with a name, which then gets put into the python script
+#Make sure that your output file reports what you want to report. Namely, pH and Ra, which only reports solution avaialble radium
+GAS_PHASE 1
+    -fixed_pressure
+    -pressure 1
+    -volume 1
+    -temperature 25
+    CO2(g)    0.00033
+    O2(g)     0.26
+SURFACE_MASTER_SPECIES
+    Clay_s   Clay_sOH #Surface site
+    Clay_w   Clay_wOH
+SURFACE_SPECIES
+
+Clay_sOH = Clay_sOH
+     log_k  0.0
+Clay_wOH = Clay_wOH
+     log_k 0.0
+
+Clay_wOH + H+ = Clay_wOH2+
+     log_k    4.5
+Clay_wOH = Clay_wO- + H+
+     log_k -7.9
+Clay_sOH + H+ = Clay_sOH2+
+     log_k    4.5
+Clay_sOH = Clay_sO- + H+
+     log_k -7.9
+
+Clay_sOH + Ra+2 = Clay_sOHRa+2
+    log_k     $Ks
+Clay_wOH + Ra+2 = Clay_wORa+ + H+
+    log_k     $Kw
+
+SURFACE 1
+    Clay_s $siteS 83.79 0.03 #STX-1 has an N2 surface area of 83.79 +/- 0.22 m^2/g. Number of sites based on 2E-3 mol sites/kg
+    Clay_w $siteW
+END
+SOLUTION 1
+    temp      25
+    units     mol/l
+    density   1
+    Cl        0.01
+    Na        0.01
+    -water    0.1 # kg
+END
+SOLUTION 2
+    temp      25
+    units     mol/l
+    density   1
+    Ra        $totRa
+    Cl        0.01
+    Na        0.01
+    -water    0.1 # kg
+END
+PHASES
+KCl
+    KCl = K+ + Cl-
+    log_k     -20
+PHASES
+pH_set
+    H+=H+
+    log_k     0.0
+END
+EXCHANGE_MASTER_SPECIES
+Clay_i	Clay_i-
+
+EXCHANGE_SPECIES
+Clay_i- = Clay_i-
+    log_k 0.0
+Clay_i- + Na+ = Clay_iNa
+    log_k 0.0
+2Clay_i- + Ra+2 = Clay_i2Ra
+    log_k 0.15 #Determined from CEC only studies
+EXCHANGE 1
+   NaClay_i 2.53E-5 #Calculated from the CEC listed by Clays.org for STX-1b CaMont
+   -equilibrate with solution 1
+
+END
+
+USE solution 2; USE GAS_PHASE 1; USE surface 1; USE EXCHANGE 1
+EQUILIBRIUM_PHASES 1
+KCl 0 10.0
+pH_set          -$pH HCl 10.0
+SELECTED_OUTPUT
+#Make sure you get the output columns you want
+    -reset                false
+    -totals               Ra 
+    -molalities 	  Ra+2 RaCl+ RaCl2 Ra(OH)+ Ra(OH)2 Ra(HCO3)+ Ra(CO3) Clay_sOHRa+2 Clay_i2Ra Clay_i- Clay_iNa
+    -pH                   true
+END

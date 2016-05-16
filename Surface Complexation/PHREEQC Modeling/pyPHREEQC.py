@@ -122,7 +122,7 @@ totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
 #db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
-tmp = "Montmorillonite 1 site CEC Model\Montmorillonite 1 site CEC model.txt"
+tmp = "Montmorillonite 2 site CEC Model\Montmorillonite 2 site CEC model.txt"
 titleString = "Single site model with Cation Exchange, DDL, Na Mont. STX-1"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
@@ -138,31 +138,32 @@ f1.clf()
 ax = f1.add_subplot(111)
 
 
-labelStr = "Cation exchange 1 site, Kint: {Kint}, Ks: {Ks} {sites} mol"
+labelStr = "Cation exchange 1 site, Kint: {Kint}, Ks: {Ks} {siteS} mol, Kw: {Kw} {siteW} mol"
 
-#siteSVal = np.array([1.4E-6]) #mol
-#siteWVal = np.array([5.6E-5])
-#Ksval = np.arange(0,10.1,0.1)
-#Ksval = np.array([7])
-#Kwval = np.array([-5.67])
-#Kval = np.arange(5.5,6.1,0.1)
-#ncol = np.size(siteSVal)*np.size(Ksval)*np.size(Kwval)*np.size(siteWVal)
+siteSVal = np.array([6E-8]) #mol, should also try 2E-7, which best fit 1 site data
+siteWVal = np.array([1.2E-6]) #mol from 4E-2 mol site, should try other values
+KsVal = np.arange(0,10.1,1)
+#KsVal = np.array([7])
+KwVal = np.array([-5.67])
+KwVal = np.arange(0,10.1,1)
+ncol = np.size(siteSVal)*np.size(KsVal)*np.size(KwVal)*np.size(siteWVal)
 
 #siteVal = np.array([1.92E-6])
 #Kval = np.array([5.6])
 #Kval = np.arange(0,10.1,0.1)
 #ncol = np.size(Kval)*np.size(siteVal)
 
-#Clay Paramters
-#KsVal = np.arange(-10,11,1)
-KintVal = np.array([0.15])
-#siteiVal = np.logspace(-8,0,num=9,endpoint=True)
-#siteiVal = np.array([2.53E-5]) #Clay value
-KsVal = np.arange(6,7.1,0.1)
-#sitesVal = np.arange(1E-7,1.1E-6,1E-7)
-sitesVal = np.array([1E-6])
-#KintVal = np.array([-3])
-ncol = np.size(KintVal)*np.size(KsVal)*np.size(sitesVal)
+#Clay Paramters 1 site
+##KsVal = np.arange(-10,11,1)
+#KintVal = np.array([0.15])
+##siteiVal = np.logspace(-8,0,num=9,endpoint=True)
+##siteiVal = np.array([2.53E-5]) #Clay value
+#KsVal = np.arange(6,7.1,0.1)
+#KsVal = np.array([6.4])
+##sitesVal = np.linspace(1E-7,1E-5,num=20,endpoint=True)
+#sitesVal = np.array([2E-7])
+##KintVal = np.array([-3])
+#ncol = np.size(KintVal)*np.size(KsVal)*np.size(sitesVal)
 
 cmap = sns.cubehelix_palette(n_colors=ncol,dark=0.3,rot=0.4,light=0.8,gamma=1.3)
 palette = itertools.cycle(cmap)
@@ -175,17 +176,18 @@ palette = itertools.cycle(cmap)
 #        simRes = x.getData()
 #        ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(k=K,site=site),color=next(palette))
 pos = 0.0
-for Kint in KintVal:
+for Kw in KwVal:
     for Ks in KsVal:
-        for sites in sitesVal:
-            x = simulation({'totRa':totRa,'K_int':Kint,'Ks':Ks,'sites':sites},tmp,db)
-            x.generateData()
-            x.addDataToMaster(writeMaster=True)
-            simRes = x.getData()
-            ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(Kint=Kint,Ks=Ks,sites=sites),color=next(palette))
-            pos = pos+1
-            per = pos/ncol
-            print '{:.2%}'.format(per)
+        for siteW in siteWVal:
+            for siteS in siteSVal:            
+                x = simulation({'totRa':totRa,'Kw':Kw,'Ks':Ks,'siteS':siteS,'siteW':siteW},tmp,db)
+                x.generateData()
+                x.addDataToMaster(writeMaster=True)
+                simRes = x.getData()
+                ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(Kw=Kw,Ks=Ks,siteS=siteS,siteW=siteW),color=next(palette))
+                pos = pos+1
+                per = pos/ncol
+                print '{:.2%}'.format(per)
 
         
 #Plot all of the data without differentiation
