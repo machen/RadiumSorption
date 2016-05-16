@@ -122,8 +122,8 @@ totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
 #db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
-tmp = "Montmorillonite 1 site CEC Model\Montmorillonite 1 site CEC model.txt"
-titleString = "Single site model with Catio Exchange, DDL, Na Mont. STX-1"
+tmp = "Montmorillonite 1 site CEC Model\Montmorillonite 1 site CEC model LiteratureSites.txt"
+titleString = "Single site model with Cation Exchange, DDL, Na Mont. STX-1"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
@@ -155,10 +155,10 @@ labelStr = "Cation exchange 1 site, Kint: {Kint}, Ks: {Ks}"
 
 #Clay Paramters
 #KsVal = np.arange(-10,11,1)
-KintVal = np.arange(0.1,0.24,0.01)
+KintVal = np.array([0.15])
 #siteiVal = np.logspace(-8,0,num=9,endpoint=True)
 #siteiVal = np.array([2.53E-5]) #Clay value
-KsVal = np.arange(-10,11,0.1)
+KsVal = np.arange(6,7.1,0.1)
 #KintVal = np.array([-3])
 ncol = np.size(KintVal)*np.size(KsVal)
 
@@ -179,7 +179,7 @@ for Kint in KintVal:
         x.generateData()
         x.addDataToMaster(writeMaster=True)
         simRes = x.getData()
-        ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(Kint=Kint,sitei=sitei),color=next(palette))
+        ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(Kint=Kint,Ks=Ks),color=next(palette))
         pos = pos+1
         per = pos/ncol
         print '{:.2%}'.format(per)

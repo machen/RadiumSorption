@@ -1,4 +1,4 @@
-SOLUTION_RAW                 1 
+SOLUTION_RAW                 2 
   -temp                      25
   -pressure                  1
   -total_h                   11.101982836254
@@ -32,17 +32,16 @@ SOLUTION_RAW                 1
     Ra(OH)+                  -0.044361468549528
     Ra+2                     -0.17744587419811
     RaCl+                    -0.044361468549528
-EXCHANGE_RAW                 1 Exchange assemblage after simulation 3.
+EXCHANGE_RAW                 1 Exchange assemblage after simulation 5.
   # EXCHANGE_MODIFY candidate identifiers #
   -exchange_gammas           1
   -component                 NaClay_i
     # EXCHANGE_MODIFY candidate identifiers #
     -totals
-      Clay_i                 1.0000000068901e-010
-      Na                     3.3458908393218e-011
-      Ra                     3.3270546147894e-011
+      Clay_i                 2.5300000057107e-005
+      Na                     2.5300000057107e-005
     -charge_balance          0
-    -la                      1.5242578810731
+    -la                      1.9997461141875
     -phase_proportion        0
     -formula_z               0
   # EXCHANGE_MODIFY candidates with new_def=true #
@@ -83,7 +82,7 @@ GAS_PHASE_RAW                1
 EQUILIBRIUM_PHASES_RAW       1 
   # EXCHANGE_MODIFY candidates; use new_def=true #
   -new_def                   0
-  -component                 NaCl
+  -component                 KCl
       # EQUILIBRIUM_PHASES_MODIFY candidate identifiers #
       -si                    0
       -moles                 10
@@ -98,19 +97,63 @@ EQUILIBRIUM_PHASES_RAW       1
   -component                 pH_set
       # EQUILIBRIUM_PHASES_MODIFY candidate identifiers #
       -add_formula           HCl
-      -si                    -2.2
+      -si                    -2
       -moles                 10
       -force_equality        0
       -dissolve_only         0
       -precipitate_only      0
       # PPassemblage workspace variables #
-      -si_org                -2.2
+      -si_org                -2
       -delta                 0
       -initial_moles         0
       -totals                
   -eltList                   # List of all elements in phases and alternate reactions
     Cl                       2
     H                        2
-    Na                       1
+    K                        1
   # PPassemblage workspace variables #
   -assemblage_totals
+SURFACE_RAW                  1 
+  # SURFACE_MODIFY candidate identifiers #
+  -type                      2
+  -dl_type                   0
+  -only_counter_ions         0
+  -thickness                 1e-008
+  -debye_lengths             0
+  -DDL_viscosity             1
+  -DDL_limit                 0.8
+  -component                 Clay_s
+    # SURFACE_MODIFY candidate identifiers #
+    -formula_z               0
+    -moles                   0.1
+    -la                      0
+    -charge_balance          0
+    -phase_proportion        0
+    -Dw                      0
+    -charge_name             Clay
+    -master_element          Clay_s
+    -totals
+      Clay_s                 0.1
+  -charge_component          Clay
+    # SURFACE_MODIFY candidate identifiers #
+    -specific_area           83.79
+    -grams                   0.03
+    -charge_balance          0
+    -mass_water              0
+    -la_psi                  0
+    -capacitance0            1
+    -capacitance1            5
+    -diffuse_layer_totals
+    # Surface workspace variables #
+    -sigma0                  0
+    -sigma1                  0
+    -sigma2                  0
+    -sigmaddl                0
+  # SURFACE_MODIFY candidates with new_def=true #
+  -new_def                   1
+  -sites_units               0
+  -solution_equilibria       0
+  -n_solution                -999
+  # Surface workspace variables #
+  -transport                 0
+  -totals                    

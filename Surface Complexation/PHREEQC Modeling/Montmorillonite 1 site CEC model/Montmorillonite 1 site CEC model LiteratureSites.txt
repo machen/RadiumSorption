@@ -24,7 +24,7 @@ Clay_sOH + Ra+2 = Clay_sOHRa+2
     log_k     $Ks
 
 SURFACE 1
-    Clay_s $sites 83.79 0.03 #STX-1 has an N2 surface area of 83.79 +/- 0.22 m^2/g. Number of sites based on 8.2E-3 mol sites/kg
+    Clay_s 2.5E-6 83.79 0.03 #STX-1 has an N2 surface area of 83.79 +/- 0.22 m^2/g. Number of sites based on 8.2E-3 mol sites/kg
 END
 SOLUTION 1
     temp      25
