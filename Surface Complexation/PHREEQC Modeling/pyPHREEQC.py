@@ -67,7 +67,7 @@ class simulation:
         matchData = copy.deepcopy(self.masterTable) #Creates a separate copy of the mastertable, which is then sliced according to the parameters in params
         if not matchData.empty: #Need to make sure matchData isn't empty before trying to slice it
             for key in params: #Iterate over all the keys in params, slicing out the master table data that matches within the error 1E-8. COULD SPECIFY ERROR IF WE WANTED
-                matchData = matchData.loc[abs(matchData.loc[:,key]-params[key])<1E-8,:]
+                matchData = matchData.loc[abs(matchData.loc[:,key]-params[key])<1E-14,:]
             return matchData
         else: #Returns empty dataframe if no match
             return matchData
@@ -91,7 +91,7 @@ class simulation:
         color = itertools.cycle(cmap)
         color2 = itertools.cycle(cmap)
         for colName in self.data.columns:
-            if colName.startswith(solidTag): #m_Fhy is a marker for solid species
+            if colName.startswith(solidTag) and "Ra" in colName: #m_Fhy is a marker for solid species
                 ax2.plot(self.data.ix[:,'pH'].values,self.data.ix[:,colName].values/totRa,'--',label=colName,color=next(color))
             elif colName.startswith("m_Ra"): #m_Ra is a marker for solution species
                 ax2.plot(self.data.ix[:,'pH'].values,self.data.ix[:,colName].values/totRa,'-',label=colName,color=next(color2))
@@ -115,14 +115,14 @@ def extractData(path):
     data = pd.read_excel(fileLoc)
     return data
              
-totRa = 5.979e-11
+totRa = 5.979e-10
 k1 = 6.66
 k2 = -5.67
 totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
 #db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
-tmp = "Montmorillonite 1 site CEC Model\Montmorillonite 1 site CEC model LiteratureSites.txt"
+tmp = "Montmorillonite 1 site CEC Model\Montmorillonite 1 site CEC model.txt"
 titleString = "Single site model with Cation Exchange, DDL, Na Mont. STX-1"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
@@ -138,7 +138,7 @@ f1.clf()
 ax = f1.add_subplot(111)
 
 
-labelStr = "Cation exchange 1 site, Kint: {Kint}, Ks: {Ks}"
+labelStr = "Cation exchange 1 site, Kint: {Kint}, Ks: {Ks} {sites} mol"
 
 #siteSVal = np.array([1.4E-6]) #mol
 #siteWVal = np.array([5.6E-5])
@@ -159,8 +159,10 @@ KintVal = np.array([0.15])
 #siteiVal = np.logspace(-8,0,num=9,endpoint=True)
 #siteiVal = np.array([2.53E-5]) #Clay value
 KsVal = np.arange(6,7.1,0.1)
+#sitesVal = np.arange(1E-7,1.1E-6,1E-7)
+sitesVal = np.array([1E-6])
 #KintVal = np.array([-3])
-ncol = np.size(KintVal)*np.size(KsVal)
+ncol = np.size(KintVal)*np.size(KsVal)*np.size(sitesVal)
 
 cmap = sns.cubehelix_palette(n_colors=ncol,dark=0.3,rot=0.4,light=0.8,gamma=1.3)
 palette = itertools.cycle(cmap)
@@ -175,14 +177,15 @@ palette = itertools.cycle(cmap)
 pos = 0.0
 for Kint in KintVal:
     for Ks in KsVal:
-        x = simulation({'totRa':totRa,'K_int':Kint,'Ks':Ks},tmp,db)
-        x.generateData()
-        x.addDataToMaster(writeMaster=True)
-        simRes = x.getData()
-        ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(Kint=Kint,Ks=Ks),color=next(palette))
-        pos = pos+1
-        per = pos/ncol
-        print '{:.2%}'.format(per)
+        for sites in sitesVal:
+            x = simulation({'totRa':totRa,'K_int':Kint,'Ks':Ks,'sites':sites},tmp,db)
+            x.generateData()
+            x.addDataToMaster(writeMaster=True)
+            simRes = x.getData()
+            ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(Kint=Kint,Ks=Ks,sites=sites),color=next(palette))
+            pos = pos+1
+            per = pos/ncol
+            print '{:.2%}'.format(per)
 
         
 #Plot all of the data without differentiation
@@ -192,6 +195,7 @@ exp5 = expData.ix[expData['Total Activity']==5,:]
 exp10 = expData.ix[expData['Total Activity']==10,:]
 exp50 = expData.ix[expData['Total Activity']==50,:]
 exp100 = expData.ix[expData['Total Activity']==100,:]
+exp250 = expData.ix[expData['Total Activity']==250,:]
 exp500 = expData.ix[expData['Total Activity']==500,:]
 
 if not exp5.empty:
@@ -202,6 +206,8 @@ if not exp50.empty:
     exp50Plot = ax.errorbar(exp50.ix[:,'pH'].values,exp50.ix[:,'fSorb'].values,xerr=exp50.ix[:,'spH'].values,yerr=exp50.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 50 Bq Total')
 if not exp100.empty:
     exp100Plot = ax.errorbar(exp100.ix[:,'pH'].values,exp100.ix[:,'fSorb'].values,xerr=exp100.ix[:,'spH'].values,yerr=exp100.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 100 Bq Total')
+if not exp250.empty:
+    exp250Plot = ax.errorbar(exp250.ix[:,'pH'].values,exp250.ix[:,'fSorb'].values,xerr=exp250.ix[:,'spH'].values,yerr=exp250.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 250 Bq Total')
 if not exp500.empty:
     exp500Plot = ax.errorbar(exp500.ix[:,'pH'].values,exp500.ix[:,'fSorb'].values,xerr=exp500.ix[:,'spH'].values,yerr=exp500.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 500 Bq Total')
 
