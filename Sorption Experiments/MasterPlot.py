@@ -54,10 +54,10 @@ f3 = plt.figure(3)
 f3.clf()
 ax3 = f3.add_subplot(111)
 pHvals  = [3,5,7,9]
-fhyPal = sns.cubehelix_palette(n_colors=4,dark=0.3,rot=0.2,light=0.8,gamma=1.3)
-montPal = sns.cubehelix_palette(n_colors=4,dark=0.3,rot=-0.2,light=0.8,gamma=1.3)
-goePal = sns.cubehelix_palette(n_colors=4,dark=0.3,rot=0,light=0.8,gamma=1.3)
-pyrPal = sns.cubehelix_palette(n_colors=4,dark=0.3,rot=0.4,light=0.8,gamma=1.3)
+fhyPal = sns.color_palette("Blues_d",4)#sns.cubehelix_palette(n_colors=4,dark=0.3,start=0.2,light=0.8,gamma=1.3,rot=0.2)
+montPal = sns.color_palette("Greens_d",4)#sns.cubehelix_palette(n_colors=4,dark=0.3,start=-0.2,light=0.8,gamma=1.3,rot=0.2)
+goePal = sns.color_palette("Reds_d",4) #sns.cubehelix_palette(n_colors=4,dark=0.3,start=0,light=0.8,gamma=1.3,rot=0.2)
+pyrPal = sns.color_palette("Purples_d",4) # sns.cubehelix_palette(n_colors=4,dark=0.3,start=0.4,light=0.8,gamma=1.3,rot=0.2)
 
 for i in range(4):
     pH = pHvals[i]
