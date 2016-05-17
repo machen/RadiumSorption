@@ -138,10 +138,10 @@ f1.clf()
 ax = f1.add_subplot(111)
 
 
-labelStr = "Cation exchange 1 site, Kint: {Kint}, Ks: {Ks} {siteS} mol, Kw: {Kw} {siteW} mol"
+labelStr = "Cation exchange 2 site, Ks: {Ks} {siteS} mol, Kw: {Kw} {siteW} mol"
 
-siteSVal = np.array([6E-8]) #mol, should also try 2E-7, which best fit 1 site data
-siteWVal = np.array([1.2E-6]) #mol from 4E-2 mol site, should try other values
+siteSVal = np.logspace(-8,-4,num=5,endpoint=True) #mol, should also try 2E-7, which best fit 1 site data
+siteWVal = np.logspace(-7,-3,num=5,endpoint=True) #mol from 4E-2 mol site, should try other values
 KsVal = np.arange(0,10.1,1)
 #KsVal = np.array([7])
 KwVal = np.array([-5.67])
