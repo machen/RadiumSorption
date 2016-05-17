@@ -22,7 +22,7 @@ class simulation:
             self.templStr = Template(tempFile.read()) #Template allows for easy pythonic substitution of the model parameters into a given run of the model (template files formatted assuming this is used)
         self.templFile = templateFile #Location of the template, which is the key linked to the master table of data that have already been run
         self.db = database #Thermodynamic database to use for simulations
-        if masterTable:
+        if masterTable is not None:
             self.masterTable = masterTable #Can preload the master table, and keep it updated during execution instead of having to read/write each time
         else:
             self.masterTable = self.loadMaster() #Loads master table into memory
@@ -123,6 +123,7 @@ totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
 #db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
 tmp = "Montmorillonite 2 site CEC Model\Montmorillonite 2 site CEC model.txt"
+#masterFile = pd.read_csv(tmp[:-4]+'.csv')
 titleString = "Single site model with Cation Exchange, DDL, Na Mont. STX-1"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
@@ -140,12 +141,14 @@ ax = f1.add_subplot(111)
 
 labelStr = "Cation exchange 2 site, Ks: {Ks} {siteS} mol, Kw: {Kw} {siteW} mol"
 
-siteSVal = np.logspace(-8,-4,num=5,endpoint=True) #mol, should also try 2E-7, which best fit 1 site data
-siteWVal = np.logspace(-7,-3,num=5,endpoint=True) #mol from 4E-2 mol site, should try other values
-KsVal = np.arange(0,10.1,1)
-#KsVal = np.array([7])
-KwVal = np.array([-5.67])
-KwVal = np.arange(0,10.1,1)
+#siteSVal = np.logspace(-8,-4,num=5,endpoint=True)
+siteSVal = np.array([1E-7]) 
+#siteWVal = np.logspace(-8,-3,num=6,endpoint=True) 
+siteWVal = np.array([1E-6])
+#KsVal = np.arange(0,10.1,2)
+KsVal = np.array([7.5])
+KwVal = np.array([0])
+#KwVal = np.arange(-10,0.1,2)
 ncol = np.size(siteSVal)*np.size(KsVal)*np.size(KwVal)*np.size(siteWVal)
 
 #siteVal = np.array([1.92E-6])
@@ -188,8 +191,7 @@ for Kw in KwVal:
                 pos = pos+1
                 per = pos/ncol
                 print '{:.2%}'.format(per)
-
-        
+ 
 #Plot all of the data without differentiation
 #expPlot = ax.errorbar(expData.ix[:,'pH'],expData.ix[:,'fSorb'],xerr=expData.ix[:,'spH'],yerr=expData.ix[:,'sfSorb'],fmt='o',label='Experimental Data')
 
@@ -220,3 +222,5 @@ ax.set_xlabel('pH')
 ax.set_ylabel('Fraction Sorbed')
 ax.set_ylim([-0.01,1.0])
 plt.show()
+
+x.plotSpeciation(solidTag="m_Clay")
