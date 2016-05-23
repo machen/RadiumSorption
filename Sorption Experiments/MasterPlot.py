@@ -18,6 +18,13 @@ pyrData = data.ix[data.ix[:,'Mineral']=='Pyrite']
 
 plt.close("all") #Close all open figures
 
+#Set marker behavior here
+mpl.rcParams["lines.markeredgewidth"] = 1
+mpl.rcParams["markers.fillstyle"] = "none"
+mpl.rcParams["errorbar.capsize"] = 5
+mpl.rcParams["lines.linewidth"] = 1
+mpl.rcParams["lines.markersize"] = 10
+
 #Metaplot of all data: Sorption Envelope
 
 f1, ax = plt.subplots(1,1,figsize=(20,10))
@@ -36,13 +43,13 @@ sns.despine()
 
 f2, ax2 = plt.subplots(1,1,figsize=(20,10))
 fhyP = ax2.errorbar(FHYdata.ix[:,'Cw (Bq/mL)'].values,FHYdata.ix[:,'Cs (Bq/g)'].values,xerr=FHYdata.ix[:,'sCw (Bq/mL)'].values,yerr=FHYdata.ix[:,'sCs (Bq/g)'].values,fmt='s',label='Ferrihydrite',mfc=
-'None',markersize=10,markeredgewidth=1,elinewidth=1,mec=sns.color_palette()[0],capsize=5)
+'None',mec=sns.color_palette()[0])
 montP = ax2.errorbar(montData.ix[:,'Cw (Bq/mL)'].values,montData.ix[:,'Cs (Bq/g)'].values,xerr=montData.ix[:,'sCw (Bq/mL)'].values,yerr=montData.ix[:,'sCs (Bq/g)'].values,fmt='o',label='Na Montmorillonite',mfc=
-'None',markersize=10,markeredgewidth=1,elinewidth=1,mec=sns.color_palette()[1],capsize=5)
+'None',mec=sns.color_palette()[1])
 goeP = ax2.errorbar(goeData.ix[:,'Cw (Bq/mL)'].values,goeData.ix[:,'Cs (Bq/g)'].values,xerr=goeData.ix[:,'sCw (Bq/mL)'].values,yerr=goeData.ix[:,'sCs (Bq/g)'].values,fmt='^',label='Goethite',mfc=
-'None',markersize=10,markeredgewidth=1,elinewidth=1,mec=sns.color_palette()[2],capsize=5)
+'None',mec=sns.color_palette()[2])
 pyrP = ax2.errorbar(pyrData.ix[:,'Cw (Bq/mL)'].values,pyrData.ix[:,'Cs (Bq/g)'].values,xerr=pyrData.ix[:,'sCw (Bq/mL)'].values,yerr=pyrData.ix[:,'sCs (Bq/g)'].values,fmt='p',label='Pyrite',mfc=
-'None',markersize=10,markeredgewidth=1,elinewidth=1,mec=sns.color_palette()[3],capsize=5)
+'None',mec=sns.color_palette()[3])
 
 handles, labels = ax2.get_legend_handles_labels()
 handles = [h[0] for h in handles]
@@ -62,6 +69,7 @@ sns.despine()
 f3, ax3 = plt.subplots(2,2,sharex='col',sharey='row',figsize=(20,10))
 pHvals  = [3,5,7,9]
 markerStyles = ['o','^','s','p']
+lineStyles = ["-","--","-.",":"]
 fhyPal = sns.color_palette("Blues_d",4)#sns.cubehelix_palette(n_colors=4,dark=0.3,start=0.2,light=0.8,gamma=1.3,rot=0.2)
 montPal = sns.color_palette("Greens_d",4)#sns.cubehelix_palette(n_colors=4,dark=0.3,start=-0.2,light=0.8,gamma=1.3,rot=0.2)
 goePal = sns.color_palette("Reds_d",4) #sns.cubehelix_palette(n_colors=4,dark=0.3,start=0,light=0.8,gamma=1.3,rot=0.2)
@@ -81,8 +89,8 @@ for i in range(4):
         sCw = fhySub.ix[:,'sCw (Bq/mL)'].values
         sCs = fhySub.ix[:,'sCs (Bq/g)'].values
         [slope,inter,rval,pval,stdErr] = linregress(Cw,Cs)  
-        ax3[0,0].plot(Cw,np.polyval([slope,inter],Cw),ls='-',lw=1.5,label=None,color=fhyPal[i])
-        ax3[0,0].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],label='pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),ls='None',color=fhyPal[i],elinewidth=1.5)
+        ax3[0,0].plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color=fhyPal[i])
+        ax3[0,0].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],label='pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),ls='None',color=fhyPal[i])
         ax3[0,0].legend(loc=0)
         ax3[0,0].set_title('Ferrihydrite')
         ax3[0,0].set_xlim(xlim)
@@ -94,7 +102,7 @@ for i in range(4):
         sCw = montSub.ix[:,'sCw (Bq/mL)'].values
         sCs = montSub.ix[:,'sCs (Bq/g)'].values
         [slope,inter,rval,pval,stdErr] = linregress(Cw,Cs)  
-        ax3[1,0].plot(Cw,np.polyval([slope,inter],Cw),ls='-',lw=1.5,label=None,color=montPal[i])
+        ax3[1,0].plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color=montPal[i])
         ax3[1,0].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],ls="none",label='pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),color=montPal[i],elinewidth=1.5)
         ax3[1,0].legend(loc=0)
         ax3[1,0].set_title('Sodium Montmorillonite')
@@ -108,7 +116,7 @@ for i in range(4):
         sCw = goeSub.ix[:,'sCw (Bq/mL)'].values
         sCs = goeSub.ix[:,'sCs (Bq/g)'].values
         [slope,inter,rval,pval,stdErr] = linregress(Cw,Cs)  
-        ax3[0,1].plot(Cw,np.polyval([slope,inter],Cw),ls='-',lw=1.5,label=None,color=goePal[i])
+        ax3[0,1].plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color=goePal[i])
         ax3[0,1].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],ls='None',label='pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),color=goePal[i],elinewidth=1.5)
         ax3[0,1].set_title('Goethite')
         ax3[0,1].legend(loc=0)
@@ -120,7 +128,7 @@ for i in range(4):
         sCw = pyrSub.ix[:,'sCw (Bq/mL)'].values
         sCs = pyrSub.ix[:,'sCs (Bq/g)'].values
         [slope,inter,rval,pval,stdErr] = linregress(Cw,Cs)  
-        ax3[1,1].plot(Cw,np.polyval([slope,inter],Cw),ls='-',lw=1.5,label=None,color=pyrPal[i])
+        ax3[1,1].plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color=pyrPal[i])
         ax3[1,1].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],ls='None',label='pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),color=pyrPal[i],elinewidth=1.5)
         ax3[1,1].set_title('Pyrite')
         ax3[1,1].legend(loc=0)
