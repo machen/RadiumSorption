@@ -7,7 +7,7 @@ Created on Wed Apr 06 16:47:14 2016
 
 import pandas as pd, numpy as np, matplotlib as mpl, matplotlib.pyplot as plt, seaborn as sns
 from scipy.stats import linregress
-sns.set_context('talk')
+sns.set_context('poster')
 sns.set_style("ticks")
 data = pd.read_excel("Sorption Experiment Master Table.xlsx",header=0)
 data = data.ix[data.ix[:,"Include?"]==True,:] #Toggle if you only want to plot data flagged to include
@@ -16,13 +16,11 @@ montData = data.ix[data.ix[:,'Mineral']=='Sodium Montmorillonite']
 goeData = data.ix[data.ix[:,'Mineral']=='Goethite']
 pyrData = data.ix[data.ix[:,'Mineral']=='Pyrite']
 
-
+plt.close("all") #Close all open figures
 
 #Metaplot of all data: Sorption Envelope
 
-f1 = plt.figure(1)
-f1.clf()
-ax = f1.add_subplot(111)
+f1, ax = plt.subplots(1,1,figsize=(20,10))
 fhyP = ax.errorbar(FHYdata.ix[:,'pH'].values,FHYdata.ix[:,'fSorb'].values,xerr=FHYdata.ix[:,'spH'].values,yerr=FHYdata.ix[:,'sfSorb'].values,fmt='o',label='Ferrihydrite')
 montP = ax.errorbar(montData.ix[:,'pH'].values,montData.ix[:,'fSorb'].values,xerr=montData.ix[:,'spH'].values,yerr=montData.ix[:,'sfSorb'].values,fmt='o',label='Na Montmorillonite')
 goeP = ax.errorbar(goeData.ix[:,'pH'].values,goeData.ix[:,'fSorb'].values,xerr=goeData.ix[:,'spH'].values,yerr=goeData.ix[:,'sfSorb'].values,fmt='o',label='Goethite')
@@ -34,24 +32,34 @@ plt.ylim([0,1])
 plt.legend(loc=0)
 plt.show()
 sns.despine()
-##Metaplot of all data: Sorption isotherm
-#
-#f2 = plt.figure(2)
-#f2.clf()
-#ax2 = f2.add_subplot(111)
-#fhyP = ax2.errorbar(FHYdata.ix[:,'Cw (Bq/mL)'].values,FHYdata.ix[:,'Cs (Bq/g)'].values,xerr=FHYdata.ix[:,'sCw (Bq/mL)'].values,yerr=FHYdata.ix[:,'sCs (Bq/g)'].values,fmt='o',label='Ferrihydrite')
-#montP = ax2.errorbar(montData.ix[:,'Cw (Bq/mL)'].values,montData.ix[:,'Cs (Bq/g)'].values,xerr=montData.ix[:,'sCw (Bq/mL)'].values,yerr=montData.ix[:,'sCs (Bq/g)'].values,fmt='o',label='Na Montmorillonite')
-#goeP = ax2.errorbar(goeData.ix[:,'Cw (Bq/mL)'].values,goeData.ix[:,'Cs (Bq/g)'].values,xerr=goeData.ix[:,'sCw (Bq/mL)'].values,yerr=goeData.ix[:,'sCs (Bq/g)'].values,fmt='o',label='Goethite')
-#pyrP = ax2.errorbar(pyrData.ix[:,'Cw (Bq/mL)'].values,pyrData.ix[:,'Cs (Bq/g)'].values,xerr=pyrData.ix[:,'sCw (Bq/mL)'].values,yerr=pyrData.ix[:,'sCs (Bq/g)'].values,fmt='o',label='Pyrite')
-#plt.xlabel('Cw (Bq/mL)')
-#plt.ylabel('Cs (Bq/g)')
-#plt.title('Sorption Isotherms')
+#Metaplot of all data: Sorption isotherm
+
+f2, ax2 = plt.subplots(1,1,figsize=(20,10))
+fhyP = ax2.errorbar(FHYdata.ix[:,'Cw (Bq/mL)'].values,FHYdata.ix[:,'Cs (Bq/g)'].values,xerr=FHYdata.ix[:,'sCw (Bq/mL)'].values,yerr=FHYdata.ix[:,'sCs (Bq/g)'].values,fmt='s',label='Ferrihydrite',mfc=
+'None',markersize=10,markeredgewidth=1,elinewidth=1,mec=sns.color_palette()[0],capsize=5)
+montP = ax2.errorbar(montData.ix[:,'Cw (Bq/mL)'].values,montData.ix[:,'Cs (Bq/g)'].values,xerr=montData.ix[:,'sCw (Bq/mL)'].values,yerr=montData.ix[:,'sCs (Bq/g)'].values,fmt='o',label='Na Montmorillonite',mfc=
+'None',markersize=10,markeredgewidth=1,elinewidth=1,mec=sns.color_palette()[1],capsize=5)
+goeP = ax2.errorbar(goeData.ix[:,'Cw (Bq/mL)'].values,goeData.ix[:,'Cs (Bq/g)'].values,xerr=goeData.ix[:,'sCw (Bq/mL)'].values,yerr=goeData.ix[:,'sCs (Bq/g)'].values,fmt='^',label='Goethite',mfc=
+'None',markersize=10,markeredgewidth=1,elinewidth=1,mec=sns.color_palette()[2],capsize=5)
+pyrP = ax2.errorbar(pyrData.ix[:,'Cw (Bq/mL)'].values,pyrData.ix[:,'Cs (Bq/g)'].values,xerr=pyrData.ix[:,'sCw (Bq/mL)'].values,yerr=pyrData.ix[:,'sCs (Bq/g)'].values,fmt='p',label='Pyrite',mfc=
+'None',markersize=10,markeredgewidth=1,elinewidth=1,mec=sns.color_palette()[3],capsize=5)
+
+handles, labels = ax2.get_legend_handles_labels()
+handles = [h[0] for h in handles]
+ax2.legend(handles,labels,loc=0,numpoints=1)
+
+plt.xlabel('Cw (Bq/mL)')
+plt.ylabel('Cs (Bq/g)')
+plt.title('Sorption Isotherms')
+plt.xlim([-0.1,2.9])
+plt.ylim([-100,8700])
 #plt.legend(loc=0)
-#plt.show()
-#sns.despine()
+plt.show()
+sns.despine()
+
 #Plot of Isotherms separated by pH, along with isotherm fits
 
-f3, ax3 = plt.subplots(2,2,sharex='col',sharey='row')
+f3, ax3 = plt.subplots(2,2,sharex='col',sharey='row',figsize=(20,10))
 pHvals  = [3,5,7,9]
 markerStyles = ['o','^','s','p']
 fhyPal = sns.color_palette("Blues_d",4)#sns.cubehelix_palette(n_colors=4,dark=0.3,start=0.2,light=0.8,gamma=1.3,rot=0.2)
@@ -125,6 +133,5 @@ for i in range(4):
 #plt.legend(loc=0)
 sns.despine()
 plt.show()
-
-f1.savefig('MasterTablePlots\\Sorption Envelope.svg',DPI=900)
-f3.savefig('MasterTablePlots\\Sorption Isotherms.svg',DPI=900)
+f1.savefig('MasterTablePlots\\Sorption Envelope.svg',dpi=1000)
+f3.savefig('MasterTablePlots\\Sorption Isotherms.svg',dpi=1000)
