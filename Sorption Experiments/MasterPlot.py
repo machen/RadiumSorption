@@ -8,7 +8,7 @@ Created on Wed Apr 06 16:47:14 2016
 import pandas as pd, numpy as np, matplotlib as mpl, matplotlib.pyplot as plt, seaborn as sns
 from scipy.stats import linregress
 sns.set_context('poster')
-sns.set_style("ticks")
+sns.set_style("ticks",rc={"font.size":48})
 data = pd.read_excel("Sorption Experiment Master Table.xlsx",header=0)
 data = data.ix[data.ix[:,"Include?"]==True,:] #Toggle if you only want to plot data flagged to include
 FHYdata = data.ix[data.ix[:,'Mineral']=="Ferrihydrite",:]
@@ -18,12 +18,20 @@ pyrData = data.ix[data.ix[:,'Mineral']=='Pyrite']
 
 plt.close("all") #Close all open figures
 
-#Set marker behavior here
-mpl.rcParams["lines.markeredgewidth"] = 1
+#Set plotting behavior here
+mpl.rcParams["lines.markeredgewidth"] = 2
 mpl.rcParams["markers.fillstyle"] = "none"
-mpl.rcParams["errorbar.capsize"] = 5
-mpl.rcParams["lines.linewidth"] = 1
-mpl.rcParams["lines.markersize"] = 10
+mpl.rcParams["errorbar.capsize"] = 10
+mpl.rcParams["lines.linewidth"] = 2
+mpl.rcParams["lines.markersize"] = 20
+mpl.rcParams["svg.fonttype"] = "none"
+#mpl.rcParams["font.size"] = 48
+#mpl.rcParams["axes.labelsize"] = "large"
+#mpl.rcParams["axes.labelpad"] = 10.0
+#mpl.rcParams["xtick.labelsize"] = "large"
+#mpl.rcParams["ytick.labelsize"] = "large"
+
+
 
 #Metaplot of all data: Sorption Envelope
 
