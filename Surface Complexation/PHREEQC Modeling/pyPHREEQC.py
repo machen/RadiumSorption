@@ -123,9 +123,9 @@ totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
 #db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
-tmp = "FHY SSM DDL Results\FHY Single site model DDL.txt"
+tmp = "GOE DDL Results\GOE Single site model DDL.txt"
 #masterFile = pd.read_csv(tmp[:-4]+'.csv')
-titleString = "Single site model, Ferrihydrite"
+titleString = "Single site model, Goethite"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
@@ -133,7 +133,7 @@ sns.set_palette("deep",n_colors = 6)
 #Find experimental data to use
 expData = extractData('..\..\Sorption Experiments\Sorption Experiment Master Table.xlsx')
 expData = expData.ix[expData.ix[:,'Include?']==True,:] #Select only data that's been vetted
-expData = expData.ix[expData.ix[:,'Mineral']=="Ferrihydrite"]
+expData = expData.ix[expData.ix[:,'Mineral']=="Goethite"]
 
 f1 = plt.figure(num=1,figsize=(10,8))
 f1.clf()
@@ -152,10 +152,10 @@ pos = 0.0
 ##KwVal = np.arange(-10,0.1,2)
 #ncol = np.size(siteSVal)*np.size(KsVal)*np.size(KwVal)*np.size(siteWVal)
 
-siteVal = np.array([5E-5]) #Ferrihydrite Nsites consistent with Sajh. Low sensitivity at this activity range
-#siteVal = np.arange(5E-5,6.1E-5,1E-6)
-#Kval = np.array([5.6])
-Kval = np.arange(5,6.1,0.1)
+siteVal = np.array([1.1E-5]) 
+#siteVal = np.arange(9E-6,20E-6,1E-6)
+#Kval = np.array([3.5])
+Kval = np.arange(0,10.1,1)
 ncol = np.size(Kval)*np.size(siteVal)
 
 #Clay Paramters 1 site
