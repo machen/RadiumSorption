@@ -123,9 +123,9 @@ totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
 #db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
-tmp = "GOE DDL Results\GOE Single site model DDL.txt"
+tmp = "Montmorillonite 1 site CEC model/Montmorillonite 1 site CEC model.txt"
 #masterFile = pd.read_csv(tmp[:-4]+'.csv')
-titleString = "Single site model, Goethite"
+titleString = "Single site model, Sodium Montmorillonite with Exchange"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
@@ -133,14 +133,14 @@ sns.set_palette("deep",n_colors = 6)
 #Find experimental data to use
 expData = extractData('..\..\Sorption Experiments\Sorption Experiment Master Table.xlsx')
 expData = expData.ix[expData.ix[:,'Include?']==True,:] #Select only data that's been vetted
-expData = expData.ix[expData.ix[:,'Mineral']=="Goethite"]
+expData = expData.ix[expData.ix[:,'Mineral']=="Sodium Montmorillonite"]
 
 f1 = plt.figure(num=1,figsize=(10,8))
 f1.clf()
 ax = f1.add_subplot(111)
 
 
-labelStr = "1 site, K: {k1} {sites} mol"
+labelStr = "1 site, K: {Ks} {sites} mol, Kint: {Kint}"
 pos = 0.0
 ##siteSVal = np.logspace(-8,-4,num=5,endpoint=True)
 #siteSVal = np.array([1E-7]) 
@@ -152,12 +152,12 @@ pos = 0.0
 ##KwVal = np.arange(-10,0.1,2)
 #ncol = np.size(siteSVal)*np.size(KsVal)*np.size(KwVal)*np.size(siteWVal)
 
-siteVal = np.array([1.1E-5]) 
-#siteVal = np.arange(9E-6,20E-6,1E-6)
-#Kval = np.array([3.5])
-Kval = np.arange(0,10.1,1)
+siteVal = np.array([2E-7]) 
+#siteVal = np.logspace(-8,-2,num=7,endpoint=True)
+Kval = np.array([6.4])
+#Kval = np.arange(0,10.1,1)
 ncol = np.size(Kval)*np.size(siteVal)
-
+Kint = 0.15
 #Clay Paramters 1 site
 ##KsVal = np.arange(-10,11,1)
 #KintVal = np.array([0.15])
@@ -173,29 +173,27 @@ ncol = np.size(Kval)*np.size(siteVal)
 cmap = sns.cubehelix_palette(n_colors=ncol,dark=0.3,rot=0.4,light=0.8,gamma=1.3)
 palette = itertools.cycle(cmap)
 #
-for K in Kval:
-    for site in siteVal:
-        x = simulation({'totRa':totRa,'k1':K,'sites':site},tmp,db)
-        x.generateData()
-        x.addDataToMaster(writeMaster=True)
-        simRes = x.getData()
-        ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(k1=K,sites=site),color=next(palette))
-        pos = pos+1
-        per = pos/ncol
-        print '{:.2%}'.format(per)
-#for Kw in KwVal:
-#    for Ks in KsVal:
-#        for siteW in siteWVal:
-#            for siteS in siteSVal:            
-#                x = simulation({'totRa':totRa,'Kw':Kw,'Ks':Ks,'siteS':siteS,'siteW':siteW},tmp,db)
-#                x.generateData()
-#                x.addDataToMaster(writeMaster=True)
-#                simRes = x.getData()
-#                ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(Kw=Kw,Ks=Ks,siteS=siteS,siteW=siteW),color=next(palette))
-#                pos = pos+1
-#                per = pos/ncol
-#                print '{:.2%}'.format(per)
-# 
+#for K in Kval:
+#    for site in siteVal:
+#        x = simulation({'totRa':totRa,'k1':K,'sites':site},tmp,db)
+#        x.generateData()
+#        x.addDataToMaster(writeMaster=True)
+#        simRes = x.getData()
+#        ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(k1=K,sites=site),color=next(palette))
+#        pos = pos+1
+#        per = pos/ncol
+#        print '{:.2%}'.format(per)
+for Ks in Kval:
+    for sites in siteVal:            
+            x = simulation({'totRa':totRa,'Ks':Ks,'sites':sites,'K_int':Kint},tmp,db)
+            x.generateData()
+            x.addDataToMaster(writeMaster=True)
+            simRes = x.getData()
+            ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(Ks=Ks,sites=sites,Kint=Kint),color=next(palette))
+            pos = pos+1
+            per = pos/ncol
+            print '{:.2%}'.format(per)
+ 
 #Plot all of the data without differentiation
 #expPlot = ax.errorbar(expData.ix[:,'pH'],expData.ix[:,'fSorb'],xerr=expData.ix[:,'spH'],yerr=expData.ix[:,'sfSorb'],fmt='o',label='Experimental Data')
 
@@ -227,4 +225,4 @@ ax.set_ylabel('Fraction Sorbed')
 ax.set_ylim([-0.01,1.0])
 plt.show()
 
-x.plotSpeciation(solidTag="m_Fhy")
+x.plotSpeciation(solidTag="m_Clay")
