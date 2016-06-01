@@ -5,7 +5,7 @@ Created on Wed Mar 09 17:44:02 2016
 @author: Michael
 """
 
-#Script to plot surface complexation results. 
+#Script to plot and generate surface complexation results. 
 
 import pandas as pd, numpy as np, matplotlib as mpl, matplotlib.pyplot as plt, seaborn as sns
 from win32com.client import Dispatch
@@ -114,6 +114,14 @@ def extractData(path):
     fileLoc = path
     data = pd.read_excel(fileLoc)
     return data
+
+#Plotting
+mpl.rcParams["lines.markeredgewidth"] = 2
+mpl.rcParams["markers.fillstyle"] = "none"
+mpl.rcParams["errorbar.capsize"] = 5
+mpl.rcParams["lines.linewidth"] = 1
+mpl.rcParams["lines.markersize"] = 20
+mpl.rcParams["svg.fonttype"] = "none"
        
 specAct = 6.02E23*np.log(2)/(1600*365*24*60*60) #Gets Bq/mol       
 totRa = 270/specAct/0.1 #Mol/L Ra-226
@@ -205,24 +213,31 @@ exp250 = expData.ix[expData['Total Activity']==250,:]
 exp500 = expData.ix[expData['Total Activity']==500,:]
 
 if not exp5.empty:
-    exp5Plot = ax.errorbar(exp5.ix[:,'pH'].values,exp5.ix[:,'fSorb'].values,xerr=exp5.ix[:,'spH'].values,yerr=exp5.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 5 Bq Total')
+    exp5Plot = ax.errorbar(exp5.ix[:,'pH'].values,exp5.ix[:,'fSorb'].values,xerr=exp5.ix[:,'spH'].values,yerr=exp5.ix[:,'sfSorb'].values,fmt='D',label='Experimental Data 5 Bq Total')
 if not exp10.empty:
-    exp10Plot = ax.errorbar(exp10.ix[:,'pH'].values,exp10.ix[:,'fSorb'].values,xerr=exp10.ix[:,'spH'].values,yerr=exp10.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 10 Bq Total')
+    exp10Plot = ax.errorbar(exp10.ix[:,'pH'].values,exp10.ix[:,'fSorb'].values,xerr=exp10.ix[:,'spH'].values,yerr=exp10.ix[:,'sfSorb'].values,fmt='^',label='Experimental Data 10 Bq Total')
 if not exp50.empty:
-    exp50Plot = ax.errorbar(exp50.ix[:,'pH'].values,exp50.ix[:,'fSorb'].values,xerr=exp50.ix[:,'spH'].values,yerr=exp50.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 50 Bq Total')
+    exp50Plot = ax.errorbar(exp50.ix[:,'pH'].values,exp50.ix[:,'fSorb'].values,xerr=exp50.ix[:,'spH'].values,yerr=exp50.ix[:,'sfSorb'].values,fmt='p',label='Experimental Data 50 Bq Total')
 if not exp100.empty:
-    exp100Plot = ax.errorbar(exp100.ix[:,'pH'].values,exp100.ix[:,'fSorb'].values,xerr=exp100.ix[:,'spH'].values,yerr=exp100.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 100 Bq Total')
+    exp100Plot = ax.errorbar(exp100.ix[:,'pH'].values,exp100.ix[:,'fSorb'].values,xerr=exp100.ix[:,'spH'].values,yerr=exp100.ix[:,'sfSorb'].values,fmt='s',label='Experimental Data 100 Bq Total')
 if not exp250.empty:
-    exp250Plot = ax.errorbar(exp250.ix[:,'pH'].values,exp250.ix[:,'fSorb'].values,xerr=exp250.ix[:,'spH'].values,yerr=exp250.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 250 Bq Total')
+    exp250Plot = ax.errorbar(exp250.ix[:,'pH'].values,exp250.ix[:,'fSorb'].values,xerr=exp250.ix[:,'spH'].values,yerr=exp250.ix[:,'sfSorb'].values,fmt='^',label='Experimental Data 250 Bq Total')
 if not exp500.empty:
     exp500Plot = ax.errorbar(exp500.ix[:,'pH'].values,exp500.ix[:,'fSorb'].values,xerr=exp500.ix[:,'spH'].values,yerr=exp500.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 500 Bq Total')
 
+handles, labels = ax.get_legend_handles_labels()
+try:
+    handles = [h[0] for h in handles]
+except TypeError:
+    pass
+ax.legend(handles,labels,loc=0,numpoints=1)
 
-ax.legend(loc=0)
+#ax.legend(loc=0)
 ax.set_title(titleString)
 ax.set_xlabel('pH')
 ax.set_ylabel('Fraction Sorbed')
 ax.set_ylim([-0.01,1.0])
+sns.despine()
 plt.show()
 
 x.plotSpeciation(solidTag="m_Clay")

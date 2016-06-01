@@ -21,8 +21,8 @@ plt.close("all") #Close all open figures
 #Set plotting behavior here
 mpl.rcParams["lines.markeredgewidth"] = 2
 mpl.rcParams["markers.fillstyle"] = "none"
-mpl.rcParams["errorbar.capsize"] = 10
-mpl.rcParams["lines.linewidth"] = 2
+mpl.rcParams["errorbar.capsize"] = 5
+mpl.rcParams["lines.linewidth"] = 1
 mpl.rcParams["lines.markersize"] = 20
 mpl.rcParams["svg.fonttype"] = "none"
 #mpl.rcParams["font.size"] = 48
@@ -59,6 +59,7 @@ goeP = ax2.errorbar(goeData.ix[:,'Cw (Bq/mL)'].values,goeData.ix[:,'Cs (Bq/g)'].
 pyrP = ax2.errorbar(pyrData.ix[:,'Cw (Bq/mL)'].values,pyrData.ix[:,'Cs (Bq/g)'].values,xerr=pyrData.ix[:,'sCw (Bq/mL)'].values,yerr=pyrData.ix[:,'sCs (Bq/g)'].values,fmt='p',label='Pyrite',mfc=
 'None',mec=sns.color_palette()[3])
 
+#Remove errorbars from legend
 handles, labels = ax2.get_legend_handles_labels()
 handles = [h[0] for h in handles]
 ax2.legend(handles,labels,loc=0,numpoints=1)
@@ -75,6 +76,10 @@ sns.despine()
 #Plot of Isotherms separated by pH, along with isotherm fits
 
 f3, ax3 = plt.subplots(2,2,sharex='col',sharey='row',figsize=(20,10))
+f4 = plt.figure(4)
+ax4 = f4.add_subplot(111) #pH 7, all minerals
+f5 = plt.figure(5) #Ferrihydrite, all minerals
+ax5 = f5.add_subplot(111)
 pHvals  = [3,5,7,9]
 markerStyles = ['o','^','s','p']
 lineStyles = ["-","--","-.",":"]
@@ -83,7 +88,7 @@ montPal = sns.color_palette("Greens_d",4)#sns.cubehelix_palette(n_colors=4,dark=
 goePal = sns.color_palette("Reds_d",4) #sns.cubehelix_palette(n_colors=4,dark=0.3,start=0,light=0.8,gamma=1.3,rot=0.2)
 pyrPal = sns.color_palette("Purples_d",4) # sns.cubehelix_palette(n_colors=4,dark=0.3,start=0.4,light=0.8,gamma=1.3,rot=0.2)
 
-for i in range(4):
+for i in range(len(pHvals)):
     pH = pHvals[i]
     fhySub = FHYdata.ix[abs(FHYdata.ix[:,'pH']-pH)<0.1,:]
     montSub = montData.ix[abs(montData.ix[:,'pH']-pH)<0.1,:]
@@ -104,6 +109,12 @@ for i in range(4):
         ax3[0,0].set_xlim(xlim)
         ax3[0,0].set_ylim(ylim)
         ax3[0,0].set_ylabel('Cs (Bq/g)')
+        if pH == 7:
+            ax4.plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[0],label=None,color='black')
+            ax4.errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[0],label='Ferrihydrite Kd: {:.2f} R2: {:.2f}'.format(slope,rval**2),ls='None',color='black')
+        ax5.plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color='black')
+        ax5.errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],label='pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),ls='None',color='black')
+        
     if not montSub.empty:
         Cw = montSub.ix[:,'Cw (Bq/mL)'].values
         Cs = montSub.ix[:,'Cs (Bq/g)'].values
@@ -118,6 +129,9 @@ for i in range(4):
         ax3[1,0].set_ylim(ylim)
         ax3[1,0].set_xlabel('Cw (Bq/mL)')
         ax3[1,0].set_ylabel('Cs (Bq/g)')
+        if pH == 7:
+            ax4.plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[1],label=None,color='black')
+            ax4.errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[1],label='Sodium Montmorillonite Kd: {:.2f} R2: {:.2f}'.format(slope,rval**2),ls='None',color='black')
     if not goeSub.empty:
         Cw = goeSub.ix[:,'Cw (Bq/mL)'].values
         Cs = goeSub.ix[:,'Cs (Bq/g)'].values
@@ -130,6 +144,9 @@ for i in range(4):
         ax3[0,1].legend(loc=0)
         ax3[0,1].set_xlim(xlim)
         ax3[0,1].set_ylim(ylim)
+        if pH == 7:
+            ax4.plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[2],label=None,color='black')
+            ax4.errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[2],label='Goethite Kd: {:.2f} R2: {:.2f}'.format(slope,rval**2),ls='None',color='black')
     if not pyrSub.empty:
         Cw = pyrSub.ix[:,'Cw (Bq/mL)'].values
         Cs = pyrSub.ix[:,'Cs (Bq/g)'].values
@@ -143,6 +160,20 @@ for i in range(4):
         ax3[1,1].set_xlim(xlim)
         ax3[1,1].set_ylim(ylim)
         ax3[1,1].set_xlabel('Cw (Bq/mL)')
+        if pH == 7:
+            ax4.plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[3],label=None,color='black')
+            ax4.errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[3],label='Pyrite Kd: {:.2f} R2: {:.2f}'.format(slope,rval**2),ls='None',color='black')
+handles, labels = ax4.get_legend_handles_labels()
+handles = [h[0] for h in handles]
+ax4.legend(handles,labels,loc=0,numpoints=1)            
+ax4.set_xlabel('Cw (Bq/mL)')
+ax4.set_ylabel('Cs (Bq/g)')
+
+handles, labels = ax5.get_legend_handles_labels()
+handles = [h[0] for h in handles]
+ax5.legend(handles,labels,loc=0,numpoints=1)
+ax5.set_xlabel('Cw (Bq/mL)')
+ax5.set_ylabel('Cs (Bq/g)')     
 #plt.xlabel('Cw (Bq/mL)')
 #plt.ylabel('Cs (Bq/g)')
 #plt.title('Sorption Isotherms')
