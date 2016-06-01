@@ -131,9 +131,9 @@ totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
 #db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
-tmp = "Montmorillonite 1 site CEC model/Montmorillonite 1 site CEC model.txt"
+tmp = "Montmorillonite 1 site CEC Model/Montmorillonite 1 site CEC model.txt"
 #masterFile = pd.read_csv(tmp[:-4]+'.csv')
-titleString = "Single site model, Sodium Montmorillonite with Exchange"
+titleString = "Single site model with exchange, Sodium Montmorillonite"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
@@ -197,7 +197,7 @@ for Ks in Kval:
             x.generateData()
             x.addDataToMaster(writeMaster=True)
             simRes = x.getData()
-            ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(Ks=Ks,sites=sites,Kint=Kint),color=next(palette))
+            ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(Ks=Ks,sites=sites,Kint=Kint),color='k')
             pos = pos+1
             per = pos/ncol
             print '{:.2%}'.format(per)
@@ -212,25 +212,28 @@ exp100 = expData.ix[expData['Total Activity']==100,:]
 exp250 = expData.ix[expData['Total Activity']==250,:]
 exp500 = expData.ix[expData['Total Activity']==500,:]
 
-if not exp5.empty:
-    exp5Plot = ax.errorbar(exp5.ix[:,'pH'].values,exp5.ix[:,'fSorb'].values,xerr=exp5.ix[:,'spH'].values,yerr=exp5.ix[:,'sfSorb'].values,fmt='D',label='Experimental Data 5 Bq Total')
+#if not exp5.empty:
+#    exp5Plot = ax.errorbar(exp5.ix[:,'pH'].values,exp5.ix[:,'fSorb'].values,xerr=exp5.ix[:,'spH'].values,yerr=exp5.ix[:,'sfSorb'].values,fmt='d',label='Experimental Data 5 Bq Total')
 if not exp10.empty:
-    exp10Plot = ax.errorbar(exp10.ix[:,'pH'].values,exp10.ix[:,'fSorb'].values,xerr=exp10.ix[:,'spH'].values,yerr=exp10.ix[:,'sfSorb'].values,fmt='^',label='Experimental Data 10 Bq Total')
+    exp10Plot = ax.errorbar(exp10.ix[:,'pH'].values,exp10.ix[:,'fSorb'].values,xerr=exp10.ix[:,'spH'].values,yerr=exp10.ix[:,'sfSorb'].values,fmt='d',label='Experimental Data 10 Bq Total',color='k')
 if not exp50.empty:
-    exp50Plot = ax.errorbar(exp50.ix[:,'pH'].values,exp50.ix[:,'fSorb'].values,xerr=exp50.ix[:,'spH'].values,yerr=exp50.ix[:,'sfSorb'].values,fmt='p',label='Experimental Data 50 Bq Total')
+    exp50Plot = ax.errorbar(exp50.ix[:,'pH'].values,exp50.ix[:,'fSorb'].values,xerr=exp50.ix[:,'spH'].values,yerr=exp50.ix[:,'sfSorb'].values,fmt='p',label='Experimental Data 50 Bq Total',color='k')
 if not exp100.empty:
-    exp100Plot = ax.errorbar(exp100.ix[:,'pH'].values,exp100.ix[:,'fSorb'].values,xerr=exp100.ix[:,'spH'].values,yerr=exp100.ix[:,'sfSorb'].values,fmt='s',label='Experimental Data 100 Bq Total')
+    exp100Plot = ax.errorbar(exp100.ix[:,'pH'].values,exp100.ix[:,'fSorb'].values,xerr=exp100.ix[:,'spH'].values,yerr=exp100.ix[:,'sfSorb'].values,fmt='s',label='Experimental Data 100 Bq Total',color='k')
 if not exp250.empty:
-    exp250Plot = ax.errorbar(exp250.ix[:,'pH'].values,exp250.ix[:,'fSorb'].values,xerr=exp250.ix[:,'spH'].values,yerr=exp250.ix[:,'sfSorb'].values,fmt='^',label='Experimental Data 250 Bq Total')
+    exp250Plot = ax.errorbar(exp250.ix[:,'pH'].values,exp250.ix[:,'fSorb'].values,xerr=exp250.ix[:,'spH'].values,yerr=exp250.ix[:,'sfSorb'].values,fmt='^',label='Experimental Data 250 Bq Total',color='k')
 if not exp500.empty:
-    exp500Plot = ax.errorbar(exp500.ix[:,'pH'].values,exp500.ix[:,'fSorb'].values,xerr=exp500.ix[:,'spH'].values,yerr=exp500.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 500 Bq Total')
+    exp500Plot = ax.errorbar(exp500.ix[:,'pH'].values,exp500.ix[:,'fSorb'].values,xerr=exp500.ix[:,'spH'].values,yerr=exp500.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 500 Bq Total',color='k')
 
 handles, labels = ax.get_legend_handles_labels()
-try:
-    handles = [h[0] for h in handles]
-except TypeError:
-    pass
-ax.legend(handles,labels,loc=0,numpoints=1)
+newHandles = []
+for h in handles:
+    try:
+        newHandles.append(h[0])
+    except TypeError:
+        newHandles.append(h)
+        continue
+ax.legend(newHandles,labels,loc=0,numpoints=1)
 
 #ax.legend(loc=0)
 ax.set_title(titleString)
