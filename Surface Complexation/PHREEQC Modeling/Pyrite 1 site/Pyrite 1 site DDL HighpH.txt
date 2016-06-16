@@ -15,10 +15,8 @@ PyrSH = PyrSH
 	log_k = 0
 PyrSH = PyrS- + H+
 	log_k 6.45
-PyrSH + Ra+2 = PyrSHRa+2
-	log_k $k1
 PyrS- + Ra+2 = PyrSRa+
-	log_k $k2
+	log_k $k1
 SURFACE 1
     PyrSH      $sites 0.8 0.04
 END

@@ -131,7 +131,7 @@ totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
 #db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
-tmp = "Pyrite 1 site/Pyrite 1 site DDL.txt"
+tmp = "Pyrite 1 site/Pyrite 1 site DDL highpH.txt"
 #masterFile = pd.read_csv(tmp[:-4]+'.csv')
 titleString = "Single site model, Pyrite"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
@@ -148,7 +148,7 @@ f1.clf()
 ax = f1.add_subplot(111)
 
 
-labelStr = "1 site, K: {k1} {sites} mol"
+labelStr = "1 site, K1: {k1} {sites} mol"
 pos = 0.0
 ##siteSVal = np.logspace(-8,-4,num=5,endpoint=True)
 #siteSVal = np.array([1E-7]) 
@@ -160,10 +160,14 @@ pos = 0.0
 ##KwVal = np.arange(-10,0.1,2)
 #ncol = np.size(siteSVal)*np.size(KsVal)*np.size(KwVal)*np.size(siteWVal)
 
-siteVal = np.array([2.23E-5])*0.04
+siteVal = np.array([8.92E-7])
+#siteVal = np.arange(1E-7,1.1E-6,1E-7)
 #siteVal = np.logspace(-8,-2,num=7,endpoint=True)
 #Kval = np.array([6.4])
-Kval = np.arange(-10,10.1,1)
+Kval = np.arange(-7,-6.1,0.1)
+Kval = np.array([-6.4])
+#K2val = np.arange(-8,-5.1,0.1)
+#K2val = np.array([-6.1])
 ncol = np.size(Kval)*np.size(siteVal)
 Kint = 0.15
 #Clay Paramters 1 site
@@ -193,14 +197,14 @@ palette = itertools.cycle(cmap)
 #        print '{:.2%}'.format(per)
 for k1 in Kval:
     for sites in siteVal:            
-            x = simulation({'totRa':totRa,'k1':k1,'sites':sites},tmp,db)
-            x.generateData()
-            x.addDataToMaster(writeMaster=True)
-            simRes = x.getData()
-            ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(k1=k1,sites=sites,Kint=Kint),color=next(palette))
-            pos = pos+1
-            per = pos/ncol
-            print '{:.2%}'.format(per)
+        x = simulation({'totRa':totRa,'k1':k1,'sites':sites},tmp,db)
+        x.generateData()
+        x.addDataToMaster(writeMaster=True)
+        simRes = x.getData()
+        ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(k1=k1,sites=sites),color=next(palette))
+        pos = pos+1
+        per = pos/ncol
+        print '{:.2%}'.format(per)
  
 #Plot all of the data without differentiation
 #expPlot = ax.errorbar(expData.ix[:,'pH'],expData.ix[:,'fSorb'],xerr=expData.ix[:,'spH'],yerr=expData.ix[:,'sfSorb'],fmt='o',label='Experimental Data')
