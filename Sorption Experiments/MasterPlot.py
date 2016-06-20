@@ -78,8 +78,12 @@ sns.despine()
 f3, ax3 = plt.subplots(2,2,sharex='col',sharey='row',figsize=(20,10))
 f4 = plt.figure(4)
 ax4 = f4.add_subplot(111) #pH 7, all minerals
-f5 = plt.figure(5) #Ferrihydrite, all minerals
+f5 = plt.figure(5) #Ferrihydrite, all pH values
 ax5 = f5.add_subplot(111)
+f6 = plt.figure(6) #Mont, all pH values
+ax6 = f6.add_subplot(111)
+f7 = plt.figure(7)
+ax7 = f7.add_subplot(111)
 pHvals  = [3,5,7,9]
 markerStyles = ['o','^','s','p']
 lineStyles = ["-","--","-.",":"]
@@ -114,7 +118,8 @@ for i in range(len(pHvals)):
             ax4.errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[0],label='Ferrihydrite Kd: {:.2f} R2: {:.2f}'.format(slope,rval**2),ls='None',color='black')
         ax5.plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color='black')
         ax5.errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],label='pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),ls='None',color='black')
-        
+        ax5.set_xlim(xlim)
+        ax5.set_ylim(ylim)
     if not montSub.empty:
         Cw = montSub.ix[:,'Cw (Bq/mL)'].values
         Cs = montSub.ix[:,'Cs (Bq/g)'].values
@@ -132,6 +137,10 @@ for i in range(len(pHvals)):
         if pH == 7:
             ax4.plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[1],label=None,color='black')
             ax4.errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[1],label='Sodium Montmorillonite Kd: {:.2f} R2: {:.2f}'.format(slope,rval**2),ls='None',color='black')
+        ax6.plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color='black')
+        ax6.errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],label='pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),ls='None',color='black')
+        ax6.set_xlim(xlim)
+        ax6.set_ylim(ylim)
     if not goeSub.empty:
         Cw = goeSub.ix[:,'Cw (Bq/mL)'].values
         Cs = goeSub.ix[:,'Cs (Bq/g)'].values
@@ -147,6 +156,10 @@ for i in range(len(pHvals)):
         if pH == 7:
             ax4.plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[2],label=None,color='black')
             ax4.errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[2],label='Goethite Kd: {:.2f} R2: {:.2f}'.format(slope,rval**2),ls='None',color='black')
+        ax7.plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color='black')
+        ax7.errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],label='pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),ls='None',color='black')
+        ax7.set_xlim(xlim)
+        ax7.set_ylim(ylim)
     if not pyrSub.empty:
         Cw = pyrSub.ix[:,'Cw (Bq/mL)'].values
         Cs = pyrSub.ix[:,'Cs (Bq/g)'].values
@@ -173,12 +186,24 @@ handles, labels = ax5.get_legend_handles_labels()
 handles = [h[0] for h in handles]
 ax5.legend(handles,labels,loc=0,numpoints=1)
 ax5.set_xlabel('Cw (Bq/mL)')
-ax5.set_ylabel('Cs (Bq/g)')     
+ax5.set_ylabel('Cs (Bq/g)')    
+
+handles, labels = ax6.get_legend_handles_labels()
+handles = [h[0] for h in handles]
+ax6.legend(handles,labels,loc=0,numpoints=1)
+ax6.set_xlabel('Cw (Bq/mL)')
+ax6.set_ylabel('Cs (Bq/g)')   
+
+handles, labels = ax7.get_legend_handles_labels()
+handles = [h[0] for h in handles]
+ax7.legend(handles,labels,loc=0,numpoints=1)
+ax7.set_xlabel('Cw (Bq/mL)')
+ax7.set_ylabel('Cs (Bq/g)')    
 #plt.xlabel('Cw (Bq/mL)')
 #plt.ylabel('Cs (Bq/g)')
 #plt.title('Sorption Isotherms')
 #plt.legend(loc=0)
 sns.despine()
 plt.show()
-f1.savefig('MasterTablePlots\\Sorption Envelope.svg',dpi=1000)
-f3.savefig('MasterTablePlots\\Sorption Isotherms.svg',dpi=1000)
+#f1.savefig('MasterTablePlots\\Sorption Envelope.svg',dpi=1000)
+#f3.savefig('MasterTablePlots\\Sorption Isotherms.svg',dpi=1000)
