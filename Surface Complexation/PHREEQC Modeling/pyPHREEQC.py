@@ -131,9 +131,9 @@ totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
 #db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
-tmp = "Pyrite 1 site/Pyrite 1 site DDL highpH.txt"
+tmp = "FHY Sajih Tetradentate\FHY Sajih Tetradentate.txt"
 #masterFile = pd.read_csv(tmp[:-4]+'.csv')
-titleString = "Single site model, Pyrite"
+titleString = "Single site model, Tetradentate Complex, FHY"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
@@ -141,14 +141,14 @@ sns.set_palette("deep",n_colors = 6)
 #Find experimental data to use
 expData = extractData('..\..\Sorption Experiments\Sorption Experiment Master Table.xlsx')
 expData = expData.ix[expData.ix[:,'Include?']==True,:] #Select only data that's been vetted
-expData = expData.ix[expData.ix[:,'Mineral']=="Pyrite"]
+expData = expData.ix[expData.ix[:,'Mineral']=="Ferrihydrite"]
 
 f1 = plt.figure(num=1,figsize=(10,8))
 f1.clf()
 ax = f1.add_subplot(111)
 
 
-labelStr = "1 site, K1: {k1} {sites} mol"
+labelStr = "1 site, K1: {k1} K2: {k2} {sites} mol"
 pos = 0.0
 ##siteSVal = np.logspace(-8,-4,num=5,endpoint=True)
 #siteSVal = np.array([1E-7]) 
@@ -160,15 +160,15 @@ pos = 0.0
 ##KwVal = np.arange(-10,0.1,2)
 #ncol = np.size(siteSVal)*np.size(KsVal)*np.size(KwVal)*np.size(siteWVal)
 
-siteVal = np.array([8.92E-7])
+siteVal = np.array([5.25E-5])
 #siteVal = np.arange(1E-7,1.1E-6,1E-7)
 #siteVal = np.logspace(-8,-2,num=7,endpoint=True)
 #Kval = np.array([6.4])
-Kval = np.arange(-7,-6.1,0.1)
-Kval = np.array([-6.4])
-#K2val = np.arange(-8,-5.1,0.1)
-#K2val = np.array([-6.1])
-ncol = np.size(Kval)*np.size(siteVal)
+Kval = np.arange(-2,0.1,0.1)
+Kval = np.array([-1.4])
+#K2val = np.arange(-10,10.1,1)
+K2val = np.array([0])
+ncol = np.size(Kval)*np.size(siteVal)*np.size(K2val)
 Kint = 0.15
 #Clay Paramters 1 site
 ##KsVal = np.arange(-10,11,1)
@@ -196,15 +196,16 @@ palette = itertools.cycle(cmap)
 #        per = pos/ncol
 #        print '{:.2%}'.format(per)
 for k1 in Kval:
-    for sites in siteVal:            
-        x = simulation({'totRa':totRa,'k1':k1,'sites':sites},tmp,db)
-        x.generateData()
-        x.addDataToMaster(writeMaster=True)
-        simRes = x.getData()
-        ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(k1=k1,sites=sites),color=next(palette))
-        pos = pos+1
-        per = pos/ncol
-        print '{:.2%}'.format(per)
+    for k2 in K2val:
+        for sites in siteVal:            
+            x = simulation({'totRa':totRa,'k1':k1,'k2':k2,'sites':sites},tmp,db)
+            x.generateData()
+            x.addDataToMaster(writeMaster=True)
+            simRes = x.getData()
+            ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(k1=k1,sites=sites,k2=k2),color=next(palette))
+            pos = pos+1
+            per = pos/ncol
+            print '{:.2%}'.format(per)
  
 #Plot all of the data without differentiation
 #expPlot = ax.errorbar(expData.ix[:,'pH'],expData.ix[:,'fSorb'],xerr=expData.ix[:,'spH'],yerr=expData.ix[:,'sfSorb'],fmt='o',label='Experimental Data')
@@ -247,4 +248,4 @@ ax.set_ylim([-0.01,1.0])
 sns.despine()
 plt.show()
 
-x.plotSpeciation(solidTag="m_Pyr")
+x.plotSpeciation(solidTag="m_(Fhy")

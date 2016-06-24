@@ -25,6 +25,7 @@ mpl.rcParams["errorbar.capsize"] = 5
 mpl.rcParams["lines.linewidth"] = 1
 mpl.rcParams["lines.markersize"] = 20
 mpl.rcParams["svg.fonttype"] = "none"
+mpl.rcParams["figure.figsize"] = [16,14]
 #mpl.rcParams["font.size"] = 48
 #mpl.rcParams["axes.labelsize"] = "large"
 #mpl.rcParams["axes.labelpad"] = 10.0
@@ -203,7 +204,13 @@ ax7.set_ylabel('Cs (Bq/g)')
 #plt.ylabel('Cs (Bq/g)')
 #plt.title('Sorption Isotherms')
 #plt.legend(loc=0)
-sns.despine()
+sns.despine(f4)
+sns.despine(f5)
+sns.despine(f6)
+sns.despine(f7)
 plt.show()
 #f1.savefig('MasterTablePlots\\Sorption Envelope.svg',dpi=1000)
 #f3.savefig('MasterTablePlots\\Sorption Isotherms.svg',dpi=1000)
+f5.savefig('MasterTablePlots\\IsothermsFHY.svg',dpi=1000)
+f6.savefig('MasterTablePlots\\IsothermsNaMont.svg',dpi=1000)
+f7.savefig('MasterTablePlots\\IsothermsGOE.svg',dpi=1000)
