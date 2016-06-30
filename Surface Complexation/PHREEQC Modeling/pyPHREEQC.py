@@ -160,14 +160,14 @@ pos = 0.0
 ##KwVal = np.arange(-10,0.1,2)
 #ncol = np.size(siteSVal)*np.size(KsVal)*np.size(KwVal)*np.size(siteWVal)
 
-siteVal = np.array([6.4E-5])*0.03
+siteVal = np.array([5E-5])
 #siteVal = np.arange(1E-7,1.1E-6,1E-7)
 #siteVal = np.logspace(-8,-2,num=7,endpoint=True)
 #Kval = np.array([6.4])
-#Kval = np.arange(-4,4.1,2)
+#Kval = np.arange(-1,1.1,0.1)
 Kval = np.array([-2])
 K2val = np.arange(5,10.1,1)
-K2val = np.array([6])
+#K2val = np.array([7])
 ncol = np.size(Kval)*np.size(siteVal)*np.size(K2val)
 Kint = 0.15
 #Clay Paramters 1 site
