@@ -131,9 +131,9 @@ totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
 #db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
-tmp = "GOE Sajih Tetradentate\GOE Sajih Tetradentate.txt"
+tmp = "Montmorillonite 1 site CEC model\Montmorillonite 1 site CEC model.txt"
 #masterFile = pd.read_csv(tmp[:-4]+'.csv')
-titleString = "Single site model, Tetradentate Complex, GOE"
+titleString = "Single site model with exchange, Tetradentate Complex, Mont"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
@@ -141,14 +141,14 @@ sns.set_palette("deep",n_colors = 6)
 #Find experimental data to use
 expData = extractData('..\..\Sorption Experiments\Sorption Experiment Master Table.xlsx')
 expData = expData.ix[expData.ix[:,'Include?']==True,:] #Select only data that's been vetted
-expData = expData.ix[expData.ix[:,'Mineral']=="Goethite"]
+expData = expData.ix[expData.ix[:,'Mineral']=="Sodium Montmorillonite"]
 
 f1 = plt.figure(num=1,figsize=(10,8))
 f1.clf()
 ax = f1.add_subplot(111)
 
 
-labelStr = "1 site, K1: {k1} K2: {k2} {sites} mol"
+labelStr = "1 site, K: {k1} {sites} mol Kint: {K_int}"
 pos = 0.0
 ##siteSVal = np.logspace(-8,-4,num=5,endpoint=True)
 #siteSVal = np.array([1E-7]) 
@@ -159,28 +159,28 @@ pos = 0.0
 #KwVal = np.array([0])
 ##KwVal = np.arange(-10,0.1,2)
 #ncol = np.size(siteSVal)*np.size(KsVal)*np.size(KwVal)*np.size(siteWVal)
-
-siteVal = np.array([1.92E-6])
-#siteVal = np.arange(1E-7,1.1E-6,1E-7)
-#siteVal = np.logspace(-8,-2,num=7,endpoint=True)
-#Kval = np.array([6.4])
-#Kval = np.arange(-10,0.1,5)
-Kval = np.array([-2.5])
-K2val = np.arange(0,10.1,2)
-K2val = np.array([3.85])
-ncol = np.size(Kval)*np.size(siteVal)*np.size(K2val)
+#
+#siteVal = np.array([1.92E-6])
+##siteVal = np.arange(1E-7,1.1E-6,1E-7)
+##siteVal = np.logspace(-8,-2,num=7,endpoint=True)
+##Kval = np.array([6.4])
+##Kval = np.arange(-10,0.1,5)
+#Kval = np.array([-2.5])
+#K2val = np.arange(0,10.1,2)
+#K2val = np.array([3.85])
+#ncol = np.size(Kval)*np.size(siteVal)*np.size(K2val)
 Kint = 0.15
 #Clay Paramters 1 site
-##KsVal = np.arange(-10,11,1)
-#KintVal = np.array([0.15])
-##siteiVal = np.logspace(-8,0,num=9,endpoint=True)
-##siteiVal = np.array([2.53E-5]) #Clay value
-#KsVal = np.arange(6,7.1,0.1)
-#KsVal = np.array([6.4])
-##sitesVal = np.linspace(1E-7,1E-5,num=20,endpoint=True)
-#sitesVal = np.array([2E-7])
-##KintVal = np.array([-3])
-#ncol = np.size(KintVal)*np.size(KsVal)*np.size(sitesVal)
+#KsVal = np.arange(-10,11,1)
+KintVal = np.array([0.15])
+#siteiVal = np.logspace(-8,0,num=9,endpoint=True)
+#siteiVal = np.array([2.53E-5]) #Clay value
+KVal = np.arange(0,10.1,1)
+#KVal = np.array([6.4])
+#sitesVal = np.linspace(1E-7,1E-5,num=20,endpoint=True)
+siteVal = np.array([6E-5])
+#KintVal = np.array([-3])
+ncol = np.size(KintVal)*np.size(KVal)*np.size(siteVal)
 
 cmap = sns.cubehelix_palette(n_colors=ncol,dark=0.3,rot=0.4,light=0.8,gamma=1.3)
 palette = itertools.cycle(cmap)
@@ -195,14 +195,14 @@ palette = itertools.cycle(cmap)
 #        pos = pos+1
 #        per = pos/ncol
 #        print '{:.2%}'.format(per)
-for k1 in Kval:
-    for k2 in K2val:
+for k1 in KVal:
+    for K_int in KintVal:
         for sites in siteVal:            
-            x = simulation({'totRa':totRa,'k1':k1,'k2':k2,'sites':sites},tmp,db)
+            x = simulation({'totRa':totRa,'Ks':k1,'K_int':K_int,'sites':sites},tmp,db)
             x.generateData()
             x.addDataToMaster(writeMaster=True)
             simRes = x.getData()
-            ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(k1=k1,sites=sites,k2=k2),color=next(palette))
+            ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(k1=k1,sites=sites,K_int=K_int),color=next(palette))
             pos = pos+1
             per = pos/ncol
             print '{:.2%}'.format(per)
