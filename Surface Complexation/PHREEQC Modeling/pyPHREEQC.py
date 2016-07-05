@@ -131,7 +131,7 @@ totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
 #db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
-tmp = "Montmorillonite 1 site CEC model\Montmorillonite 1 site CEC model.txt"
+tmp = "Montmorillonite 2 site CEC model\Montmorillonite 2 site CEC model.txt"
 #masterFile = pd.read_csv(tmp[:-4]+'.csv')
 titleString = "Single site model with exchange, Tetradentate Complex, Mont"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
@@ -148,17 +148,17 @@ f1.clf()
 ax = f1.add_subplot(111)
 
 
-labelStr = "1 site, K: {k1} {sites} mol Kint: {K_int}"
+labelStr = "2 site w/ exchange, Ks: {Ks} {siteS} mol, Kw: {Kw} {siteW} mol"
 pos = 0.0
-##siteSVal = np.logspace(-8,-4,num=5,endpoint=True)
-#siteSVal = np.array([1E-7]) 
-##siteWVal = np.logspace(-8,-3,num=6,endpoint=True) 
-#siteWVal = np.array([1E-6])
-##KsVal = np.arange(0,10.1,2)
-#KsVal = np.array([7.5])
-#KwVal = np.array([0])
-##KwVal = np.arange(-10,0.1,2)
-#ncol = np.size(siteSVal)*np.size(KsVal)*np.size(KwVal)*np.size(siteWVal)
+#siteSVal = np.logspace(-8,-4,num=5,endpoint=True)
+siteSVal = np.array([2E-3])*0.03 
+#siteWVal = np.logspace(-8,-3,num=6,endpoint=True) 
+siteWVal = np.array([4E-2])*0.03
+#KsVal = np.arange(-10,10.1,5)
+KsVal = np.array([6.2])
+KwVal = np.array([-10])
+#KwVal = np.arange(0,10.1,2)
+ncol = np.size(siteSVal)*np.size(KsVal)*np.size(KwVal)*np.size(siteWVal)
 #
 #siteVal = np.array([1.92E-6])
 ##siteVal = np.arange(1E-7,1.1E-6,1E-7)
@@ -171,16 +171,16 @@ pos = 0.0
 #ncol = np.size(Kval)*np.size(siteVal)*np.size(K2val)
 Kint = 0.15
 #Clay Paramters 1 site
-#KsVal = np.arange(-10,11,1)
-KintVal = np.array([0.15])
-#siteiVal = np.logspace(-8,0,num=9,endpoint=True)
-#siteiVal = np.array([2.53E-5]) #Clay value
-KVal = np.arange(0,10.1,1)
-#KVal = np.array([6.4])
-#sitesVal = np.linspace(1E-7,1E-5,num=20,endpoint=True)
-siteVal = np.array([6E-5])
-#KintVal = np.array([-3])
-ncol = np.size(KintVal)*np.size(KVal)*np.size(siteVal)
+##KsVal = np.arange(-10,11,1)
+#KintVal = np.array([0.15])
+##siteiVal = np.logspace(-8,0,num=9,endpoint=True)
+##siteiVal = np.array([2.53E-5]) #Clay value
+#KVal = np.arange(0,10.1,1)
+##KVal = np.array([6.4])
+##sitesVal = np.linspace(1E-7,1E-5,num=20,endpoint=True)
+#siteVal = np.array([6E-5])
+##KintVal = np.array([-3])
+#ncol = np.size(KintVal)*np.size(KVal)*np.size(siteVal)
 
 cmap = sns.cubehelix_palette(n_colors=ncol,dark=0.3,rot=0.4,light=0.8,gamma=1.3)
 palette = itertools.cycle(cmap)
@@ -195,17 +195,18 @@ palette = itertools.cycle(cmap)
 #        pos = pos+1
 #        per = pos/ncol
 #        print '{:.2%}'.format(per)
-for k1 in KVal:
-    for K_int in KintVal:
-        for sites in siteVal:            
-            x = simulation({'totRa':totRa,'Ks':k1,'K_int':K_int,'sites':sites},tmp,db)
-            x.generateData()
-            x.addDataToMaster(writeMaster=True)
-            simRes = x.getData()
-            ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(k1=k1,sites=sites,K_int=K_int),color=next(palette))
-            pos = pos+1
-            per = pos/ncol
-            print '{:.2%}'.format(per)
+for Ks in KsVal:
+    for Kw in KwVal:
+        for siteS in siteSVal:
+            for siteW in siteWVal:            
+                x = simulation({'totRa':totRa,'Ks':Ks,'Kw':Kw,'siteS':siteS,'siteW':siteW},tmp,db)
+                x.generateData()
+                x.addDataToMaster(writeMaster=True)
+                simRes = x.getData()
+                ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(Ks=Ks,Kw=Kw,siteS=siteS,siteW=siteW),color=next(palette))
+                pos = pos+1
+                per = pos/ncol
+                print '{:.2%}'.format(per)
  
 #Plot all of the data without differentiation
 #expPlot = ax.errorbar(expData.ix[:,'pH'],expData.ix[:,'fSorb'],xerr=expData.ix[:,'spH'],yerr=expData.ix[:,'sfSorb'],fmt='o',label='Experimental Data')
@@ -248,4 +249,4 @@ ax.set_ylim([-0.01,1.0])
 sns.despine()
 plt.show()
 
-x.plotSpeciation(solidTag="m_(Fhy")
+x.plotSpeciation(solidTag="m_Clay")
