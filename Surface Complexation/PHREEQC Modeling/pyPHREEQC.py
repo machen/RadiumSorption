@@ -133,7 +133,7 @@ db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.da
 #db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
 tmp = "Montmorillonite 2 site CEC model\Montmorillonite 2 site CEC model.txt"
 #masterFile = pd.read_csv(tmp[:-4]+'.csv')
-titleString = "Single site model with exchange, Tetradentate Complex, Mont"
+titleString = "Two site model with exchange, Sodium Montmorillonite"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
@@ -150,13 +150,13 @@ ax = f1.add_subplot(111)
 
 labelStr = "2 site w/ exchange, Ks: {Ks} {siteS} mol, Kw: {Kw} {siteW} mol"
 pos = 0.0
-#siteSVal = np.logspace(-8,-4,num=5,endpoint=True)
-siteSVal = np.array([2E-3])*0.03 
-#siteWVal = np.logspace(-8,-3,num=6,endpoint=True) 
-siteWVal = np.array([4E-2])*0.03
+#siteSVal = np.arange(1E-9,2E-8,1E-9)
+siteSVal = np.array([1.9E-8])
+#siteWVal = np.arange(1E-9,1E-8,1E-9) 
+siteWVal = np.array([6E-9])
 #KsVal = np.arange(-10,10.1,5)
-KsVal = np.array([6.2])
-KwVal = np.array([-10])
+KsVal = np.array([7.5])
+KwVal = np.array([0])
 #KwVal = np.arange(0,10.1,2)
 ncol = np.size(siteSVal)*np.size(KsVal)*np.size(KwVal)*np.size(siteWVal)
 #
