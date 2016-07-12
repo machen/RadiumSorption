@@ -116,12 +116,15 @@ def extractData(path):
     return data
 
 #Plotting
+sns.set_context('poster')
+sns.set_style("ticks",rc={"font.size":48})
 mpl.rcParams["lines.markeredgewidth"] = 2
 mpl.rcParams["markers.fillstyle"] = "none"
 mpl.rcParams["errorbar.capsize"] = 5
 mpl.rcParams["lines.linewidth"] = 1
 mpl.rcParams["lines.markersize"] = 20
 mpl.rcParams["svg.fonttype"] = "none"
+mpl.rcParams["figure.figsize"] = [16,14]       
        
 specAct = 6.02E23*np.log(2)/(1600*365*24*60*60) #Gets Bq/mol       
 totRa = 270/specAct/0.1 #Mol/L Ra-226
@@ -131,9 +134,9 @@ totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
 #db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
-tmp = "Montmorillonite 1 site CEC model\Montmorillonite 1 site 2 Rxn CEC model.txt"
+tmp = "Montmorillonite 2 site CEC model\Montmorillonite 2 site CEC model.txt"
 #masterFile = pd.read_csv(tmp[:-4]+'.csv')
-titleString = "Single site, 2 reaction model with exchange, Sodium Montmorillonite"
+titleString = "Two site, 2 reaction model with exchange, Sodium Montmorillonite"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
@@ -148,7 +151,7 @@ f1.clf()
 ax = f1.add_subplot(111)
 
 
-labelStr = "1 site 2 rxn w/ exchange, K1: {K1} K2: {K2} {sites} mol"
+labelStr = "1 site 2 rxn w/ exchange, Ks: {Ks} {siteS} mol Kw: {Kw} {siteW} mol"
 pos = 0.0
 #siteSVal = np.arange(1E-9,2E-8,1E-9)
 siteSVal = np.array([1.9E-8])
@@ -182,13 +185,13 @@ Kint = 0.15
 ##KintVal = np.array([-3])
 #ncol = np.size(KintVal)*np.size(KVal)*np.size(siteVal)
 
-K1Val = np.array([9.7])
-#K1Val = np.arange(9,10.1,0.1)
-K2Val =np.array([10.1])
-#K2Val = np.arange(10,11.1,0.1)
-siteVal = np.array([1E-10])
-#siteVal = np.logspace(-10,-2,num=9,endpoint=True)
-ncol = np.size(K1Val)*np.size(K2Val)*np.size(siteVal)
+#K1Val = np.array([9.7])
+##K1Val = np.arange(9,10.1,0.1)
+#K2Val =np.array([10.1])
+##K2Val = np.arange(10,11.1,0.1)
+#siteVal = np.array([1E-10])
+##siteVal = np.logspace(-10,-2,num=9,endpoint=True)
+#ncol = np.size(K1Val)*np.size(K2Val)*np.size(siteVal)
 
 cmap = sns.cubehelix_palette(n_colors=ncol,dark=0.3,rot=0.4,light=0.8,gamma=1.3)
 palette = itertools.cycle(cmap)
@@ -203,14 +206,27 @@ palette = itertools.cycle(cmap)
 #        pos = pos+1
 #        per = pos/ncol
 #        print '{:.2%}'.format(per)
-for K1 in K1Val:
-    for K2 in K2Val:
-        for sites in siteVal:        
-                x = simulation({'totRa':totRa,'K1':K1,'K2':K2,'sites':sites},tmp,db)
+#for K1 in K1Val:
+#    for K2 in K2Val:
+#        for sites in siteVal:        
+#                x = simulation({'totRa':totRa,'K1':K1,'K2':K2,'sites':sites},tmp,db)
+#                x.generateData()
+#                x.addDataToMaster(writeMaster=True)
+#                simRes = x.getData()
+#                ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(K1=K1,K2=K2,sites=sites),color='k')#next(palette))
+#                pos = pos+1
+#                per = pos/ncol
+#                print '{:.2%}'.format(per)
+ 
+for Ks in KsVal:
+    for Kw in KwVal:
+        for siteS in siteSVal:
+            for siteW in siteWVal:
+                x = simulation({'totRa':totRa,'Ks':Ks,'Kw':Kw,'siteS':siteS,'siteW':siteW},tmp,db)
                 x.generateData()
                 x.addDataToMaster(writeMaster=True)
                 simRes = x.getData()
-                ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(K1=K1,K2=K2,sites=sites),color=next(palette))
+                ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(Ks=Ks,Kw=Kw,siteS=siteS,siteW=siteW),color='k')#next(palette))
                 pos = pos+1
                 per = pos/ncol
                 print '{:.2%}'.format(per)
@@ -256,4 +272,4 @@ ax.set_ylim([-0.01,1.0])
 sns.despine()
 plt.show()
 
-x.plotSpeciation(solidTag="m_Clay_s")
+x.plotSpeciation(solidTag="m_Clay_")
