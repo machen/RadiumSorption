@@ -7,9 +7,9 @@ Created on Thu Apr 07 11:31:22 2016
 
 import numpy as np, pandas as pd
 
-fileLocation = "RaMont_pH7\\" #Working folder, which contains the input folder and output
-dataFile = 'RaMont_pH7_Kinetics_NoScript.xlsx' #Name of files
-resultFile ='RaMont_pH7_Kinetics Equilibrated Data.xlsx'
+fileLocation = "RaCaMont_pH7\\" #Working folder, which contains the input folder and output
+dataFile = 'RaCaMont_pH7_Kinetics_NoScript.xlsx' #Name of files
+resultFile ='RaCaMont_pH7_Kinetics Equilibrated Data.xlsx'
 
 
 def calcEquilSample(data):
