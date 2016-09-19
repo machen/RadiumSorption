@@ -134,9 +134,9 @@ totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
 #db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
-tmp = "GOE Sajih Tetradentate/GOE Sajih Tetradentate.txt"
+tmp = "GOE DDL Results\GOE Single site model DDL RealSA.txt"
 #masterFile = pd.read_csv(tmp[:-4]+'.csv')
-titleString = "Tetradentate Model, GOE"
+titleString = "Single Site Model, GOE, Real Surface Area"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
@@ -151,7 +151,7 @@ f1.clf()
 ax = f1.add_subplot(111)
 
 
-labelStr = "1 site 2 rxn w/ exchange, K1: {K1} K2: {K2} {sites} mol"
+labelStr = "1 site 1 rxn, K1: {K1} {sites} mol"
 pos = 0.0
 #siteSVal = np.arange(1E-9,2E-8,1E-9)
 siteSVal = np.array([1.9E-8])
@@ -185,11 +185,12 @@ Kint = 0.15
 ##KintVal = np.array([-3])
 #ncol = np.size(KintVal)*np.size(KVal)*np.size(siteVal)
 
-K1Val = np.array([-5])
-#K1Val = np.arange(9,10.1,0.1)
-K2Val =np.array([4.9])
-#K2Val = np.arange(10,11.1,0.1)
-siteVal = np.array([1.1E-5])
+K1Val = np.array([5.7])
+#K1Val = np.arange(5,6.5,0.1)
+K2Val =np.array([0])
+#K2Val = np.arange(4.0,6.1,0.1)
+siteVal = np.array([5.6E-5])
+#siteVal = np.arange(1E-8,1.1E-7,1E-8)
 #siteVal = np.logspace(-10,-2,num=9,endpoint=True)
 ncol = np.size(K1Val)*np.size(K2Val)*np.size(siteVal)
 
@@ -209,11 +210,11 @@ palette = itertools.cycle(cmap)
 for K1 in K1Val:
     for K2 in K2Val:
         for sites in siteVal:        
-                x = simulation({'totRa':totRa,'k1':K1,'k2':K2,'sites':sites},tmp,db)
+                x = simulation({'totRa':totRa,'k1':K1,'sites':sites},tmp,db)
                 x.generateData()
                 x.addDataToMaster(writeMaster=True)
                 simRes = x.getData()
-                ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(K1=K1,K2=K2,sites=sites),color='k')#next(palette))
+                ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(K1=K1,sites=sites),color='k')#next(palette))
                 pos = pos+1
                 per = pos/ncol
                 print '{:.2%}'.format(per)
