@@ -134,9 +134,9 @@ totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
 #db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
-tmp = "Montmorillonite 2 Site CEC Model\Montmorillonite 2 Site model RealSA.txt"
+tmp = "Pyrite 1 site\Pyrite 1 site DDL Deprotonated Site.txt"
 #masterFile = pd.read_csv(tmp[:-4]+'.csv')
-titleString = "Two Site Model, NaMont, Real Surface Area"
+titleString = "One Site Model, Pyrite, Real Surface Area"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
@@ -144,14 +144,14 @@ sns.set_palette("deep",n_colors = 6)
 #Find experimental data to use
 expData = extractData('..\..\Sorption Experiments\Sorption Experiment Master Table.xlsx')
 expData = expData.ix[expData.ix[:,'Include?']==True,:] #Select only data that's been vetted
-expData = expData.ix[expData.ix[:,'Mineral']=="Sodium Montmorillonite"]
+expData = expData.ix[expData.ix[:,'Mineral']=="Pyrite"]
 
 f1 = plt.figure(num=1,figsize=(10,8))
 f1.clf()
 ax = f1.add_subplot(111)
 
 
-labelStr = "2 site 2 rxn, Ks: {K1} {sites} mol, Kw: {K2} {siteW} mol"
+labelStr = "1 site 1 rxn, K: {K1} {sites} mol"
 pos = 0.0
 #siteSVal = np.arange(1E-9,2E-8,1E-9)
 siteSVal = np.array([1.9E-8])
@@ -185,11 +185,11 @@ Kint = 0.15
 ##KintVal = np.array([-3])
 #ncol = np.size(KintVal)*np.size(KVal)*np.size(siteVal)
 
-K1Val = np.array([7.5])
-#K1Val = np.arange(5.0,7.1,0.2)
+K1Val = np.array([-10.5])
+#K1Val = np.arange(-11,-9.9,0.1)
 K2Val =np.array([0])
 #K2Val = np.arange(0.0,10.1,1.0)
-siteVal = np.array([1.9E-8])
+siteVal = np.array([8.92E-7])
 #siteVal = np.arange(1E-7,2.5E-7,1E-8)
 #siteVal = np.logspace(-10,-2,num=9,endpoint=True)
 siteWVal = np.array([6E-9])
@@ -212,11 +212,11 @@ for K1 in K1Val:
     for K2 in K2Val:
         for sites in siteVal:   
             for siteW in siteWVal:
-                    x = simulation({'totRa':totRa,'Ks':K1,'Kw':K2,'siteS':sites,'siteW':siteW},tmp,db)
+                    x = simulation({'totRa':totRa,'k1':K1,'sites':sites},tmp,db)
                     x.generateData()
                     x.addDataToMaster(writeMaster=True)
                     simRes = x.getData()
-                    ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(K1=K1,sites=sites,K2=K2,siteW=siteW),color='k')#next(palette))
+                    ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(K1=K1,sites=sites),color='k')#next(palette))
                     pos = pos+1
                     per = pos/ncol
                     print '{:.2%}'.format(per)
