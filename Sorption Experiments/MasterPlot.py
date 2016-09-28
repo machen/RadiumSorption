@@ -83,8 +83,10 @@ f5 = plt.figure(5) #Ferrihydrite, all pH values
 ax5 = f5.add_subplot(111)
 f6 = plt.figure(6) #Mont, all pH values
 ax6 = f6.add_subplot(111)
-f7 = plt.figure(7)
+f7 = plt.figure(7) #Geothite, all pH values
 ax7 = f7.add_subplot(111)
+f8 = plt.figure(8)
+ax8 = f8.add_subplot(111)
 pHvals  = [3,5,7,9]
 markerStyles = ['o','^','s','p']
 lineStyles = ["-","--","-.",":"]
@@ -177,6 +179,22 @@ for i in range(len(pHvals)):
         if pH == 7:
             ax4.plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[3],label=None,color='black')
             ax4.errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[3],label='Pyrite Kd: {:.2f} R2: {:.2f}'.format(slope,rval**2),ls='None',color='black')
+        ax8.plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color='black')
+        ax8.errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],label='pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),ls='None',color='black')
+        ax8.set_xlim(xlim)
+        ax8.set_ylim(ylim)
+      
+#Plot of Montmorillonite Kinetic Data      
+times = np.array([175,374,1440,15547,15530])
+montKineticCw = np.array([0.492803,0.473911,0.487378,0.541394,0.638563])
+montKineticsCw = np.array([0.007277,0.018693,0.028428,0.101393,0.054642])
+f9 = plt.figure(9)
+ax9 = f9.add_subplot(111)
+ax9.errorbar(times,montKineticCw,yerr=montKineticsCw,marker=markerStyles[0],color='k')
+ax9.set_ylim([0,1.0])
+ax9.set_xlabel('Experiment Length (sec)')
+ax9.set_ylabel('Cw (Bq/mL)')
+
 handles, labels = ax4.get_legend_handles_labels()
 handles = [h[0] for h in handles]
 ax4.legend(handles,labels,loc=0,numpoints=1)            
@@ -200,6 +218,12 @@ handles = [h[0] for h in handles]
 ax7.legend(handles,labels,loc=0,numpoints=1)
 ax7.set_xlabel('Cw (Bq/mL)')
 ax7.set_ylabel('Cs (Bq/g)')    
+
+handles, labels = ax8.get_legend_handles_labels()
+handles = [h[0] for h in handles]
+ax8.legend(handles,labels,loc=0,numpoints=1)
+ax8.set_xlabel('Cw (Bq/mL)')
+ax8.set_ylabel('Cs (Bq/g)')   
 #plt.xlabel('Cw (Bq/mL)')
 #plt.ylabel('Cs (Bq/g)')
 #plt.title('Sorption Isotherms')
@@ -214,3 +238,5 @@ plt.show()
 f5.savefig('MasterTablePlots\\IsothermsFHY.svg',dpi=1000)
 f6.savefig('MasterTablePlots\\IsothermsNaMont.svg',dpi=1000)
 f7.savefig('MasterTablePlots\\IsothermsGOE.svg',dpi=1000)
+f8.savefig('MasterTablePlots\\IsothermsPYR.svg',dpi=1000)
+f9.savefig('MasterTablePlots\\KineticsNaMont.svg',dpi=1000)
