@@ -1,6 +1,10 @@
 #Ignore data files
 *.csv
 *.png
+*.tmp
+
+#Ignore specific files
+Manuscript/~$dium Sorption Manuscript D-1.docx
 
 # Windows image file caches
 Thumbs.db
