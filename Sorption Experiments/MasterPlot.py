@@ -95,12 +95,18 @@ montPal = sns.color_palette("Greens_d",4)#sns.cubehelix_palette(n_colors=4,dark=
 goePal = sns.color_palette("Reds_d",4) #sns.cubehelix_palette(n_colors=4,dark=0.3,start=0,light=0.8,gamma=1.3,rot=0.2)
 pyrPal = sns.color_palette("Purples_d",4) # sns.cubehelix_palette(n_colors=4,dark=0.3,start=0.4,light=0.8,gamma=1.3,rot=0.2)
 
+fhyOutput = pd.DataFrame(index = np.arange(0,5))
+goeOutput = pd.DataFrame(index = np.arange(0,5))
+montOutput = pd.DataFrame(index = np.arange(0,5))
+pyrOutput = pd.DataFrame(index = np.arange(0,5))
+
 for i in range(len(pHvals)):
     pH = pHvals[i]
-    fhySub = FHYdata.ix[abs(FHYdata.ix[:,'pH']-pH)<0.1,:]
-    montSub = montData.ix[abs(montData.ix[:,'pH']-pH)<0.1,:]
-    goeSub = goeData.ix[abs(goeData.ix[:,'pH']-pH)<0.1,:]
-    pyrSub = pyrData.ix[abs(pyrData.ix[:,'pH']-pH)<0.1,:]
+    pHs = str(pH)
+    fhySub = FHYdata.ix[abs(FHYdata.ix[:,'pH']-pH)<0.2,:]
+    montSub = montData.ix[abs(montData.ix[:,'pH']-pH)<0.2,:]
+    goeSub = goeData.ix[abs(goeData.ix[:,'pH']-pH)<0.2,:]
+    pyrSub = pyrData.ix[abs(pyrData.ix[:,'pH']-pH)<0.2,:]
     xlim = [-0.5,3.0]
     ylim = [-100,10000]
     if not fhySub.empty:
@@ -108,7 +114,10 @@ for i in range(len(pHvals)):
         Cs = fhySub.ix[:,'Cs (Bq/g)'].values
         sCw = fhySub.ix[:,'sCw (Bq/mL)'].values
         sCs = fhySub.ix[:,'sCs (Bq/g)'].values
-        [slope,inter,rval,pval,stdErr] = linregress(Cw,Cs)  
+        [slope,inter,rval,pval,stdErr] = linregress(Cw,Cs)
+        out = np.array([Cw,Cs,sCw,sCs,np.polyval([slope,inter],Cw)])
+        out = pd.DataFrame(np.transpose(out), columns = [pHs+' Cw',pHs+' Cs',pHs+' sCw',pHs+' sCs',pHs+' Fit'])
+        fhyOutput = fhyOutput.merge(out,how='outer',left_index=True,right_index=True)
         ax3[0,0].plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color=fhyPal[i])
         ax3[0,0].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],label='pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),ls='None',color=fhyPal[i])
         ax3[0,0].legend(loc=0)
@@ -128,7 +137,10 @@ for i in range(len(pHvals)):
         Cs = montSub.ix[:,'Cs (Bq/g)'].values
         sCw = montSub.ix[:,'sCw (Bq/mL)'].values
         sCs = montSub.ix[:,'sCs (Bq/g)'].values
-        [slope,inter,rval,pval,stdErr] = linregress(Cw,Cs)  
+        [slope,inter,rval,pval,stdErr] = linregress(Cw,Cs)
+        out = np.array([Cw,Cs,sCw,sCs,np.polyval([slope,inter],Cw)])
+        out = pd.DataFrame(np.transpose(out), columns = [pHs+' Cw',pHs+' Cs',pHs+' sCw',pHs+' sCs',pHs+' Fit'])
+        montOutput = montOutput.merge(out,how='outer',left_index=True,right_index=True)
         ax3[1,0].plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color=montPal[i])
         ax3[1,0].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],ls="none",label='pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),color=montPal[i],elinewidth=1.5)
         ax3[1,0].legend(loc=0)
@@ -149,7 +161,10 @@ for i in range(len(pHvals)):
         Cs = goeSub.ix[:,'Cs (Bq/g)'].values
         sCw = goeSub.ix[:,'sCw (Bq/mL)'].values
         sCs = goeSub.ix[:,'sCs (Bq/g)'].values
-        [slope,inter,rval,pval,stdErr] = linregress(Cw,Cs)  
+        [slope,inter,rval,pval,stdErr] = linregress(Cw,Cs)
+        out = np.array([Cw,Cs,sCw,sCs,np.polyval([slope,inter],Cw)])
+        out = pd.DataFrame(np.transpose(out), columns = [pHs+' Cw',pHs+' Cs',pHs+' sCw',pHs+' sCs',pHs+' Fit'])
+        goeOutput = goeOutput.merge(out,how='outer',left_index=True,right_index=True)
         ax3[0,1].plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color=goePal[i])
         ax3[0,1].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],ls='None',label='pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),color=goePal[i],elinewidth=1.5)
         ax3[0,1].set_title('Goethite')
@@ -168,7 +183,10 @@ for i in range(len(pHvals)):
         Cs = pyrSub.ix[:,'Cs (Bq/g)'].values
         sCw = pyrSub.ix[:,'sCw (Bq/mL)'].values
         sCs = pyrSub.ix[:,'sCs (Bq/g)'].values
-        [slope,inter,rval,pval,stdErr] = linregress(Cw,Cs)  
+        [slope,inter,rval,pval,stdErr] = linregress(Cw,Cs)
+        out = np.array([Cw,Cs,sCw,sCs,np.polyval([slope,inter],Cw)])
+        out = pd.DataFrame(np.transpose(out), columns = [pHs+' Cw',pHs+' Cs',pHs+' sCw',pHs+' sCs',pHs+' Fit'])
+        pyrOutput = pyrOutput.merge(out,how='outer',left_index=True,right_index=True)
         ax3[1,1].plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color=pyrPal[i])
         ax3[1,1].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],ls='None',label='pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),color=pyrPal[i],elinewidth=1.5)
         ax3[1,1].set_title('Pyrite')
@@ -242,3 +260,8 @@ f6.savefig('MasterTablePlots\\IsothermsNaMont.svg',dpi=1000)
 f7.savefig('MasterTablePlots\\IsothermsGOE.svg',dpi=1000)
 f8.savefig('MasterTablePlots\\IsothermsPYR.svg',dpi=1000)
 f9.savefig('MasterTablePlots\\KineticsNaMont.svg',dpi=1000)
+
+fhyOutput.to_csv('MasterTablePLots\\FhyIsothermData.csv')
+goeOutput.to_csv('MasterTablePLots\\GoeIsothermData.csv')
+montOutput.to_csv('MasterTablePLots\\MontIsothermData.csv')
+pyrOutput.to_csv('MasterTablePLots\\PyrIsothermData.csv')
