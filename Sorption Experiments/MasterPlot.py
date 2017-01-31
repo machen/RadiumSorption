@@ -21,17 +21,18 @@ plt.close("all") #Close all open figures
 #Set plotting behavior here
 mpl.rcParams["lines.markeredgewidth"] = 2
 mpl.rcParams["markers.fillstyle"] = "none"
-mpl.rcParams["errorbar.capsize"] = 5
-mpl.rcParams["lines.linewidth"] = 1
-mpl.rcParams["lines.markersize"] = 30
+mpl.rcParams["errorbar.capsize"] = 10
+mpl.rcParams["lines.linewidth"] = 5
+mpl.rcParams["lines.markersize"] = 40
 mpl.rcParams["svg.fonttype"] = "none"
 mpl.rcParams["figure.figsize"] = [16,14]
-#mpl.rcParams["font.size"] = 48
-#mpl.rcParams["axes.labelsize"] = "large"
-#mpl.rcParams["axes.labelpad"] = 10.0
-#mpl.rcParams["xtick.labelsize"] = "large"
-#mpl.rcParams["ytick.labelsize"] = "large"
-
+mpl.rcParams["font.size"] = 35
+mpl.rcParams["legend.fontsize"] = "medium"
+mpl.rcParams["axes.labelsize"] = "large"
+mpl.rcParams["axes.labelpad"] = 10.0
+mpl.rcParams["xtick.labelsize"] = "large"
+mpl.rcParams["ytick.labelsize"] = "large"
+mpl.rcParams["figure.autolayout"] = True
 
 
 #Metaplot of all data: Sorption Envelope
@@ -215,6 +216,7 @@ ax9.set_ylabel('Cw (Bq/mL)')
 
 handles, labels = ax4.get_legend_handles_labels()
 handles = [h[0] for h in handles]
+labels = ['Ferrihydrite','Na Montmorillonite','Goethite','Pyrite']
 ax4.legend(handles,labels,loc=0,numpoints=1)            
 ax4.set_xlabel('Cw (Bq/mL)')
 ax4.set_ylabel('Cs (Bq/g)')
@@ -255,13 +257,13 @@ sns.despine(f9)
 plt.show()
 #f1.savefig('MasterTablePlots\\Sorption Envelope.svg',dpi=1000)
 #f3.savefig('MasterTablePlots\\Sorption Isotherms.svg',dpi=1000)
-f5.savefig('MasterTablePlots\\IsothermsFHY.svg',dpi=1000)
-f6.savefig('MasterTablePlots\\IsothermsNaMont.svg',dpi=1000)
-f7.savefig('MasterTablePlots\\IsothermsGOE.svg',dpi=1000)
-f8.savefig('MasterTablePlots\\IsothermsPYR.svg',dpi=1000)
-f9.savefig('MasterTablePlots\\KineticsNaMont.svg',dpi=1000)
-
-fhyOutput.to_csv('MasterTablePLots\\FhyIsothermData.csv')
-goeOutput.to_csv('MasterTablePLots\\GoeIsothermData.csv')
-montOutput.to_csv('MasterTablePLots\\MontIsothermData.csv')
-pyrOutput.to_csv('MasterTablePLots\\PyrIsothermData.csv')
+#f5.savefig('MasterTablePlots\\IsothermsFHY.svg',dpi=1000)
+#f6.savefig('MasterTablePlots\\IsothermsNaMont.svg',dpi=1000)
+#f7.savefig('MasterTablePlots\\IsothermsGOE.svg',dpi=1000)
+#f8.savefig('MasterTablePlots\\IsothermsPYR.svg',dpi=1000)
+#f9.savefig('MasterTablePlots\\KineticsNaMont.svg',dpi=1000)
+#
+#fhyOutput.to_csv('MasterTablePLots\\FhyIsothermData.csv')
+#goeOutput.to_csv('MasterTablePLots\\GoeIsothermData.csv')
+#montOutput.to_csv('MasterTablePLots\\MontIsothermData.csv')
+#pyrOutput.to_csv('MasterTablePLots\\PyrIsothermData.csv')
