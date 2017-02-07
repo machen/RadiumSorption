@@ -19,19 +19,20 @@ pyrData = data.ix[data.ix[:,'Mineral']=='Pyrite']
 plt.close("all") #Close all open figures
 
 #Set plotting behavior here
-mpl.rcParams["lines.markeredgewidth"] = 2
+mpl.rcParams["figure.figsize"] = [3.33,3.33]
+mpl.rcParams["lines.markeredgewidth"] = 1
 mpl.rcParams["markers.fillstyle"] = "none"
-mpl.rcParams["errorbar.capsize"] = 10
-mpl.rcParams["lines.linewidth"] = 5
-mpl.rcParams["lines.markersize"] = 40
+mpl.rcParams["errorbar.capsize"] = 1
+mpl.rcParams["lines.linewidth"] = 2
+mpl.rcParams["lines.markersize"] = 15
 mpl.rcParams["svg.fonttype"] = "none"
-mpl.rcParams["figure.figsize"] = [16,14]
-mpl.rcParams["font.size"] = 35
-mpl.rcParams["legend.fontsize"] = "medium"
-mpl.rcParams["axes.labelsize"] = "large"
-mpl.rcParams["axes.labelpad"] = 10.0
-mpl.rcParams["xtick.labelsize"] = "large"
-mpl.rcParams["ytick.labelsize"] = "large"
+
+mpl.rcParams["font.size"] = 12
+mpl.rcParams["legend.fontsize"] = 12
+mpl.rcParams["axes.labelsize"] = 12
+mpl.rcParams["axes.labelpad"] = 5
+mpl.rcParams["xtick.labelsize"] = "small"
+mpl.rcParams["ytick.labelsize"] = "small"
 mpl.rcParams["figure.autolayout"] = True
 
 
