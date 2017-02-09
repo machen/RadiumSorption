@@ -81,7 +81,7 @@ sns.despine()
 
 #Plot of Isotherms separated by pH, along with isotherm fits
 
-f3, ax3 = plt.subplots(2,2,sharex='col',sharey='row',figsize=(7,8))
+f3, ax3 = plt.subplots(2,2,sharex='col',sharey='row',figsize=(7,4.5))
 f4 = plt.figure(4,figsize=(3.33,5))
 ax4 = f4.add_subplot(111) #pH 7, all minerals
 f5 = plt.figure(5) #Ferrihydrite, all pH values
@@ -267,7 +267,7 @@ sns.despine(f9)
 plt.show()
 #f1.savefig('MasterTablePlots\\Sorption Envelope.svg',dpi=1000)
 f3.savefig('..\\Manuscript\\Figures\\Sorption Isotherms.svg',dpi=1000)
-f4.savefig('..\\Manuscript\\Figures\\Figure1-pH7Isotherms.svg',dpi=1000)
+#f4.savefig('..\\Manuscript\\Figures\\Figure1-pH7Isotherms.svg',dpi=1000)
 #f5.savefig('MasterTablePlots\\IsothermsFHY.svg',dpi=1000)
 #f6.savefig('MasterTablePlots\\IsothermsNaMont.svg',dpi=1000)
 #f7.savefig('MasterTablePlots\\IsothermsGOE.svg',dpi=1000)
