@@ -19,20 +19,23 @@ pyrData = data.ix[data.ix[:,'Mineral']=='Pyrite']
 plt.close("all") #Close all open figures
 
 #Set plotting behavior here
-mpl.rcParams["figure.figsize"] = [3.33,3.33]
-mpl.rcParams["lines.markeredgewidth"] = 1
+mpl.rcParams["figure.figsize"] = [3.33,5]
+mpl.rcParams["lines.markeredgewidth"] = 1.5
 mpl.rcParams["markers.fillstyle"] = "none"
-mpl.rcParams["errorbar.capsize"] = 1
-mpl.rcParams["lines.linewidth"] = 2
-mpl.rcParams["lines.markersize"] = 15
+mpl.rcParams["errorbar.capsize"] = 4
+mpl.rcParams["lines.linewidth"] = 1.5
+mpl.rcParams["lines.markersize"] = 12
 mpl.rcParams["svg.fonttype"] = "none"
 
+mpl.rcParams["xtick.labelsize"] = 12
+mpl.rcParams["ytick.labelsize"] = 12            
+mpl.rcParams["axes.titlesize"] = 14
+            
 mpl.rcParams["font.size"] = 12
+mpl.rcParams["font.family"] = "Times New Roman"
 mpl.rcParams["legend.fontsize"] = 12
 mpl.rcParams["axes.labelsize"] = 12
 mpl.rcParams["axes.labelpad"] = 5
-mpl.rcParams["xtick.labelsize"] = "small"
-mpl.rcParams["ytick.labelsize"] = "small"
 mpl.rcParams["figure.autolayout"] = True
 
 
@@ -78,8 +81,8 @@ sns.despine()
 
 #Plot of Isotherms separated by pH, along with isotherm fits
 
-f3, ax3 = plt.subplots(2,2,sharex='col',sharey='row',figsize=(20,10))
-f4 = plt.figure(4)
+f3, ax3 = plt.subplots(2,2,sharex='col',sharey='row',figsize=(7,8))
+f4 = plt.figure(4,figsize=(3.33,5))
 ax4 = f4.add_subplot(111) #pH 7, all minerals
 f5 = plt.figure(5) #Ferrihydrite, all pH values
 ax5 = f5.add_subplot(111)
@@ -121,7 +124,7 @@ for i in range(len(pHvals)):
         out = pd.DataFrame(np.transpose(out), columns = [pHs+' Cw',pHs+' Cs',pHs+' sCw',pHs+' sCs',pHs+' Fit'])
         fhyOutput = fhyOutput.merge(out,how='outer',left_index=True,right_index=True)
         ax3[0,0].plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color=fhyPal[i])
-        ax3[0,0].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],label='pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),ls='None',color=fhyPal[i])
+        ax3[0,0].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],label='pH: {}'.format(pH),ls='None',color=fhyPal[i])
         ax3[0,0].legend(loc=0)
         ax3[0,0].set_title('Ferrihydrite')
         ax3[0,0].set_xlim(xlim)
@@ -144,7 +147,7 @@ for i in range(len(pHvals)):
         out = pd.DataFrame(np.transpose(out), columns = [pHs+' Cw',pHs+' Cs',pHs+' sCw',pHs+' sCs',pHs+' Fit'])
         montOutput = montOutput.merge(out,how='outer',left_index=True,right_index=True)
         ax3[1,0].plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color=montPal[i])
-        ax3[1,0].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],ls="none",label='pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),color=montPal[i],elinewidth=1.5)
+        ax3[1,0].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],ls="none",label='pH: {}'.format(pH),color=montPal[i],elinewidth=1.5)
         ax3[1,0].legend(loc=0)
         ax3[1,0].set_title('Sodium Montmorillonite')
         ax3[1,0].set_xlim(xlim)
@@ -168,7 +171,7 @@ for i in range(len(pHvals)):
         out = pd.DataFrame(np.transpose(out), columns = [pHs+' Cw',pHs+' Cs',pHs+' sCw',pHs+' sCs',pHs+' Fit'])
         goeOutput = goeOutput.merge(out,how='outer',left_index=True,right_index=True)
         ax3[0,1].plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color=goePal[i])
-        ax3[0,1].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],ls='None',label='pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),color=goePal[i],elinewidth=1.5)
+        ax3[0,1].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],ls='None',label='pH: {}'.format(pH),color=goePal[i],elinewidth=1.5)
         ax3[0,1].set_title('Goethite')
         ax3[0,1].legend(loc=0)
         ax3[0,1].set_xlim(xlim)
@@ -190,7 +193,7 @@ for i in range(len(pHvals)):
         out = pd.DataFrame(np.transpose(out), columns = [pHs+' Cw',pHs+' Cs',pHs+' sCw',pHs+' sCs',pHs+' Fit'])
         pyrOutput = pyrOutput.merge(out,how='outer',left_index=True,right_index=True)
         ax3[1,1].plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color=pyrPal[i])
-        ax3[1,1].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],ls='None',label='pH: {} Kd: {:.2f} R2: {:.2f}'.format(pH,slope,rval**2),color=pyrPal[i],elinewidth=1.5)
+        ax3[1,1].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],ls='None',label='pH: {}'.format(pH),color=pyrPal[i],elinewidth=1.5)
         ax3[1,1].set_title('Pyrite')
         ax3[1,1].legend(loc=0)
         ax3[1,1].set_xlim(xlim)
@@ -214,6 +217,12 @@ ax9.errorbar(times,montKineticCw,yerr=montKineticsCw,marker=markerStyles[0],colo
 ax9.set_ylim([0,1.0])
 ax9.set_xlabel('Experiment Length (sec)')
 ax9.set_ylabel('Cw (Bq/mL)')
+
+for i in [0,1]:
+    for j in [0,1]:
+        handles, labels = ax3[i,j].get_legend_handles_labels()
+        handles = [h[0] for h in handles]
+        ax3[i,j].legend(handles,labels,loc=0)
 
 handles, labels = ax4.get_legend_handles_labels()
 handles = [h[0] for h in handles]
@@ -257,7 +266,8 @@ sns.despine(f8)
 sns.despine(f9)
 plt.show()
 #f1.savefig('MasterTablePlots\\Sorption Envelope.svg',dpi=1000)
-#f3.savefig('MasterTablePlots\\Sorption Isotherms.svg',dpi=1000)
+f3.savefig('..\\Manuscript\\Figures\\Sorption Isotherms.svg',dpi=1000)
+f4.savefig('..\\Manuscript\\Figures\\Figure1-pH7Isotherms.svg',dpi=1000)
 #f5.savefig('MasterTablePlots\\IsothermsFHY.svg',dpi=1000)
 #f6.savefig('MasterTablePlots\\IsothermsNaMont.svg',dpi=1000)
 #f7.savefig('MasterTablePlots\\IsothermsGOE.svg',dpi=1000)
