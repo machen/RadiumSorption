@@ -16,6 +16,13 @@ montData = data.ix[data.ix[:,'Mineral']=='Sodium Montmorillonite']
 goeData = data.ix[data.ix[:,'Mineral']=='Goethite']
 pyrData = data.ix[data.ix[:,'Mineral']=='Pyrite']
 
+#QUICKLY NEED TO CONVERT GRAPHS TO pCi/L / pCi/g
+#FHYdata.ix[:,2:6] = FHYdata.ix[:,2:6]*27.027*1000
+#montData.ix[:,2:6] = montData.ix[:,2:6]*27.027*1000
+#goeData.ix[:,2:6] = goeData.ix[:,2:6]*27.027*1000
+#pyrData.ix[:,2:6] = pyrData.ix[:,2:6]*27.027*1000
+
+
 plt.close("all") #Close all open figures
 
 #Set plotting behavior here
@@ -266,7 +273,7 @@ sns.despine(f8)
 sns.despine(f9)
 plt.show()
 #f1.savefig('MasterTablePlots\\Sorption Envelope.svg',dpi=1000)
-f3.savefig('..\\Manuscript\\Figures\\Sorption Isotherms.svg',dpi=1000)
+#f3.savefig('..\\Manuscript\\Figures\\Sorption Isotherms.svg',dpi=1000)
 #f4.savefig('..\\Manuscript\\Figures\\Figure1-pH7Isotherms.svg',dpi=1000)
 #f5.savefig('MasterTablePlots\\IsothermsFHY.svg',dpi=1000)
 #f6.savefig('MasterTablePlots\\IsothermsNaMont.svg',dpi=1000)
