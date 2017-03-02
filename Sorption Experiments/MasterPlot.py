@@ -11,10 +11,15 @@ sns.set_context('poster')
 sns.set_style("ticks",rc={"font.size":48})
 data = pd.read_excel("Sorption Experiment Master Table.xlsx",header=0)
 data = data.ix[data.ix[:,"Include?"]==True,:] #Toggle if you only want to plot data flagged to include
+
+#Create dataframes containing only the sub data (sort by minerals)
+
 FHYdata = data.ix[data.ix[:,'Mineral']=="Ferrihydrite",:]
 montData = data.ix[data.ix[:,'Mineral']=='Sodium Montmorillonite']
 goeData = data.ix[data.ix[:,'Mineral']=='Goethite']
 pyrData = data.ix[data.ix[:,'Mineral']=='Pyrite']
+
+SA = {"fhy":382.9,"goe":146.46,"namont":50.162,"pyr":0.0685}
 
 #QUICKLY NEED TO CONVERT GRAPHS TO pCi/L / pCi/g
 #FHYdata.ix[:,2:6] = FHYdata.ix[:,2:6]*27.027*1000
@@ -26,7 +31,7 @@ pyrData = data.ix[data.ix[:,'Mineral']=='Pyrite']
 plt.close("all") #Close all open figures
 
 #Set plotting behavior here
-mpl.rcParams["figure.figsize"] = [3.33,5]
+mpl.rcParams["figure.figsize"] = [6.66 ,5]
 mpl.rcParams["lines.markeredgewidth"] = 1.5
 mpl.rcParams["markers.fillstyle"] = "none"
 mpl.rcParams["errorbar.capsize"] = 4
@@ -88,7 +93,7 @@ sns.despine()
 
 #Plot of Isotherms separated by pH, along with isotherm fits
 
-f3, ax3 = plt.subplots(2,2,sharex='col',sharey='row',figsize=(7,4.5))
+f3, ax3 = plt.subplots(2,2,sharex='col',figsize=(7.3,4.5))
 f4 = plt.figure(4,figsize=(3.33,5))
 ax4 = f4.add_subplot(111) #pH 7, all minerals
 f5 = plt.figure(5) #Ferrihydrite, all pH values
@@ -102,10 +107,14 @@ ax8 = f8.add_subplot(111)
 pHvals  = [3,5,7,9]
 markerStyles = ['o','^','s','p']
 lineStyles = ["-","--","-.",":"]
-fhyPal = sns.color_palette("Blues_d",4)#sns.cubehelix_palette(n_colors=4,dark=0.3,start=0.2,light=0.8,gamma=1.3,rot=0.2)
-montPal = sns.color_palette("Greens_d",4)#sns.cubehelix_palette(n_colors=4,dark=0.3,start=-0.2,light=0.8,gamma=1.3,rot=0.2)
-goePal = sns.color_palette("Reds_d",4) #sns.cubehelix_palette(n_colors=4,dark=0.3,start=0,light=0.8,gamma=1.3,rot=0.2)
-pyrPal = sns.color_palette("Purples_d",4) # sns.cubehelix_palette(n_colors=4,dark=0.3,start=0.4,light=0.8,gamma=1.3,rot=0.2)
+fhyPal = sns.color_palette("Reds_d",4)
+montPal = sns.color_palette("Greens_d",4)
+goePal = sns.color_palette("Oranges_d",4)
+pyrPal = sns.color_palette("Purples_d",4)
+fhyPal.reverse()
+montPal.reverse()
+goePal.reverse()
+pyrPal.reverse()
 
 fhyOutput = pd.DataFrame(index = np.arange(0,5))
 goeOutput = pd.DataFrame(index = np.arange(0,5))
@@ -273,7 +282,7 @@ sns.despine(f8)
 sns.despine(f9)
 plt.show()
 #f1.savefig('MasterTablePlots\\Sorption Envelope.svg',dpi=1000)
-#f3.savefig('..\\Manuscript\\Figures\\Sorption Isotherms.svg',dpi=1000)
+f3.savefig('..\\Manuscript\\Figures\\Sorption Isotherms.svg',dpi=1000)
 #f4.savefig('..\\Manuscript\\Figures\\Figure1-pH7Isotherms.svg',dpi=1000)
 #f5.savefig('MasterTablePlots\\IsothermsFHY.svg',dpi=1000)
 #f6.savefig('MasterTablePlots\\IsothermsNaMont.svg',dpi=1000)
