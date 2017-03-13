@@ -91,10 +91,10 @@ ax2[0].set_ylabel("Fraction Sorbed (.)")
 
 f3, ax3 = plt.subplots(2,2,sharex='col',sharey='row',figsize=(7,4.5))
 
-blue = sns.color_palette("Blues",1)[0]
-red = sns.color_palette("Reds",1)[0]
-purple = sns.color_palette("Purples",1)[0]
-green = sns.color_palette("Greens",1)[0]
+blue = #sns.color_palette("Blues",1)[0]
+red = #sns.color_palette("Reds",1)[0]
+purple = #sns.color_palette("Purples",1)[0]
+green = #sns.color_palette("Greens",1)[0]
 
 ax3[0,0].plot(fhySim.ix[:,"pH"].values,fhySim.ix[:,"fSorb"].values,ls="-",color = blue,label = "Simulation")
 ax3[0,0].errorbar(fhyExp.ix[:,"pH (data)"].values,fhyExp.ix[:,"fSorb (data)"],xerr = fhyExp.ix[:,"spH (data)"].values,yerr=fhyExp.ix[:,"sfSorb (data)"],color=blue,marker = ".",ls="none",label = "Experiment")
@@ -140,4 +140,4 @@ for i in [0,1]:
         
 #plt.savefig("Figure2-FHYGoeSCM.svg",dpi=1000)
 f2.savefig("Figure2Alt-FHYNaMontSCM.svg",dpi=1000)
-f3.savefig("AllSCM.svg",dpi=1000)
+f3.savefig("AllSCM_BW.svg",dpi=1000)
