@@ -5,7 +5,8 @@ Created on Wed Apr 06 16:47:14 2016
 @author: Michael
 """
 
-import pandas as pd, numpy as np, matplotlib as mpl, matplotlib.pyplot as plt, seaborn as sns
+import pandas as pd, numpy as np, matplotlib as mpl
+import matplotlib.pyplot as plt, seaborn as sns
 from scipy.stats import linregress
 sns.set_context('poster')
 sns.set_style("ticks",rc={"font.size":48})
@@ -129,7 +130,7 @@ for i in range(len(pHvals)):
     goeSub = goeData.ix[abs(goeData.ix[:,'pH']-pH)<0.2,:]
     pyrSub = pyrData.ix[abs(pyrData.ix[:,'pH']-pH)<0.2,:]
     xlim = [-0.5,3.0]
-    ylim = [-100,10000]
+    ylim = [-100,20000]
     if not fhySub.empty:
         Cw = fhySub.ix[:,'Cw (Bq/mL)'].values
         Cs = fhySub.ix[:,'Cs (Bq/g)'].values
@@ -282,7 +283,7 @@ sns.despine(f8)
 sns.despine(f9)
 plt.show()
 #f1.savefig('MasterTablePlots\\Sorption Envelope.svg',dpi=1000)
-#f3.savefig('..\\Manuscript\\Figures\\Sorption Isotherms.svg',dpi=1000)
+f3.savefig('..\\Manuscript\\Figures\\Sorption Isotherms.svg',dpi=1000)
 #f4.savefig('..\\Manuscript\\Figures\\Figure1-pH7Isotherms.svg',dpi=1000)
 #f5.savefig('MasterTablePlots\\IsothermsFHY.svg',dpi=1000)
 #f6.savefig('MasterTablePlots\\IsothermsNaMont.svg',dpi=1000)
@@ -290,7 +291,7 @@ plt.show()
 #f8.savefig('MasterTablePlots\\IsothermsPYR.svg',dpi=1000)
 #f9.savefig('MasterTablePlots\\KineticsNaMont.svg',dpi=1000)
 #
-#fhyOutput.to_csv('MasterTablePLots\\FhyIsothermData.csv')
-#goeOutput.to_csv('MasterTablePLots\\GoeIsothermData.csv')
-#montOutput.to_csv('MasterTablePLots\\MontIsothermData.csv')
-#pyrOutput.to_csv('MasterTablePLots\\PyrIsothermData.csv')
+fhyOutput.to_csv('MasterTablePlots\\FhyIsothermData.csv')
+goeOutput.to_csv('MasterTablePlots\\GoeIsothermData.csv')
+montOutput.to_csv('MasterTablePlots\\MontIsothermData.csv')
+pyrOutput.to_csv('MasterTablePlots\\PyrIsothermData.csv')
