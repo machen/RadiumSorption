@@ -91,35 +91,35 @@ ax2[0].set_ylabel("Fraction Sorbed (.)")
 
 f3, ax3 = plt.subplots(2,2,sharex='col',sharey='row',figsize=(7,4.5))
 
-blue = #sns.color_palette("Blues",1)[0]
-red = #sns.color_palette("Reds",1)[0]
-purple = #sns.color_palette("Purples",1)[0]
-green = #sns.color_palette("Greens",1)[0]
+fhycolor = sns.color_palette("Reds_d",1)[0]
+goecolor = sns.color_palette("Oranges_d",1)[0]
+pyrcolor = sns.color_palette("Purples_d",1)[0]
+montcolor = sns.color_palette("Greens_d",1)[0]
 
-ax3[0,0].plot(fhySim.ix[:,"pH"].values,fhySim.ix[:,"fSorb"].values,ls="-",color = blue,label = "Simulation")
-ax3[0,0].errorbar(fhyExp.ix[:,"pH (data)"].values,fhyExp.ix[:,"fSorb (data)"],xerr = fhyExp.ix[:,"spH (data)"].values,yerr=fhyExp.ix[:,"sfSorb (data)"],color=blue,marker = ".",ls="none",label = "Experiment")
+ax3[0,0].plot(fhySim.ix[:,"pH"].values,fhySim.ix[:,"fSorb"].values,ls="-",color = fhycolor,label = "Simulation")
+ax3[0,0].errorbar(fhyExp.ix[:,"pH (data)"].values,fhyExp.ix[:,"fSorb (data)"],xerr = fhyExp.ix[:,"spH (data)"].values,yerr=fhyExp.ix[:,"sfSorb (data)"],color=fhycolor,marker = ".",ls="none",label = "Experiment")
 ax3[0,0].set_xlim([2,10])
 ax3[0,0].set_ylim([-0.1,1.1])
 ax3[0,0].legend(loc=0)
 ax3[0,0].set_title("Ferrihydrite")
 ax3[0,0].set_ylabel("fSorb")
 
-ax3[0,1].plot(goeSim.ix[:,"pH"].values,goeSim.ix[:,"fSorb"].values,ls="-",color = red,label = "Simulation")
-ax3[0,1].errorbar(goeExp.ix[:,"pH (data)"].values,goeExp.ix[:,"fSorb (data)"],xerr = goeExp.ix[:,"spH (data)"].values,yerr=goeExp.ix[:,"sfSorb (data)"],color=red,marker = ".",ls="none",label = "Experiment")
+ax3[0,1].plot(goeSim.ix[:,"pH"].values,goeSim.ix[:,"fSorb"].values,ls="-",color = goecolor,label = "Simulation")
+ax3[0,1].errorbar(goeExp.ix[:,"pH (data)"].values,goeExp.ix[:,"fSorb (data)"],xerr = goeExp.ix[:,"spH (data)"].values,yerr=goeExp.ix[:,"sfSorb (data)"],color=goecolor,marker = ".",ls="none",label = "Experiment")
 ax3[0,1].set_xlim([2,10])
 ax3[0,1].set_ylim([-0.1,1.1])
 ax3[0,1].legend(loc=0)
 ax3[0,1].set_title("Goethite")
 
-ax3[1,0].plot(montSim.ix[:,"pH"].values,montSim.ix[:,"fSorb"].values,ls="-",color = green,label = "Simulation")
-ax3[1,0].errorbar(montExp.ix[:,"pH (data)"].values,montExp.ix[:,"fSorb (data)"],xerr = montExp.ix[:,"spH (data)"].values,yerr=montExp.ix[:,"sfSorb (data)"],color=green,marker = ".",ls="none",label = "Experiment")
+ax3[1,0].plot(montSim.ix[:,"pH"].values,montSim.ix[:,"fSorb"].values,ls="-",color = montcolor,label = "Simulation")
+ax3[1,0].errorbar(montExp.ix[:,"pH (data)"].values,montExp.ix[:,"fSorb (data)"],xerr = montExp.ix[:,"spH (data)"].values,yerr=montExp.ix[:,"sfSorb (data)"],color=montcolor,marker = ".",ls="none",label = "Experiment")
 ax3[1,0].set_xlim([2,10])
 ax3[1,0].set_ylim([-0.1,1.1])
 ax3[1,0].legend(loc=0)
 ax3[1,0].set_title("Sodium Montmorillonite")
 
-ax3[1,1].plot(pyrSim.ix[:,"pH"].values,pyrSim.ix[:,"fSorb"].values,ls="-",color = purple,label = "Simulation")
-ax3[1,1].errorbar(pyrExp.ix[:,"pH (data)"].values,pyrExp.ix[:,"fSorb (data)"],xerr = pyrExp.ix[:,"spH (data)"].values,yerr=pyrExp.ix[:,"sfSorb (data)"],color=purple,marker = ".",ls="none",label = "Experiment")
+ax3[1,1].plot(pyrSim.ix[:,"pH"].values,pyrSim.ix[:,"fSorb"].values,ls="-",color = pyrcolor,label = "Simulation")
+ax3[1,1].errorbar(pyrExp.ix[:,"pH (data)"].values,pyrExp.ix[:,"fSorb (data)"],xerr = pyrExp.ix[:,"spH (data)"].values,yerr=pyrExp.ix[:,"sfSorb (data)"],color=pyrcolor,marker = ".",ls="none",label = "Experiment")
 ax3[1,1].set_xlim([2,10])
 ax3[1,1].set_ylim([-0.1,1.1])
 ax3[1,1].legend(loc=0)
@@ -139,5 +139,5 @@ for i in [0,1]:
         ax3[i,j].legend(handles,labels,loc=0)
         
 #plt.savefig("Figure2-FHYGoeSCM.svg",dpi=1000)
-f2.savefig("Figure2Alt-FHYNaMontSCM.svg",dpi=1000)
-f3.savefig("AllSCM_BW.svg",dpi=1000)
+#f2.savefig("Figure2Alt-FHYNaMontSCM.svg",dpi=1000)
+#f3.savefig("AllSCM.svg",dpi=1000)
