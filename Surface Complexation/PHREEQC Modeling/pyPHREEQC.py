@@ -81,7 +81,7 @@ class simulation:
         newMaster = pd.concat([newData,self.masterTable],ignore_index=True)
         self.masterTable = newMaster
         if writeMaster:
-            newMaster.drop_duplicates(keep='first',subset=['k1','k2','pH']).to_csv(self.templFile[:-4]+'.csv',index=False)
+            newMaster.drop_duplicates(keep='first',subset=self.param.keys().append('pH')).to_csv(self.templFile[:-4]+'.csv',index=False) #Save this to a file for future usage, uses PD drop_duplicates with the params and pH to remove duplicate entries
     def plotSpeciation(self,titleStr='',solidTag="m_Fhy"):
         f2 = plt.figure(2)
         f2.clf()
@@ -134,9 +134,9 @@ totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
 #db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
-tmp = "GOE Sajih Tetradentate\GOE Sajih Tetradentate RealSA.txt"
+tmp = "Pyrite 1 site\Pyrite 1 site DDL Deprotonated Site.txt"
 #masterFile = pd.read_csv(tmp[:-4]+'.csv')
-titleString = "Tetradentate Model, Goethite, Real Surface Area"
+titleString = "Single site model, Pyrite, Real Surface Area"
 #x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
 #x.generateData()
 sns.set_palette("deep",n_colors = 6)
@@ -151,7 +151,7 @@ f1.clf()
 ax = f1.add_subplot(111)
 
 
-labelStr = "1 site 2 rxn, K1: {K1}, K2: {K2} {sites} mol"
+labelStr = "1 site 2 rxn, K1: {K1}, {sites} mol"
 pos = 0.0
 #siteSVal = np.arange(1E-9,2E-8,1E-9)
 siteSVal = np.array([1.9E-8])
@@ -185,12 +185,12 @@ Kint = 0.15
 ##KintVal = np.array([-3])
 #ncol = np.size(KintVal)*np.size(KVal)*np.size(siteVal)
 
-K1Val = np.array([-2.5])
+K1Val = np.array([-10.0])
 #K1Val = np.arange(-2.8,-2.4,0.1)
-K2Val =np.array([4.6])
+K2Val =np.array([-10.0])
 #K2Val = np.arange(3.9,5.1,0.1)
 #siteVal = np.array([1.42E-6])
-siteVal = np.array([1.92E-6])
+siteVal = np.array([1.11E-6])
 #siteVal = np.arange(1.35E-6,1.44E-6,1E-8)
 #siteVal = np.logspace(-10,-2,num=9,endpoint=True)
 siteWVal = np.array([6E-9])
@@ -213,11 +213,11 @@ for K1 in K1Val:
     for K2 in K2Val:
         for sites in siteVal:   
             for siteW in siteWVal:
-                    x = simulation({'totRa':totRa,'k1':K1,'sites':sites,'k2':K2},tmp,db)
+                    x = simulation({'totRa':totRa,'k1':K1,'sites':sites},tmp,db)
                     x.generateData()
                     x.addDataToMaster(writeMaster=True)
                     simRes = x.getData()
-                    ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(K1=K1,sites=sites,K2=K2),color=next(palette))
+                    ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(K1=K1,sites=sites),color=next(palette))
                     pos = pos+1
                     per = pos/ncol
                     print '{:.2%}'.format(per)
