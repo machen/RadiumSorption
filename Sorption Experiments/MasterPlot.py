@@ -130,7 +130,7 @@ for i in range(len(pHvals)):
     goeSub = goeData.ix[abs(goeData.ix[:,'pH']-pH)<0.2,:]
     pyrSub = pyrData.ix[abs(pyrData.ix[:,'pH']-pH)<0.2,:]
     xlim = [-0.5,3.0]
-    ylim = [-100,20000]
+    ylim = [-100,10000]
     if not fhySub.empty:
         Cw = fhySub.ix[:,'Cw (Bq/mL)'].values
         Cs = fhySub.ix[:,'Cs (Bq/g)'].values
