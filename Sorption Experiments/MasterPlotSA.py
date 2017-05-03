@@ -287,7 +287,8 @@ plt.show()
 #DATA OUTPUT
 
 #f1.savefig('MasterTablePlots\\Sorption Envelope.svg',dpi=1000)
-f3.savefig('..\\Manuscript\\Figures\\Sorption Isotherms SA.svg',dpi=1000)
+#f3.savefig('..\\Manuscript\\Figures\\Sorption Isotherms SA.svg',dpi=1000)
+f3.savefig('MasterTablePlots\\Sorption Isotherms SA All Valid Data.svg', dpi=1000)
 #f4.savefig('..\\Manuscript\\Figures\\Figure1-pH7Isotherms.svg',dpi=1000)
 #f5.savefig('MasterTablePlots\\IsothermsFHY.svg',dpi=1000)
 #f6.savefig('MasterTablePlots\\IsothermsNaMont.svg',dpi=1000)
