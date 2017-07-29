@@ -20,8 +20,8 @@ dataIsotherm = data.ix[data.ix[:,"Salt"]=="NaCl",:] #Selecting the data for the 
 
 dataMultiSalinity = data.ix[abs(data.ix[:,"TotAct"]-64.0)<20.0,:] #Select all data that is near the total activity of the mixed results
 dataMultiSalinity = dataMultiSalinity.ix[abs(dataMultiSalinity.ix[:,"pH"]-7.0)<0.2,:] #Further select down the data to only include data with similar pH
-dataMultiSalinity = dataMultiSalinity.sort_values(by="Salt") #sort the table by salt to make it easier to select on
-
+dataMultiSalinity = dataMultiSalinity.sort_values(by="Salt") #sort the table by salt to make it easier to select on                                                
+                                                 
 """SECTION 2: ISOTHERM PLOTS"""
               
 #Make Mineral Specific dataframes for each isotherm
@@ -254,16 +254,48 @@ sns.despine(f9)
 
 """SECTION 3: SALINITY PLOTS"""
 
-saltLabels = dataMultiSalinity.ix[:,'Salt'].unique()
-
-groups = len(saltLabels)
 
 #Data for each mineral
 
-valsFHY = dataMultiSalinity.ix[dataMultiSalinity.ix[:,'Mineral']=='Ferrihydrite',['fSorb','sfSorb']]
-valsGOE = dataMultiSalinity.ix[dataMultiSalinity.ix[:,'Mineral']=='Goethite',['fSorb','sfSorb']]
-valsMont = dataMultiSalinity.ix[dataMultiSalinity.ix[:,'Mineral']=='Sodium Montmorillonite',['fSorb','sfSorb']]
-valsPYR = dataMultiSalinity.ix[dataMultiSalinity.ix[:,'Mineral']=='Pyrite',['fSorb','sfSorb']]
+valsFHY = dataMultiSalinity.ix[dataMultiSalinity.ix[:,'Mineral']=='Ferrihydrite',:].sort_values(by='Ionic Strength (meq/L)',ascending=True)
+valsGOE = dataMultiSalinity.ix[dataMultiSalinity.ix[:,'Mineral']=='Goethite',:].sort_values(by='Ionic Strength (meq/L)',ascending=True)
+valsMont = dataMultiSalinity.ix[dataMultiSalinity.ix[:,'Mineral']=='Sodium Montmorillonite',:].sort_values(by='Ionic Strength (meq/L)',ascending=True)
+valsPYR = dataMultiSalinity.ix[dataMultiSalinity.ix[:,'Mineral']=='Pyrite',:].sort_values(by='Ionic Strength (meq/L)',ascending=True)
+
+
+##PLOT 1: Plot, by mineral, "Kd" (Cs/Cw) vs. Ionic Strength
+
+KdIFig, KdIAx = plt.subplots()
+I = valsFHY.ix[:,'Ionic Strength (meq/L)'].values
+K = valsFHY.ix[:,'Cs (Bq/g)'].values/valsFHY.ix[:,'Cw (Bq/mL)'].values #Units of mL/g
+sK = K*np.sqrt((valsFHY.ix[:,'sCs (Bq/g)']/valsFHY.ix[:,'Cs (Bq/g)'])**2+(valsFHY.ix[:,'sCw (Bq/mL)']/valsFHY.ix[:,'Cw (Bq/mL)'])**2)    #units of mL/g
+KdIAx.errorbar(I,K,yerr=sK,marker='.',label='Ferrihydrite',ls='None',color=fhyPal[1])
+
+I = valsGOE.ix[:,'Ionic Strength (meq/L)'].values
+K = valsGOE.ix[:,'Cs (Bq/g)'].values/valsGOE.ix[:,'Cw (Bq/mL)'].values #Units of mL/g
+sK = K*np.sqrt((valsGOE.ix[:,'sCs (Bq/g)']/valsGOE.ix[:,'Cs (Bq/g)'])**2+(valsGOE.ix[:,'sCw (Bq/mL)']/valsGOE.ix[:,'Cw (Bq/mL)'])**2)    #units of mL/g
+KdIAx.errorbar(I,K,yerr=sK,marker='.',label='Goethite',ls='None',color=goePal[1])
+
+I = valsMont.ix[:,'Ionic Strength (meq/L)'].values
+K = valsMont.ix[:,'Cs (Bq/g)'].values/valsMont.ix[:,'Cw (Bq/mL)'].values #Units of mL/g
+sK = K*np.sqrt((valsMont.ix[:,'sCs (Bq/g)']/valsMont.ix[:,'Cs (Bq/g)'])**2+(valsMont.ix[:,'sCw (Bq/mL)']/valsMont.ix[:,'Cw (Bq/mL)'])**2)    #units of mL/g
+KdIAx.errorbar(I,K,yerr=sK,marker='.',label='Sodium Montmorillonite',ls='None',color=montPal[1])
+
+I = valsPYR.ix[:,'Ionic Strength (meq/L)'].values
+K = valsPYR.ix[:,'Cs (Bq/g)'].values/valsPYR.ix[:,'Cw (Bq/mL)'].values #Units of mL/g
+sK = K*np.sqrt((valsPYR.ix[:,'sCs (Bq/g)']/valsPYR.ix[:,'Cs (Bq/g)'])**2+(valsPYR.ix[:,'sCw (Bq/mL)']/valsPYR.ix[:,'Cw (Bq/mL)'])**2)    #units of mL/g
+KdIAx.errorbar(I,K,yerr=sK,marker='.',label='Pyrite',ls='None',color=pyrPal[1])
+
+KdIAx.set_yscale('log')
+KdIAx.set_xscale('log')
+KdIAx.legend(loc=0)
+KdIAx.set_title("Ionic Strength vs K")
+
+##PLOT 2: Bars. Requires to have the same number of points for each data value.
+
+
+saltLabels =valsFHY.ix[:,'Salt'].unique()
+groups = len(saltLabels)
 
 fBar, axBar = plt.subplots()
 index = np.arange(groups)
@@ -272,7 +304,7 @@ bar_width =0.1
 fhyBar = plt.bar(index-1.5*bar_width,valsFHY.ix[:,'fSorb'],bar_width,yerr = valsFHY.ix[:,'sfSorb'],alpha = 1, color = fhyPal[1],label = 'Ferrihydrite')
 goeBar = plt.bar(index-0.5*bar_width,valsGOE.ix[:,'fSorb'],bar_width,yerr = valsGOE.ix[:,'sfSorb'],alpha = 1, color = goePal[1],label = 'Goethite')
 montBar = plt.bar(index+0.5*bar_width,valsMont.ix[:,'fSorb'],bar_width,yerr = valsMont.ix[:,'sfSorb'],alpha = 1, color = montPal[1],label = 'Sodium Montmorillonite')
-#pyrBar = plt.bar(index+1.5*bar_width,valsPYR.ix[:,'fSorb'],bar_width,yerr = valsPYR.ix[:,'sfSorb'],alpha = 1, color = pyrPal[1],label = 'Pyrite') #need mroe data points
+#pyrBar = plt.bar(index+1.5*bar_width,valsPYR.ix[:,'fSorb'],bar_width,yerr = valsPYR.ix[:,'sfSorb'],alpha = 1, color = pyrPal[1],label = 'Pyrite') #need more data points
 
 axBar.set_ylabel('Fraction Sorbed')
 axBar.set_title("Salinity testing")
@@ -281,8 +313,32 @@ axBar.set_xticklabels(saltLabels)
 
 axBar.legend(loc=0)
 
+#PLOT 3: IONIC STRENGTH VS FSORB
 
+sorbIFig, sorbIAx = plt.subplots()
+I = valsFHY.ix[:,'Ionic Strength (meq/L)'].values
+K = valsFHY.ix[:,'fSorb'].values #Dimensionless units
+sK = valsFHY.ix[:,'sfSorb'].values #Dimensionless units
+sorbIAx.errorbar(I,K,yerr=sK,marker='.',label='Ferrihydrite',ls='None',color=fhyPal[1])
 
+I = valsGOE.ix[:,'Ionic Strength (meq/L)'].values
+K = valsGOE.ix[:,'fSorb'].values #Dimensionless units
+sK = valsGOE.ix[:,'sfSorb'].values #Dimensionless units
+sorbIAx.errorbar(I,K,yerr=sK,marker='.',label='Goethite',ls='None',color=goePal[1])
+
+I = valsMont.ix[:,'Ionic Strength (meq/L)'].values
+K = valsMont.ix[:,'fSorb'].values #Dimensionless units
+sK =valsMont.ix[:,'sfSorb'].values #Dimensionless units
+sorbIAx.errorbar(I,K,yerr=sK,marker='.',label='Sodium Montmorillonite',ls='None',color=montPal[1])
+
+I = valsPYR.ix[:,'Ionic Strength (meq/L)'].values
+K = valsPYR.ix[:,'fSorb'].values #Dimensionless units
+sK =valsPYR.ix[:,'sfSorb'].values #Dimensionless units
+sorbIAx.errorbar(I,K,yerr=sK,marker='.',label='Pyrite',ls='None',color=pyrPal[1])
+
+sorbIAx.set_xscale('log')
+sorbIAx.legend(loc=0)
+sorbIAx.set_title("Ionic Strength vs fSorb")
 
 
 
