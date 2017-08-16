@@ -15,7 +15,7 @@ import itertools, os, copy
 #New script will allow user to run a series of PHREEQC calculation using a template file, allowing for iteration over multiple values
 
 class simulation:
-    def __init__(self,parameters,templateFile,database,pHrange=[2,10],masterTable=None):
+    def __init__(self,parameters,templateFile,database,pHrange=[2,10],masterTable=None,check=False):
         self.param = parameters #Dictionary of parameters, which includes everything you want to input to the template
         self.pHrange = pHrange #Range of pHs each simulation should run over
         with open(templateFile,'r') as tempFile:
@@ -27,6 +27,7 @@ class simulation:
         else:
             self.masterTable = self.loadMaster() #Loads master table into memory
         self.data = pd.DataFrame() #Should only contian data that are specified by the parameters and pH range
+        self.dataFromMaster = check
 
     def runPHREEQC(self,inputStr):
         """inputStr: String that you want PHREEQC to run, should have valid PHRREQC syntax"""
@@ -48,10 +49,13 @@ class simulation:
             if chk.empty:
                 subRes = self.runPHREEQC(self.templStr.substitute(inputParam)) #Run phreeqc with the parameters if the data is not yet there
                 subRes = pd.DataFrame([subRes[1]],columns=subRes[0])
-                fSorb = (inputParam['totRa']-subRes.ix[:,'Ra(mol/kgw)'].values)/inputParam['totRa']
+                fSorb = (inputParam['totRa']-subRes.loc[:,'Ra(mol/kgw)'].values)/inputParam['totRa']
+                Rd = (inputParam['totRa']-subRes.loc[:,'Ra(mol/kgw)'].values)/subRes.loc[:,'Ra(mol/kgw)'].values
                 subRes['fSorb'] = pd.Series(fSorb,index=subRes.index)
+                subRes['Rd'] = pd.Series(Rd,index=subRes.index)
             else:
                 subRes = chk #If the data is there, append the result that would have come out of running PHRREQC instead. Note that I assume that a given simulation instance may have both already run and unrun data
+                self.dataFromMaster=True
             self.data = self.data.append(subRes,ignore_index=True) #Note that self.data is a pandas dataframe containing ALL of the results from selected output
     def loadMaster(self):
         #Assumes your template is saved with some kind of extension of the form ".xxx", and loads the master table into the simulation
@@ -67,11 +71,14 @@ class simulation:
         matchData = copy.deepcopy(self.masterTable) #Creates a separate copy of the mastertable, which is then sliced according to the parameters in params
         if not matchData.empty: #Need to make sure matchData isn't empty before trying to slice it
             for key in params: #Iterate over all the keys in params, slicing out the master table data that matches within the error 1E-8. COULD SPECIFY ERROR IF WE WANTED
-                matchData = matchData.loc[abs(matchData.loc[:,key]-params[key])<1E-14,:]
+                matchData = matchData.loc[abs(matchData.loc[:,key]-params[key])<1E-16,:]
             return matchData
         else: #Returns empty dataframe if no match
             return matchData
     def addDataToMaster(self,writeMaster=False):
+        #Write master is a USER choice whether or not the simulation should attempt to save its results, dataFromMaster prevents the simulation from "double writing" data when it's drawing the data from the masterTable (see self.checkMaster())
+        if  self.dataFromMaster:
+            return
         #Save data into master table of results. Should include all parameters
         newData = self.data
         n=len(newData.index) 
@@ -86,18 +93,18 @@ class simulation:
         f2 = plt.figure(2)
         f2.clf()
         ax2 = f2.add_subplot(111)
-        totRa = x.param['totRa']
+        totRa = self.param['totRa']
         cmap = sns.color_palette("hls",n_colors=16)
         color = itertools.cycle(cmap)
         color2 = itertools.cycle(cmap)
         for colName in self.data.columns:
             if colName.startswith(solidTag) and "Ra" in colName: #m_Fhy is a marker for solid species
-                ax2.plot(self.data.ix[:,'pH'].values,self.data.ix[:,colName].values/totRa,'--',label=colName,color=next(color))
+                ax2.plot(self.data.loc[:,'pH'].values,self.data.loc[:,colName].values/totRa,'--',label=colName,color=next(color))
             elif colName.startswith("m_Ra"): #m_Ra is a marker for solution species
-                ax2.plot(self.data.ix[:,'pH'].values,self.data.ix[:,colName].values/totRa,'-',label=colName,color=next(color2))
+                ax2.plot(self.data.loc[:,'pH'].values,self.data.loc[:,colName].values/totRa,'-',label=colName,color=next(color2))
             else: #Do not plot things that are not part of the speciation
                 continue
-        #ax2.plot(self.data.ix[:,'pH'],self.data.ix[:,'fSorb'],'-k',label='Fraction Sorbed')
+        #ax2.plot(self.data.loc[:,'pH'],self.data.loc[:,'fSorb'],'-k',label='Fraction Sorbed')
         plt.legend(loc=0)
         plt.title(titleStr+" Speciation")
         plt.xlabel("pH")
@@ -109,12 +116,14 @@ class simulation:
         return self.masterTable
     def getParam(self):
         return self.param
+
 def extractData(path):
     #Function retrieves data from an excel spreadsheet
     fileLoc = path
     data = pd.read_excel(fileLoc)
     return data
-
+    
+    
 #Plotting
 sns.set_context('poster')
 sns.set_style("ticks",rc={"font.size":48})
@@ -128,54 +137,58 @@ mpl.rcParams["figure.figsize"] = [16,14]
        
 specAct = 6.02E23*np.log(2)/(1600*365*24*60*60) #Gets Bq/mol       
 totRa = 100/specAct/0.1 #Mol/L Ra-226
-k1 = 6.66
-k2 = -5.67
-totalSites = 5.98E-5 #Total expected number of sites given 2 sites/nm^2 on FHY
 
 db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
-#db="D:\Junction\Program Files (x86)\USGS\Phreeqc Interactive\database\sit.dat" #Database for home computer
-tmp = "FHY 2 Site DzombakMorel DDL\FHY StrongWeak DDL.txt"
-#masterFile = pd.read_csv(tmp[:-4]+'.csv')
-titleString = "Ferrihydrite, Dzombak and Morel Model"
-#x = simulation({'totRa':totRa,'k1':k1,'k2':k2},[2,10],tmp,db)
-#x.generateData()
+#db="F:\Programs\USGS\Phreeqc Interactive 3.3.12-12704\database\sit.dat" #Database for home computer
+tmp = "Montmorillonite 2 Site CEC Model\Montmorillonite BaeyensBradbury RealSA.txt" #Location of template file to use as the input file for PHREEQC, changing this means changing the x.simulation inputs, as well as the figure legend plot strings
+titleString = "Sodium Montmorillonite by Baeyens and Bradbury"
 sns.set_palette("deep",n_colors = 6)
 
 #Find experimental data to use
 expData = extractData('..\..\Sorption Experiments\Sorption Experiment Master Table.xlsx')
-expData = expData.ix[expData.ix[:,'Include?']==True,:] #Select only data that's been vetted
-expData = expData.ix[expData.ix[:,'Mineral']=="Ferrihydrite"]
-expData = expData.ix[expData.ix[:,'Salt']=='NaCl'] #Want to fit isotherm data at first
-expData = expData.ix[expData.ix[:,"Ionic Strength (meq/L)"]==10] #Want to fit isotherm data first
+expData = expData.loc[expData.loc[:,'Include?']==True,:] #Select only data that's been vetted
+expData = expData.loc[expData.loc[:,'Mineral']=="Sodium Montmorillonite"]
+expData = expData.loc[expData.loc[:,'Salt']=='NaCl'] #Want to fit isotherm data at first
+expData = expData.loc[expData.loc[:,"Ionic Strength (meq/L)"]==10] #Want to fit isotherm data first
+expData = expData.loc[abs(expData.loc[:,"MinMass (g)"].values-0.030)<0.01,:]
+
+resData = extractData('..\..\Sorption Experiments\Isotherm Results.xlsx')
+resData = resData.loc[resData.loc[:,'mineral']=='montmorillonite']
+
+#MAIN SCRIPT PLOTTING
 
 f1 = plt.figure(num=1,figsize=(10,8))
 f1.clf()
 ax = f1.add_subplot(111)
 
+f3 = plt.figure(num=3,figsize=(10,8))
+f3.clf()
+ax3 = f3.add_subplot(111)
 
 
 pos = 0.0
 
-K1Val = np.array([5.9])
-#K1Val = np.arange(5.7,6.8,0.1)
+K1Val = np.array([6.6])
+#K1Val = np.arange(5.0,7.1,0.1)
 
-K2Val =np.array([-2.5])
-#K2Val = np.arange(-6,-0.9,0.5)
+K2Val =np.array([0.5])
+#K2Val = np.arange(0.0,2.1,0.1)
 
-K3Val = np.array([-17])
-#K3Val = np.arange(-20.1,20.1,10.0)
+K3Val = np.array([0.2])
+#K3Val = np.arange(0.1,0.21,0.01)
 
 #siteVal = np.array([1.40E-6]) 
-siteVal = np.array([1.40E-6])
+siteVal = np.array([6E-8])
 #siteVal = np.arange(1.35E-6,1.44E-6,1E-8)
 #siteVal = np.logspace(-10,-2,num=9,endpoint=True)
-siteWVal = np.array([5.62E-5])
+siteWVal = np.array([1.2E-6])
 #siteWVal = np.logspace(-10,-2,num=9,endpoint=True)
-ncol = np.size(K1Val)*np.size(K2Val)*np.size(siteVal)*np.size(K3Val)*np.size(siteWVal)
+siteWbVal = np.array([1.2E-6])
+ncol = np.size(K1Val)*np.size(K2Val)*np.size(siteVal)*np.size(K3Val)*np.size(siteWVal)*np.size(siteWbVal)
 
-cmap = sns.cubehelix_palette(n_colors=ncol,dark=0.3,rot=0.4,light=0.8,gamma=1.3)
+cmap = sns.cubehelix_palette(n_colors=ncol,dark=0.3,rot=0.4,light=0.8,gamma=1.3,start=1.5)
 palette = itertools.cycle(cmap)
-labelStr = "2 site 2 rxn, S: {sites} mol Ks: {K1}, W: {siteW} mol, Kw: {K2} "
+labelStr = "3 sites 2 rxn, Strong Site: {siteS} K1: {K1}, Site W: {siteW} K2: {K2}, Site wB: {siteWb}, Ki: {Ki}"
 #
 #for K in Kval:
 #    for site in siteVal:
@@ -183,7 +196,7 @@ labelStr = "2 site 2 rxn, S: {sites} mol Ks: {K1}, W: {siteW} mol, Kw: {K2} "
 #        x.generateData()
 #        x.addDataToMaster(writeMaster=True)
 #        simRes = x.getData()
-#        ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(k1=K,sites=site),color=next(palette))
+#        ax.plot(simRes.loc[:,'pH'],simRes.loc[:,'fSorb'],'-',label=labelStr.format(k1=K,sites=site),color=next(palette))
 #        pos = pos+1
 #        per = pos/ncol
 #        print '{:.2%}'.format(per)
@@ -192,38 +205,23 @@ for K1 in K1Val:
         for K3 in K3Val:
             for sites in siteVal:   
                 for siteW in siteWVal:
-                        x = simulation({'totRa':totRa,'ks':K1,'kw':K2,'siteS':sites,'siteW':siteW},tmp,db)
-                        x.generateData()
-                        x.addDataToMaster(writeMaster=True)
-                        simRes = x.getData()
-                        ax.plot(simRes.ix[:,'pH'],simRes.ix[:,'fSorb'],'-',label=labelStr.format(K1=K1,sites=sites,siteW=siteW,K2=K2),color=next(palette))
-                        pos = pos+1
-                        per = pos/ncol
-                        print '{:.2%}'.format(per)
+                    for siteWb in siteWbVal:
+                            x = simulation({'totRa':totRa,'Ks':K1,'siteS':sites,'Kw':K2,'siteW':siteW,'siteWb':siteWb,'Ki':K3},tmp,db)
+                            x.generateData()
+                            x.addDataToMaster(writeMaster=True)
+                            simRes = x.getData()
+                            curCol = next(palette)
+                            ax.plot(simRes.loc[:,'pH'],simRes.loc[:,'fSorb'],'-',label=labelStr.format(K1=K1,siteS=sites,K2=K2,siteW=siteW,siteWb=siteWb,Ki=K3),color=curCol)
+                            ax3.plot(simRes.loc[:,'pH'],simRes.loc[:,'Rd'],'-',label=labelStr.format(K1=K1,siteS=sites,K2=K2,siteW=siteW,siteWb=siteWb,Ki=K3),color=curCol)
+                            pos = pos+1
+                            per = pos/ncol
+                            print '{:.2%}'.format(per)
      
  
 #Plot all of the data without differentiation
-expPlot = ax.errorbar(expData.ix[:,'pH'],expData.ix[:,'fSorb'],xerr=expData.ix[:,'spH'],yerr=expData.ix[:,'sfSorb'],fmt='o',label='Experimental Data')
-
-#exp5 = expData.ix[expData['Total Activity']==5,:]
-#exp10 = expData.ix[expData['Total Activity']==10,:]
-#exp50 = expData.ix[expData['Total Activity']==50,:]
-#exp100 = expData.ix[expData['Total Activity']==100,:]
-#exp250 = expData.ix[expData['Total Activity']==250,:]
-#exp500 = expData.ix[expData['Total Activity']==500,:]
-#
-##if not exp5.empty:
-##    exp5Plot = ax.errorbar(exp5.ix[:,'pH'].values,exp5.ix[:,'fSorb'].values,xerr=exp5.ix[:,'spH'].values,yerr=exp5.ix[:,'sfSorb'].values,fmt='d',label='Experimental Data 5 Bq Total')
-#if not exp10.empty:
-#    exp10Plot = ax.errorbar(exp10.ix[:,'pH'].values,exp10.ix[:,'fSorb'].values,xerr=exp10.ix[:,'spH'].values,yerr=exp10.ix[:,'sfSorb'].values,fmt='d',label='Experimental Data 10 Bq Total',color='k')
-#if not exp50.empty:
-#    exp50Plot = ax.errorbar(exp50.ix[:,'pH'].values,exp50.ix[:,'fSorb'].values,xerr=exp50.ix[:,'spH'].values,yerr=exp50.ix[:,'sfSorb'].values,fmt='p',label='Experimental Data 50 Bq Total',color='k')
-#if not exp100.empty:
-#    exp100Plot = ax.errorbar(exp100.ix[:,'pH'].values,exp100.ix[:,'fSorb'].values,xerr=exp100.ix[:,'spH'].values,yerr=exp100.ix[:,'sfSorb'].values,fmt='s',label='Experimental Data 100 Bq Total',color='k')
-#if not exp250.empty:
-#    exp250Plot = ax.errorbar(exp250.ix[:,'pH'].values,exp250.ix[:,'fSorb'].values,xerr=exp250.ix[:,'spH'].values,yerr=exp250.ix[:,'sfSorb'].values,fmt='^',label='Experimental Data 250 Bq Total',color='k')
-#if not exp500.empty:
-#    exp500Plot = ax.errorbar(exp500.ix[:,'pH'].values,exp500.ix[:,'fSorb'].values,xerr=exp500.ix[:,'spH'].values,yerr=exp500.ix[:,'sfSorb'].values,fmt='o',label='Experimental Data 500 Bq Total',color='k')
+expPlot = ax.errorbar(expData.loc[:,'pH'],expData.loc[:,'fSorb'],xerr=expData.loc[:,'spH'],yerr=expData.loc[:,'sfSorb'],fmt='o',label='Experimental Data')
+resPlot = ax3.errorbar(resData.loc[:,'pH'],resData.loc[:,'Kd (mL/g)'],xerr=resData.loc[:,'spH'],yerr=resData.loc[:,'sKd (mL/g)'],fmt='.',label='Fitted Kds')
+additionalPlot = ax3.plot(7,1443.032,label="Sajih",ls='None',marker='o')
 
 handles, labels = ax.get_legend_handles_labels()
 newHandles = []
@@ -243,4 +241,11 @@ ax.set_ylim([-0.1,1.1])
 sns.despine()
 plt.show()
 
-x.plotSpeciation(solidTag="m_Clay_s")
+ax3.set_title(titleString)
+ax3.set_xlabel('pH')
+ax3.set_ylabel('Rd (mL/g)')
+ax3.set_yscale('linear')
+ax3.set_ylim(-100,500000)
+ax3.legend(loc=0)
+
+x.plotSpeciation(solidTag="m_Clay_")
