@@ -1,0 +1,170 @@
+SOLUTION_RAW                 2 
+  -temp                      25
+  -pressure                  1
+  -total_h                   11.101982836254
+  -total_o                   5.5509914181267
+  -cb                        1.7124354979126e-011
+  -density                   0.99762605135116
+  -totals
+    Cl                       0.001000584766871
+    Na                       0.001000584766871
+    Ra                       8.0046781349812e-012
+  -pH                        7
+  -pe                        4
+  -mu                        0.010005958271112
+  -ah2o                      0.99965084543174
+  -mass_water                0.1
+  -soln_vol                  0.10029657579691
+  -total_alkalinity          -1.1149779825159e-012
+  -activities
+    Cl                       -2.0438074008127
+    E                        -4
+    H(0)                     -25.08
+    Na                       -2.0438074019776
+    O(0)                     -41.980303324761
+    Ra                       -10.27641027739
+  -gammas
+    Cl-                      -0.044061279943248
+    ClO4-                    -0.044261394687647
+    H+                       -0.043160766928117
+    Na+                      -0.044061288777843
+    OH-                      -0.043961234720409
+    Ra(OH)+                  -0.044361468627158
+    Ra+2                     -0.17744587450863
+    RaCl+                    -0.044361468627158
+EXCHANGE_RAW                 1 
+  # EXCHANGE_MODIFY candidate identifiers #
+  -exchange_gammas           1
+  -component                 NaClay_iNa
+    # EXCHANGE_MODIFY candidate identifiers #
+    -totals
+      Clay_i                 2.53e-005
+      Na                     5.06e-005
+    -charge_balance          0
+    -la                      0
+    -phase_proportion        0
+    -formula_z               0
+  # EXCHANGE_MODIFY candidates with new_def=true #
+  -new_def                   0
+  -solution_equilibria       0
+  -n_solution                -999
+  # Exchange workspace variables #
+  -totals
+GAS_PHASE_RAW                1 
+  # GAS_PHASE_MODIFY candidate identifiers #
+  -type                      0
+  -total_p                   1
+  -volume                    1
+  -component                 CO2(g)
+    # GAS_PHASE_MODIFY candidate identifiers #
+    -moles                   1.3488051058492e-005
+    # GAS_PHASE_MODIFY candidate identifiers with new_def=true #
+    -p_read                  0.00033
+    # GasComp workspace variables #
+    -initial_moles           0
+  -component                 O2(g)
+    # GAS_PHASE_MODIFY candidate identifiers #
+    -moles                   0.010626949318812
+    # GAS_PHASE_MODIFY candidate identifiers with new_def=true #
+    -p_read                  0.26
+    # GasComp workspace variables #
+    -initial_moles           0
+  # GAS_PHASE_MODIFY candidate identifiers with new_def=true #
+  -new_def                   0
+  -solution_equilibria       0
+  -n_solution                -999
+  -temperature               298.15
+  # GasPhase workspace variables #
+  -total_moles               0
+  -v_m                       0
+  -pr_in                     0
+  -totals                    
+EQUILIBRIUM_PHASES_RAW       1 
+  # EXCHANGE_MODIFY candidates; use new_def=true #
+  -new_def                   0
+  -component                 pH_set
+      # EQUILIBRIUM_PHASES_MODIFY candidate identifiers #
+      -add_formula           HCl
+      -si                    -7
+      -moles                 10
+      -force_equality        0
+      -dissolve_only         0
+      -precipitate_only      0
+      # PPassemblage workspace variables #
+      -si_org                -7
+      -delta                 0
+      -initial_moles         0
+      -totals                
+  -eltList                   # List of all elements in phases and alternate reactions
+    Cl                       1
+    H                        2
+  # PPassemblage workspace variables #
+  -assemblage_totals
+SURFACE_RAW                  1 
+  # SURFACE_MODIFY candidate identifiers #
+  -type                      1
+  -dl_type                   0
+  -only_counter_ions         0
+  -thickness                 1e-008
+  -debye_lengths             0
+  -DDL_viscosity             1
+  -DDL_limit                 0.8
+  -component                 Clay_s
+    # SURFACE_MODIFY candidate identifiers #
+    -formula_z               0
+    -moles                   6e-008
+    -la                      0
+    -charge_balance          0
+    -phase_proportion        0
+    -Dw                      0
+    -charge_name             Clay
+    -master_element          Clay_s
+    -totals
+      Clay_s                 6e-008
+  -component                 Clay_w
+    # SURFACE_MODIFY candidate identifiers #
+    -formula_z               0
+    -moles                   1.2e-006
+    -la                      0
+    -charge_balance          0
+    -phase_proportion        0
+    -Dw                      0
+    -charge_name             Clay
+    -master_element          Clay_w
+    -totals
+      Clay_w                 1.2e-006
+  -component                 Clay_wb
+    # SURFACE_MODIFY candidate identifiers #
+    -formula_z               0
+    -moles                   1.2e-006
+    -la                      0
+    -charge_balance          0
+    -phase_proportion        0
+    -Dw                      0
+    -charge_name             Clay
+    -master_element          Clay_wb
+    -totals
+      Clay_wb                1.2e-006
+  -charge_component          Clay
+    # SURFACE_MODIFY candidate identifiers #
+    -specific_area           50.162
+    -grams                   0.03
+    -charge_balance          0
+    -mass_water              0
+    -la_psi                  0
+    -capacitance0            1
+    -capacitance1            5
+    -diffuse_layer_totals
+    # Surface workspace variables #
+    -sigma0                  0
+    -sigma1                  0
+    -sigma2                  0
+    -sigmaddl                0
+  # SURFACE_MODIFY candidates with new_def=true #
+  -new_def                   1
+  -sites_units               0
+  -solution_equilibria       0
+  -n_solution                -999
+  # Surface workspace variables #
+  -transport                 0
+  -totals                    

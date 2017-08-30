@@ -1,0 +1,60 @@
+#Template file for PHRREQC/Python interactions.
+#Parameters to vary should be bracketed with a name, which then gets put into the python script
+#Make sure that your output file reports what you want to report. Namely, pH and Ra, which only reports solution avaialble radium
+GAS_PHASE 1
+    -fixed_pressure
+    -pressure 1
+    -volume 1
+    -temperature 25
+    CO2(g)    0.00033
+    O2(g)     0
+SURFACE_MASTER_SPECIES
+    Pyr_a           Pyr_aSH        
+    Pyr_b           Pyr_bOH
+SURFACE_SPECIES
+Pyr_aSH = Pyr_aSH
+	log_k = 0
+Pyr_bOH = Pyr_bOH
+	log_k = 0
+Pyr_aSH = Pyr_aS- + H+
+	log_k -6.45
+Pyr_bOH = Pyr_bO- + H+
+	log_k -3.12
+Pyr_bOH + Ra+2 + Cl- = Pyr_bORaCl + H+
+	log_k $k1
+Pyr_bOH + Ra+2 + H2O = Pyr_bORaOH + 2H+
+	log_k $k2
+
+SURFACE 1
+    Pyr_aSH      $siteS 0.0685 0.04
+    Pyr_bOH      $siteO 
+END
+SOLUTION 1
+    temp      25
+    units     mol/l
+    density   1
+    Ra        $totRa
+    Cl        0.01
+    Na        0.01
+    -water    0.1 # kg
+END
+PHASES
+KCl
+    KCl = K+ + Cl-
+    log_k     -20
+PHASES
+pH_set
+    H+=H+
+    log_k     0.0
+END
+USE solution 1; USE GAS_PHASE 1; USE surface 1
+EQUILIBRIUM_PHASES 1
+KCl 0 10.0
+pH_set          -$pH HCl 10.0
+SELECTED_OUTPUT
+#IF YOU CHANGE THIS YOU WILL NEED TO FIX simulation.generateData() in the python script. (Assumes 2 columns of data, in the order (pH, radium))
+    -reset                false
+    -totals               Ra
+    -molalities           Ra+2 RaCl+ RaCl2 Ra(OH)+ Ra(OH)2 Ra(HCO3)+ Ra(CO3) PyrSRa+ PyrSHRa+2
+    -pH                   true
+END

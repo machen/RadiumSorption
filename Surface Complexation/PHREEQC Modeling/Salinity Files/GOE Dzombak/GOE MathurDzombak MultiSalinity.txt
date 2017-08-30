@@ -1,0 +1,78 @@
+#Template file for PHRREQC/Python interactions.
+#Parameters to vary should be bracketed with a name, which then gets put into the python script
+#Make sure that your output file reports what you want to report. Namely, pH and Ra, which only reports solution avaialble radium
+GAS_PHASE 1
+    -fixed_pressure
+    -pressure 1
+    -volume 1
+    -temperature 25
+    CO2(g)    0.00033
+    O2(g)     0.26
+SURFACE_MASTER_SPECIES
+    Fhy           FhyOH        
+SURFACE_SPECIES
+FhyOH + H+ = FhyOH2+
+    log_k     6.93
+FhyOH = FhyOH
+    log_k     0
+FhyOH = FhyO- + H+
+    log_k     -9.65
+FhyOH + Ra+2 = FhyORa+ + H+
+    log_k     $k1
+FhyOH + Ra+2 = FhyOHRa+2
+    log_k     $k2
+
+#Cations from Mathur and Dzombak 2006, Table 3&4. (May want to update)
+
+FhyOH + Ca+2 = FhyOCa+ + H+
+    log_k -6.48 #Fitted by prev
+FhyOH + Ca+2 = FhyOHCa+2
+    log_k 3.98 #Derived from LFER
+
+FhyOH + Mg+2 = FhyOMg+ + H+
+    log_k -3.02 #Fitted by prev
+FhyOH + Mg+2 = FhyOHMg+2
+    log_k 5.24 #Derived from LFER
+
+FhyOH + Sr+2 = FhyOSr+ + H+
+    log_k -5.44 #Fitted by prev
+FhyOH + Sr+2 = FhyOHSr+2
+    log_k 3.59 #Derived from LFER
+ 
+#Carbonate from Van Geen, 1994 using a double layer model.
+FhyOH + 2H+ + CO3-2 = FhyOCOOH + H2O
+    log_k  20.78
+FhyOH + H+ + CO3-2 = FhyOCOO- + H2O
+    log_k 12.71
+
+
+SURFACE 1
+    FhyOH     1.46E-5 146.46 0.03
+END
+SOLUTION 1
+    units     mol/kgw
+    density   1
+    Ra        $totRa
+    Cl        $Cl
+    Na        $Na
+    K         $K
+    Mg        $Mg
+    Ca        $Ca
+    Sr        $Sr
+    -water    0.1 # kg
+END
+PHASES
+pH_set
+    H+=H+
+    log_k     0.0
+END
+USE solution 1; USE GAS_PHASE 1; USE surface 1
+EQUILIBRIUM_PHASES 1
+pH_set          -$pH HCl 10.0
+SELECTED_OUTPUT
+#IF YOU CHANGE THIS YOU WILL NEED TO FIX simulation.generateData() in the python script. (Assumes 2 columns of data, in the order (pH, radium))
+    -reset                false
+    -totals               Ra
+    -molalities           Ra+2 RaCl+ RaCl2 Ra(OH)+ Ra(OH)2 Ra(HCO3)+ Ra(CO3) FhyOHRa+2
+    -pH                   true
+END

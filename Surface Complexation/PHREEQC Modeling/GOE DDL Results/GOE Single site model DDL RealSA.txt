@@ -32,7 +32,7 @@ SOLUTION 1
 END
 PHASES
 KCl
-    KCl = K+ + Cl-
+    NaCl = Na+ + Cl-
     log_k     -20
 PHASES
 pH_set

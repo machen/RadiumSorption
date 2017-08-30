@@ -7,9 +7,9 @@ Created on Thu Apr 07 11:31:22 2016
 
 import numpy as np, pandas as pd
 
-fileLocation = "RaCaCl2Oxic\\" #Working folder, which contains the input folder and output
-dataFile = 'RaCaCl2Oxic.xlsx' #Name of files
-resultFile ='RaCaCl2Oxic Equilibrated Data.xlsx'
+fileLocation = "RaPYRSingleSalt\\" #Working folder, which contains the input folder and output
+dataFile = 'RaPYRSingleSalt.xlsx' #Name of files
+resultFile ='RaPYRSingleSalt Equilibrated Data.xlsx'
 
 
 def calcEquilSample(data):

@@ -34,17 +34,12 @@ SOLUTION 1
     -water    0.1 # kg
 END
 PHASES
-KCl
-    KCl = K+ + Cl-
-    log_k     -20
-PHASES
 pH_set
     H+=H+
     log_k     0.0
 END
 USE solution 1; USE GAS_PHASE 1; USE surface 1
 EQUILIBRIUM_PHASES 1
-KCl 0 10.0
 pH_set          -$pH HCl 10.0
 SELECTED_OUTPUT
 #IF YOU CHANGE THIS YOU WILL NEED TO FIX simulation.generateData() in the python script. (Assumes 2 columns of data, in the order (pH, radium))

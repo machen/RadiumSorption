@@ -14,7 +14,7 @@ SURFACE_SPECIES
 PyrSH = PyrSH
 	log_k = 0
 PyrSH = PyrS- + H+
-	log_k 6.45
+	log_k -6.45
 PyrS- + Ra+2 = PyrSRa+
 	log_k $k1
 SURFACE 1

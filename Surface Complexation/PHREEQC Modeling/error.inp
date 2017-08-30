@@ -1,55 +1,37 @@
-SOLUTION_RAW                 2 
+SOLUTION_RAW                 1 
   -temp                      25
   -pressure                  1
   -total_h                   11.101982836254
-  -total_o                   5.5509914181267
-  -cb                        1.2076491351939e-010
-  -density                   0.99762605146801
+  -total_o                   5.5509914181263
+  -cb                        2.5736254721477e-011
+  -density                   0.99762605136032
   -totals
-    Cl                       0.0010005847669882
-    Na                       0.0010005847669882
-    Ra                       5.9824963218323e-011
+    Cl                       0.0010005847668803
+    Na                       0.0010005847668803
+    Ra                       1.2099252052947e-011
   -pH                        7
   -pe                        4
-  -mu                        0.010005959303174
-  -ah2o                      0.99965084542406
+  -mu                        0.010005958350547
+  -ah2o                      0.9996508454312
   -mass_water                0.1
   -soln_vol                  0.10029657579691
-  -total_alkalinity          -1.1149656411663e-012
+  -total_alkalinity          -1.5377292649402e-012
   -activities
-    Cl                       -2.0438074028713
+    Cl                       -2.0438074009713
     E                        -4
-    H(0)                     -25.08
-    Na                       -2.0438074039161
-    O(0)                     -41.980303324768
-    Ra                       -9.4028717188256
+    H(0)                     -25.079938794231
+    Na                       -2.0438074021269
+    O(0)                     -41.980187644735
+    Ra                       -10.096995630193
   -gammas
-    Cl-                      -0.044061281932549
-    ClO4-                    -0.044261396676972
-    H+                       -0.043160768917646
-    Na+                      -0.044061290767228
-    OH-                      -0.043961236709699
-    Ra(OH)+                  -0.044361470616495
-    Ra+2                     -0.17744588246598
-    RaCl+                    -0.044361470616495
-EXCHANGE_RAW                 1 Exchange assemblage after simulation 5.
-  # EXCHANGE_MODIFY candidate identifiers #
-  -exchange_gammas           1
-  -component                 NaClay_i
-    # EXCHANGE_MODIFY candidate identifiers #
-    -totals
-      Clay_i                 2.5300000057107e-005
-      Na                     2.5300000057107e-005
-    -charge_balance          0
-    -la                      1.9997461141875
-    -phase_proportion        0
-    -formula_z               0
-  # EXCHANGE_MODIFY candidates with new_def=true #
-  -new_def                   0
-  -solution_equilibria       0
-  -n_solution                -999
-  # Exchange workspace variables #
-  -totals
+    Cl-                      -0.044061280096358
+    ClO4-                    -0.044261394840759
+    H+                       -0.043160767081246
+    Na+                      -0.044061288931129
+    OH-                      -0.043961234873519
+    Ra(OH)+                  -0.044361468780271
+    Ra+2                     -0.17744587512108
+    RaCl+                    -0.044361468780271
 GAS_PHASE_RAW                1 
   # GAS_PHASE_MODIFY candidate identifiers #
   -type                      0
@@ -82,21 +64,9 @@ GAS_PHASE_RAW                1
 EQUILIBRIUM_PHASES_RAW       1 
   # EXCHANGE_MODIFY candidates; use new_def=true #
   -new_def                   0
-  -component                 KCl
-      # EQUILIBRIUM_PHASES_MODIFY candidate identifiers #
-      -si                    0
-      -moles                 10
-      -force_equality        0
-      -dissolve_only         0
-      -precipitate_only      0
-      # PPassemblage workspace variables #
-      -si_org                0
-      -delta                 0
-      -initial_moles         0
-      -totals                
   -component                 pH_set
       # EQUILIBRIUM_PHASES_MODIFY candidate identifiers #
-      -add_formula           HCl
+      -add_formula           NaOH
       -si                    -2
       -moles                 10
       -force_equality        0
@@ -108,9 +78,9 @@ EQUILIBRIUM_PHASES_RAW       1
       -initial_moles         0
       -totals                
   -eltList                   # List of all elements in phases and alternate reactions
-    Cl                       2
     H                        2
-    K                        1
+    Na                       1
+    O                        1
   # PPassemblage workspace variables #
   -assemblage_totals
 SURFACE_RAW                  1 
@@ -122,34 +92,24 @@ SURFACE_RAW                  1
   -debye_lengths             0
   -DDL_viscosity             1
   -DDL_limit                 0.8
-  -component                 Clay_s
+  -component                 PyrSH
     # SURFACE_MODIFY candidate identifiers #
     -formula_z               0
-    -moles                   1e-008
+    -moles                   1.108e-006
     -la                      0
     -charge_balance          0
     -phase_proportion        0
     -Dw                      0
-    -charge_name             Clay
-    -master_element          Clay_s
+    -charge_name             Pyr
+    -master_element          Pyr
     -totals
-      Clay_s                 1e-008
-  -component                 Clay_w
+      H                      1.108e-006
+      Pyr                    1.108e-006
+      S                      1.108e-006
+  -charge_component          Pyr
     # SURFACE_MODIFY candidate identifiers #
-    -formula_z               0
-    -moles                   0.1
-    -la                      0
-    -charge_balance          0
-    -phase_proportion        0
-    -Dw                      0
-    -charge_name             Clay
-    -master_element          Clay_w
-    -totals
-      Clay_w                 0.1
-  -charge_component          Clay
-    # SURFACE_MODIFY candidate identifiers #
-    -specific_area           83.79
-    -grams                   0.03
+    -specific_area           0.0685
+    -grams                   0.04
     -charge_balance          0
     -mass_water              0
     -la_psi                  0
