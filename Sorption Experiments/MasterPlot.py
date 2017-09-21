@@ -2,9 +2,7 @@
 """
 Created on Wed Apr 06 16:47:14 2016
 
-@author: Michael
-"""       
-
+@author: Michael"""
 """SECTION 1: IMPORT MODULES AND DATA, SETUP DATA FRAMES"""
 
 import pandas as pd, numpy as np, matplotlib as mpl
@@ -116,11 +114,11 @@ pyrPal.reverse()
 for i in range(len(pHvals)):
     pH = pHvals[i]
     pHs = str(pH)
-    fhySub = FHYdata.loc[abs(FHYdata.loc[:,'pH']-pH)<0.2,:]
-    montSub = montData.loc[abs(montData.loc[:,'pH']-pH)<0.2,:]
-    goeSub = goeData.loc[abs(goeData.loc[:,'pH']-pH)<0.2,:]
-    pyrSub = pyrData.loc[abs(pyrData.loc[:,'pH']-pH)<0.2,:]
-    glassSub = glassData.loc[abs(glassData.loc[:,'pH']-pH)<0.2,:]
+    fhySub = FHYdata.loc[abs(FHYdata.loc[:,'pH']-pH)<0.2,:].sort_values(by='Cw (Bq/mL)')
+    montSub = montData.loc[abs(montData.loc[:,'pH']-pH)<0.2,:].sort_values(by='Cw (Bq/mL)')
+    goeSub = goeData.loc[abs(goeData.loc[:,'pH']-pH)<0.2,:].sort_values(by='Cw (Bq/mL)')
+    pyrSub = pyrData.loc[abs(pyrData.loc[:,'pH']-pH)<0.2,:].sort_values(by='Cw (Bq/mL)')
+    glassSub = glassData.loc[abs(glassData.loc[:,'pH']-pH)<0.2,:].sort_values(by='Cw (Bq/mL)')
     xlim = [-0.5,4.0]
     ylim = [-500,14000]
     if not fhySub.empty:
@@ -129,7 +127,8 @@ for i in range(len(pHvals)):
         sCw = fhySub.loc[:,'sCw (Bq/mL)'].values
         sCs = fhySub.loc[:,'sCs (Bq/g)'].values
         [slope,inter,rval,pval,stdErr] = linregress(Cw,Cs)
-        ax3[0,0].plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color=fhyPal[i])
+        fitCs = np.polyval([slope,inter],Cw)
+        ax3[0,0].plot(Cw,fitCs,ls=lineStyles[i],label=None,color=fhyPal[i])
         ax3[0,0].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],label='pH: {}'.format(pH),ls='None',color=fhyPal[i])
         ax3[0,0].legend(loc=0)
         ax3[0,0].set_title('Ferrihydrite')
@@ -144,12 +143,21 @@ for i in range(len(pHvals)):
         ax5.set_xlim(xlim)
         ax5.set_ylim(ylim)
         resultsIsotherm.loc['fhy'+str(pH),:] = [slope,stdErr,np.mean(fhySub.loc[:,'pH']),np.std(fhySub.loc[:,'pH']),'ferrihydrite']#Write results of slope fitting to new dataframe
+        plotRes = pd.DataFrame([],columns=['Cw','Cs','sCw','sCs','fitCs'])
+        plotRes.loc[:,'Cw'] = Cw
+        plotRes.loc[:,'Cs'] = Cs
+        plotRes.loc[:,'sCw'] = sCw
+        plotRes.loc[:,'sCs'] = sCs
+        plotRes.loc[:,'fitCs'] = fitCs
+        plotRes.to_csv('MasterPlotData\\FHYpH{}.csv'.format(pH))
+        del plotRes, Cw, Cs, sCw, sCs, fitCs
     if not montSub.empty:
         Cw = montSub.loc[:,'Cw (Bq/mL)'].values
         Cs = montSub.loc[:,'Cs (Bq/g)'].values
         sCw = montSub.loc[:,'sCw (Bq/mL)'].values
         sCs = montSub.loc[:,'sCs (Bq/g)'].values
         [slope,inter,rval,pval,stdErr] = linregress(Cw,Cs)
+        fitCs = np.polyval([slope,inter],Cw)
         ax3[1,0].plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color=montPal[i])
         ax3[1,0].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],ls="none",label='pH: {}'.format(pH),color=montPal[i],elinewidth=1.5)
         ax3[1,0].legend(loc=0)
@@ -158,6 +166,13 @@ for i in range(len(pHvals)):
         ax3[1,0].set_ylim(ylim)
         ax3[1,0].set_xlabel('Cw (Bq/mL)')
         ax3[1,0].set_ylabel('Cs (Bq/g)')
+        plotRes = pd.DataFrame([],columns=['Cw','Cs','sCw','sCs','fitCs'])
+        plotRes.loc[:,'Cw'] = Cw
+        plotRes.loc[:,'Cs'] = Cs
+        plotRes.loc[:,'sCw'] = sCw
+        plotRes.loc[:,'sCs'] = sCs
+        plotRes.loc[:,'fitCs'] = fitCs
+        plotRes.to_csv('MasterPlotData\\MontpH{}.csv'.format(pH))
         if pH == 7:
             ax4.plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[1],label=None,color='black')
             ax4.errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[1],label='Sodium Montmorillonite Kd: {:.2f} R2: {:.2f}'.format(slope,rval**2),ls='None',color='black')
@@ -172,12 +187,20 @@ for i in range(len(pHvals)):
         sCw = goeSub.loc[:,'sCw (Bq/mL)'].values
         sCs = goeSub.loc[:,'sCs (Bq/g)'].values
         [slope,inter,rval,pval,stdErr] = linregress(Cw,Cs)
-        ax3[0,1].plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color=goePal[i])
+        fitCs = np.polyval([slope,inter],Cw)
+        ax3[0,1].plot(Cw,fitCs,ls=lineStyles[i],label=None,color=goePal[i])
         ax3[0,1].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],ls='None',label='pH: {}'.format(pH),color=goePal[i],elinewidth=1.5)
         ax3[0,1].set_title('Goethite')
         ax3[0,1].legend(loc=0)
         ax3[0,1].set_xlim(xlim)
         ax3[0,1].set_ylim(ylim)
+        plotRes = pd.DataFrame([],columns=['Cw','Cs','sCw','sCs','fitCs'])
+        plotRes.loc[:,'Cw'] = Cw
+        plotRes.loc[:,'Cs'] = Cs
+        plotRes.loc[:,'sCw'] = sCw
+        plotRes.loc[:,'sCs'] = sCs
+        plotRes.loc[:,'fitCs'] = fitCs
+        plotRes.to_csv('MasterPlotData\\GOEpH{}.csv'.format(pH))
         if pH == 7:
             ax4.plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[2],label=None,color='black')
             ax4.errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[2],label='Goethite Kd: {:.2f} R2: {:.2f}'.format(slope,rval**2),ls='None',color='black')
@@ -192,13 +215,21 @@ for i in range(len(pHvals)):
         sCw = pyrSub.loc[:,'sCw (Bq/mL)'].values
         sCs = pyrSub.loc[:,'sCs (Bq/g)'].values
         [slope,inter,rval,pval,stdErr] = linregress(Cw,Cs)
-        ax3[1,1].plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[i],label=None,color=pyrPal[i])
+        fitCs = np.polyval([slope,inter],Cw)
+        ax3[1,1].plot(Cw,fitCs,ls=lineStyles[i],label=None,color=pyrPal[i])
         ax3[1,1].errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[i],ls='None',label='pH: {}'.format(pH),color=pyrPal[i],elinewidth=1.5)
         ax3[1,1].set_title('Pyrite')
         ax3[1,1].legend(loc=0)
         ax3[1,1].set_xlim(xlim)
         ax3[1,1].set_ylim(ylim)
         ax3[1,1].set_xlabel('Cw (Bq/mL)')
+        plotRes = pd.DataFrame([],columns=['Cw','Cs','sCw','sCs','fitCs'])
+        plotRes.loc[:,'Cw'] = Cw
+        plotRes.loc[:,'Cs'] = Cs
+        plotRes.loc[:,'sCw'] = sCw
+        plotRes.loc[:,'sCs'] = sCs
+        plotRes.loc[:,'fitCs'] = fitCs
+        plotRes.to_csv('MasterPlotData\\PYRpH{}.csv'.format(pH))
         if pH == 7:
             ax4.plot(Cw,np.polyval([slope,inter],Cw),ls=lineStyles[3],label=None,color='black')
             ax4.errorbar(Cw,Cs,xerr=sCw,yerr=sCs,marker=markerStyles[3],label='Pyrite Kd: {:.2f} R2: {:.2f}'.format(slope,rval**2),ls='None',color='black')
@@ -213,7 +244,7 @@ for i in range(len(pHvals)):
         sCw = glassSub.loc[:,'sCw (Bq/mL)'].values
         sfSorb = glassSub.loc[:,'sfSorb'].values
         ax9.errorbar(Cw,fSorb,xerr=sCw,yerr=sfSorb,marker=markerStyles[i],label='pH: {}'.format(pH),ls='None',color='black')
-                          
+    
 
 
 #Strip out the errorbars from the legend, despine
@@ -525,10 +556,10 @@ plt.show()
 ##f9.savefig('MasterTablePlots\\KineticsNaMont.svg',dpi=1000)
 
 #resultsIsotherm.to_csv('..\\Manuscript\\Second Submission EST\\Figures\\IsothermResults.csv')
-dataLowIExport = dataLowI.loc[:,['SampleID','Ionic Strength (meq/L)','Salt','Mineral','fSorb','sfSorb']]
-dataLowIExport.to_csv('..\\Manuscript\\Second Submission EST\\Figures\\LowSalinityData.csv')
-dataArtificialExport = dataArtificial.loc[:,['SampleID','Ionic Strength (meq/L)','Mineral','fSorb','sfSorb']]
-dataArtificialExport.to_csv('..\\Manuscript\\Second Submission EST\\Figures\\ArtificialWaters.csv')
+#dataLowIExport = dataLowI.loc[:,['SampleID','Ionic Strength (meq/L)','Salt','Mineral','fSorb','sfSorb']]
+#dataLowIExport.to_csv('..\\Manuscript\\Second Submission EST\\Figures\\LowSalinityData.csv')
+#dataArtificialExport = dataArtificial.loc[:,['SampleID','Ionic Strength (meq/L)','Mineral','fSorb','sfSorb']]
+#dataArtificialExport.to_csv('..\\Manuscript\\Second Submission EST\\Figures\\ArtificialWaters.csv')
 #
 #fRd.savefig('..\\Manuscript\\Second Submission EST\\Figures\\Figure1a-pHKd.svg',dpi=1000)
 #fRdSA.savefig('..\\Manuscript\\Second Submission EST\\Figures\\Figure1a-pHKdSA.svg',dpi=1000)
