@@ -5,9 +5,7 @@ Created on Mon Jul 14 17:14:36 2014
 @author: machen
 """
 
-#TEST COMMENT
-
-#Model of Thorium series decay through Ra 224 given a certain initial concentration
+# Model of Thorium series decay through Ra 224 given a certain initial concentration
 
 # Next step: Include Sorption
 
@@ -32,7 +30,8 @@ pref = 1/(1+1.0/Kdgw)+1/(1+Kdsw)
 Two beakers at secular eq and sorption eq, one with seawater,
 one with gw (same solid).
 Replace gw in one beaker with sw, allow to equillibrate"""
-c_initial = np.array([10**5, 4.07E-5*pref, 5.12E-9, 1.36E-5, 7.07E-8*pref]).transpose()
+c_initial = np.array([10**5, 4.07E-5*pref, 5.12E-9,
+                      1.36E-5, 7.07E-8*pref]).transpose()
 # Objects in c are: 232Th, 228Ra, 228Ac, 228Th, 224Ra
 dt = 0.0002  # years
 t = np.arange(0, 30, dt)
@@ -46,17 +45,17 @@ for i in range(1, np.shape(t)[0]):
     #if t[i]%0.2 <dt: # Every 0.2 years, flush brackish water with seawater because I can
         #c[1,i-1] = c[1,i-1]/(1+1/Kdmix)+c_eq[1]/(1+1/Kdsw)
         #c[4,i-1] = c[4,i-1]/(1+1/Kdmix)+c_eq[4]/(1+1/Kdsw)
+    f = c[:-1, i-1]*kdecay[:-1]-c[1:, i-1]*kdecay[1:]
+    f = np.insert(f, 0, 0)  # Keep thorium 232 at a constant value
+    c[:, i] = f*dt+c[:, i-1]
 
+Th232 = c[0, :]
+Ra228 = c[1, :]
+Ac228 = c[2, :]
+Th228 = c[3, :]
+Ra224 = c[4, :]
 
-    f = c[:-1,i-1]*kdecay[:-1]-c[1:,i-1]*kdecay[1:]
-    f = np.insert(f,0,0) #Keep thorium 232 at a constant value
-    c[:,i] = f*dt+c[:,i-1]
-
-Th232 = c[0,:]
-Ra228 = c[1,:]
-Ac228 = c[2,:]
-Th228 = c[3,:]
-Ra224 = c[4,:]
+plt.ion()
 
 f1 = plt.figure(1)
 plt.clf()
@@ -67,21 +66,22 @@ p4, = plt.plot(t, Ra224, '-b')
 plt.xlabel('Time elapsed (years)')
 plt.ylabel('Amount of compound (moles)')
 plt.yscale('log')
-plt.legend((p1, p2, p3, p4), (r'$^{228}Ra$', r'$^{228}Ac$', r'$^{228}Th$',r'$^{224}Ra$'), loc=0)
-plt.show()
+plt.legend((p1, p2, p3, p4), (r'$^{228}Ra$', r'$^{228}Ac$',
+                              r'$^{228}Th$', r'$^{224}Ra$'), loc=0)
 
 f2 = plt.figure(2)
 plt.clf()
-p21, = plt.plot(t,Ra228,'-r')
-p24, = plt.plot(t,Ra224,'-b')
+p21, = plt.plot(t, Ra228, '-r')
+p24, = plt.plot(t, Ra224, '-b')
 plt.xlabel('Time elapsed (years)')
 plt.ylabel('Amount of compound (moles)')
 plt.yscale('log')
-plt.legend((p21,p24),(r'$^{228}Ra$',r'$^{224}Ra$'),loc=0)
-plt.show()
+plt.legend((p21, p24), (r'$^{228}Ra$', r'$^{224}Ra$'), loc=0)
 
-Th232_n = c[0,:]/c_initial[0]
-Ra228_n = c[1,:]/c_initial[1]
-Ac228_n = c[2,:]/c_initial[2]
-Th228_n = c[3,:]/c_initial[3]
-Ra224_n = c[4,:]/c_initial[4]
+Th232_n = c[0, :]/c_initial[0]
+Ra228_n = c[1, :]/c_initial[1]
+Ac228_n = c[2, :]/c_initial[2]
+Th228_n = c[3, :]/c_initial[3]
+Ra224_n = c[4, :]/c_initial[4]
+
+plt.show(block=False)
