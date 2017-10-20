@@ -87,7 +87,7 @@ class simulation:
         newMaster = pd.concat([newData,self.masterTable],ignore_index=True)
         self.masterTable = newMaster
         if writeMaster:
-            newMaster.drop_duplicates(keep='first',subset=self.param.keys().append('pH')).to_csv(self.templFile[:-4]+'.csv',index=False) #Save this to a file for future usage, uses PD drop_duplicates with the params and pH to remove duplicate entries
+            newMaster.drop_duplicates(keep='first',subset=list(self.param.keys()).append('pH')).to_csv(self.templFile[:-4]+'.csv',index=False) #Save this to a file for future usage, uses PD drop_duplicates with the params and pH to remove duplicate entries
     def plotSpeciation(self,titleStr='',solidTag="m_Fhy"):
         f2 = plt.figure(2)
         f2.clf()
@@ -132,25 +132,25 @@ def stripErrorBarLegends(axis):
             continue
     axis.legend(newHandles,labels,loc=0,numpoints=1)
 
-#Plotting Parameters
+# Plotting Parameters
 sns.set_context('poster')
 sns.set_style("ticks",rc={"font.size":48})
-mpl.rcParams["lines.markeredgewidth"] = 2
+mpl.rcParams["lines.markeredgewidth"] = 5
 mpl.rcParams["markers.fillstyle"] = "full"
-mpl.rcParams["errorbar.capsize"] = 5
-mpl.rcParams["lines.linewidth"] = 1
-mpl.rcParams["lines.markersize"] = 20
+mpl.rcParams["errorbar.capsize"] = 10
+mpl.rcParams["lines.linewidth"] = 5
+mpl.rcParams["lines.markersize"] = 35
 mpl.rcParams["svg.fonttype"] = "none"
-mpl.rcParams["figure.figsize"] = [16,14]    
+mpl.rcParams["figure.figsize"] = [16,14]
 
 #Database Selection
 
-db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
+db = "C:\Program Files (x86)\\USGS\\Phreeqc Interactive 3.1.4-8929\\database\\sit.dat" #Database for lab computer
 #db="F:\Programs\USGS\Phreeqc Interactive 3.3.12-12704\database\sit.dat" #Database for home computer
 
 #Import the solution conditions to use as a table
 
-expCond = pd.read_excel("SalinityConditions.xlsx",header=0,index_col=0)
+expCond = pd.read_excel("SalinityConditions.xlsx",header=0,index_col=0,sheetname='Sheet1')
 
 #Set K values to check or sweep through
 K1Val = np.array([0.0])
@@ -161,12 +161,12 @@ K3Val = np.array([-17.0])
 #K3Val= np.arange(-18.0,-15.9,0.1)
 K4Val = np.array([8.9])
 #K4Val = np.arange(-9.2,-8.5,0.1)
-templateFile = 'Montmorillonite\Montmorillonite BaeyensBradbury CompSelectivity 2K MultiSalinity.txt'
+templateFile = 'FHY DzombakMorel\FHYDzombakMorelMultiSalinity.txt'
 
-mineral = 'Sodium Montmorillonite'
+mineral = 'Ferrihydrite'
 
 ncol = len(expCond.index)*len(K1Val)*len(K2Val)*len(K3Val)*len(K4Val)
-print ncol
+print(ncol)
 
 #Create data to compare against
 expData = extractData('..\..\..\Sorption Experiments\Sorption Experiment Master Table.xlsx')
@@ -199,7 +199,7 @@ for cond in expCond.index:
                     params = expCond.loc[cond,:].to_dict()
                     params['k1'] = K1
                     params['k2'] = K2
-                    #params['k3'] = K3
+                    params['k3'] = K3
                     #params['k4'] = K4
                     params['totRa'] = 8E-11
                     x = simulation(params,templateFile,db,pHrange=[7.0,7.0])
@@ -209,21 +209,18 @@ for cond in expCond.index:
                     curCol = next(palette)
                     #Ploting for checking the efficacy of established fits
                     axResK.errorbar(simRes.loc[:,'fSorb'],expData.loc[expData.loc[:,'Salt']==cond,'fSorb'].values,yerr=expData.loc[expData.loc[:,'Salt']==cond,'sfSorb'].values,color=curCol,marker='.',ls='none',label=cond)
-        
                     err = float(simRes.loc[:,'fSorb'].values-expData.loc[expData.loc[:,'Salt']==cond,'fSorb'])
                     pos +=1
                     per = pos/ncol
                     errors.loc[cond,simNum,:] = pd.Series(data = [K1,K2,err**2,float(simRes.loc[:,'fSorb'].values)],index=errors.minor_axis)
                     simNum+=1
-                    print '{:.2%}'.format(per)
+                    print('{:.2%}'.format(per))
 
 axResK.plot([0,1.0],[0,1.0],color='k',ls='-') #Plot 1 to 1 line of theoretical vs fitted
 stripErrorBarLegends(axResK)
 axResK.set_xlabel('Fraction sorbed (simulation)')
 axResK.set_ylabel('Fraction sorbed (experimental)')
-           
-           
-#Test fit against the best fit produced by simulation so far
+# Test fit against the best fit produced by simulation so far
 bestErrPath = templateFile[:-4]+'BestErrors.csv'
 if os.path.isfile(bestErrPath):
     bestErr = pd.read_csv(bestErrPath,header=0,index_col=0)
@@ -232,7 +229,7 @@ else:
     bestErr = pd.DataFrame(index=errors.minor_axis,columns=errors.items)
     minErr = 1E10
 
-#Calculate the best fit and plot it
+# Calculate the best fit and plot it
 for simIndex in errors.major_axis:
     testRMSE = np.sqrt(np.sum(errors.loc[:,simIndex,'err2'].values)/len(errors.items))
     if testRMSE <= minErr:
@@ -255,4 +252,6 @@ axTestK.set_ylabel('Fraction sorbed (experimental)')
 axTestK.set_title('Best fitted error over all conditions')
 axTestK.annotate('RMSE: {R} \nK1: {K1}, K2:{K2}'.format(K1=bestErr.loc['K1','NaCl'],K2=bestErr.loc['K2','NaCl'],R=minErr),xy=[0.7,0.1])
 
-fTestK.savefig(templateFile[:-4]+' Fitted.png',dpi=600)
+#fTestK.savefig(templateFile[:-4]+' Fitted.png', dpi=600)
+fTestK.savefig('Example.svg', dpi=2400)
+plt.show()
