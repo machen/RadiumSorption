@@ -492,7 +492,7 @@ palette = iter(sns.color_palette('deep',n_colors=nBars))
 for label in saltLabels:
     fSalt = dataMinSort.loc[dataMinSort.loc[:,'Salt']==label,'fSorb']
     sfSalt = dataMinSort.loc[dataMinSort.loc[:,'Salt']==label,'sfSorb']
-    axBar3.bar(index+offset.next(),fSalt,bar_width,yerr=sfSalt,label=label,color=next(palette),alpha=1,ecolor='k')
+    axBar3.bar(index+next(offset),fSalt,bar_width,yerr=sfSalt,label=label,color=next(palette),alpha=1,ecolor='k')
 
 axBar3.legend(loc=0)
 axBar3.set_xticks(index)
