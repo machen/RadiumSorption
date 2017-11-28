@@ -128,32 +128,32 @@ def extractData(path):
 sns.set_context('poster')
 sns.set_style("ticks",rc={"font.size":48})
 mpl.rcParams["lines.markeredgewidth"] = 2
-mpl.rcParams["markers.fillstyle"] = "none"
+mpl.rcParams["markers.fillstyle"] = "full"
 mpl.rcParams["errorbar.capsize"] = 5
 mpl.rcParams["lines.linewidth"] = 1
-mpl.rcParams["lines.markersize"] = 20
+mpl.rcParams["lines.markersize"] = 8
 mpl.rcParams["svg.fonttype"] = "none"
 mpl.rcParams["figure.figsize"] = [16,14]       
        
 specAct = 6.02E23*np.log(2)/(1600*365*24*60*60) #Gets Bq/mol       
 totRa = 100/specAct/0.1 #Mol/L Ra-226
 
-db = "C:\Program Files (x86)\USGS\Phreeqc Interactive 3.1.4-8929\database\sit.dat" #Database for lab computer
+db = "C:\\Program Files (x86)\\USGS\\Phreeqc Interactive 3.1.4-8929\\database\\sit.dat" #Database for lab computer
 #db="F:\Programs\USGS\Phreeqc Interactive 3.3.12-12704\database\sit.dat" #Database for home computer
-tmp = "Oxidized Pyrite\Oxidized Pyrite Naveau 2 Site.txt" #Location of template file to use as the input file for PHREEQC, changing this means changing the x.simulation inputs, as well as the figure legend plot strings
-titleString = "Pyrite"
+tmp = "Montmorillonite 2 Site CEC Model\\Montmorillonite BaeyensBradbury RealSA.txt" #Location of template file to use as the input file for PHREEQC, changing this means changing the x.simulation inputs, as well as the figure legend plot strings
+titleString = "Sodium Montmorillonite"
 sns.set_palette("deep",n_colors = 6)
 
 #Find experimental data to use
 expData = extractData('..\..\Sorption Experiments\Sorption Experiment Master Table.xlsx')
 expData = expData.loc[expData.loc[:,'Include?']==True,:] #Select only data that's been vetted
-expData = expData.loc[expData.loc[:,'Mineral']=="Pyrite"]
+expData = expData.loc[expData.loc[:,'Mineral']=="Sodium Montmorillonite"]
 expData = expData.loc[expData.loc[:,'Salt']=='NaCl'] #Want to fit isotherm data at first
 expData = expData.loc[expData.loc[:,"Ionic Strength (meq/L)"]==10] #Want to fit isotherm data first
-expData = expData.loc[abs(expData.loc[:,"MinMass (g)"].values-0.040)<0.01,:]
+expData = expData.loc[abs(expData.loc[:,"MinMass (g)"].values-0.030)<0.01,:]
 
 resData = extractData('..\..\Sorption Experiments\Isotherm Results.xlsx')
-resData = resData.loc[resData.loc[:,'mineral']=='pyrite']
+resData = resData.loc[resData.loc[:,'mineral']=='sodium montmorillonite']
 
 #MAIN SCRIPT PLOTTING
 
@@ -168,27 +168,27 @@ ax3 = f3.add_subplot(111)
 
 pos = 0.0
 
-K1Val = np.array([-20.0])
-K1Val = np.arange(-20.0,5.1,5.0)
+K1Val = np.array([-0.0])
+#K1Val = np.arange(-20.0,5.1,5.0)
 
-K2Val =np.array([-5.0])
-K2Val = np.arange(-20.0,5.1,5.0)
+K2Val =np.array([-2.1])
+#K2Val = np.arange(-20.0,5.1,5.0)
 
 K3Val = np.array([0.2])
 #K3Val = np.arange(0.1,0.21,0.01)
 
-#siteVal = np.array([1.40E-6]) 
-siteVal = np.array([1.108E-6])
+#siteVal = np.array([1.40E-6])
+siteVal = np.array([6E-8])
 #siteVal = np.arange(1.35E-6,1.44E-6,1E-8)
 #siteVal = np.logspace(-10,-2,num=9,endpoint=True)
-siteWVal = np.array([7.44E-7])
+siteWVal = np.array([1.2E-6])
 #siteWVal = np.logspace(-10,-2,num=9,endpoint=True)
 siteWbVal = np.array([1.2E-6])
 ncol = np.size(K1Val)*np.size(K2Val)*np.size(siteVal)*np.size(K3Val)*np.size(siteWVal)*np.size(siteWbVal)
 
 cmap = sns.cubehelix_palette(n_colors=ncol,dark=0.3,rot=0.4,light=0.8,gamma=1.3,start=1.5)
 palette = itertools.cycle(cmap)
-labelStr = "1 site 2 rxn, site S: {sites} K: {K1}, site O: {siteW} K: {K2}"
+labelStr = "1 site 2 rxn, sites: {sites} K1: {K1}, K2: {K2}"
 #
 #for K in Kval:
 #    for site in siteVal:
@@ -206,20 +206,20 @@ for K1 in K1Val:
             for sites in siteVal:   
                 for siteW in siteWVal:
                     for siteWb in siteWbVal:
-                            x = simulation({'totRa':totRa,'k1':K1,'siteS':sites,'siteO':siteW,'k2':K2},tmp,db)
+                            x = simulation({'totRa':totRa,'Ks':K1,'Kw':K2,'Ki':K3,'siteS':sites,'siteW':siteW,'siteWb':siteWb},tmp,db)
                             x.generateData()
-                            x.addDataToMaster(writeMaster=True)
+                            x.addDataToMaster(writeMaster=False)
                             simRes = x.getData()
                             curCol = next(palette)
-                            ax.plot(simRes.loc[:,'pH'],simRes.loc[:,'fSorb'],'-',label=labelStr.format(K1=K1,sites=sites,K2=K2,siteW=siteW),color=curCol)
-                            ax3.plot(simRes.loc[:,'pH'],simRes.loc[:,'Rd'],'-',label=labelStr.format(K1=K1,sites=sites,K2=K2,siteW=siteW),color=curCol)
+                            ax.plot(simRes.loc[:,'pH'],simRes.loc[:,'fSorb'],'-',label=labelStr.format(K1=K1,sites=sites,K2=K2),color='k')
+                            ax3.plot(simRes.loc[:,'pH'],simRes.loc[:,'Rd'],'-',label=labelStr.format(K1=K1,sites=sites,K2=K2),color=curCol)
                             pos = pos+1
                             per = pos/ncol
-                            print '{:.2%}'.format(per)
+                            print('{:.2%}'.format(per))
      
  
 #Plot all of the data without differentiation
-expPlot = ax.errorbar(expData.loc[:,'pH'],expData.loc[:,'fSorb'],xerr=expData.loc[:,'spH'],yerr=expData.loc[:,'sfSorb'],fmt='o',label='Experimental Data')
+expPlot = ax.errorbar(expData.loc[:,'pH'],expData.loc[:,'fSorb'],xerr=expData.loc[:,'spH'],yerr=expData.loc[:,'sfSorb'],fmt='o',label='Experimental Data',color='k')
 resPlot = ax3.errorbar(resData.loc[:,'pH'],resData.loc[:,'Kd (mL/g)'],xerr=resData.loc[:,'spH'],yerr=resData.loc[:,'sKd (mL/g)'],fmt='.',label='Fitted Kds')
 additionalPlot = ax3.plot(7,1443.032,label="Sajih",ls='None',marker='o')
 
@@ -248,4 +248,4 @@ ax3.set_yscale('linear')
 ax3.set_ylim(-100,500000)
 ax3.legend(loc=0)
 
-x.plotSpeciation(solidTag="m_Pyr")
+#x.plotSpeciation(solidTag="m_Pyr")

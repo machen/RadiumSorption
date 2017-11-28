@@ -153,17 +153,17 @@ db = "C:\Program Files (x86)\\USGS\\Phreeqc Interactive 3.1.4-8929\\database\\si
 expCond = pd.read_excel("SalinityConditions.xlsx",header=0,index_col=0,sheetname='Sheet1')
 
 #Set K values to check or sweep through
-K1Val = np.array([0.0])
-#K1Val = np.arange(-20.0,20.1,1.0)
-K2Val = np.array([-2.1])
-#K2Val = np.arange(-20.0,20.1,1.0)
-K3Val = np.array([-17.0])
-#K3Val= np.arange(-18.0,-15.9,0.1)
+K1Val = np.array([-2.5])
+#K1Val = np.arange(5.5, 6.1, 0.1)
+K2Val = np.array([-6.6])
+#K2Val = np.arange(-11.5, -10.9, 0.1)
+K3Val = np.array([-9.4])
+#K3Val = np.arange(-10.0, -9.1, 0.1)
 K4Val = np.array([8.9])
 #K4Val = np.arange(-9.2,-8.5,0.1)
-templateFile = 'FHY DzombakMorel\FHYDzombakMorelMultiSalinity.txt'
+templateFile = 'GOE Dzombak\GOE MathurDzombak MultiSalinity.txt'
 
-mineral = 'Ferrihydrite'
+mineral = 'Goethite'
 
 ncol = len(expCond.index)*len(K1Val)*len(K2Val)*len(K3Val)*len(K4Val)
 print(ncol)
@@ -199,7 +199,7 @@ for cond in expCond.index:
                     params = expCond.loc[cond,:].to_dict()
                     params['k1'] = K1
                     params['k2'] = K2
-                    params['k3'] = K3
+                    #params['k3'] = K3
                     #params['k4'] = K4
                     params['totRa'] = 8E-11
                     x = simulation(params,templateFile,db,pHrange=[7.0,7.0])
@@ -252,6 +252,6 @@ axTestK.set_ylabel('Fraction sorbed (experimental)')
 axTestK.set_title('Best fitted error over all conditions')
 axTestK.annotate('RMSE: {R} \nK1: {K1}, K2:{K2}'.format(K1=bestErr.loc['K1','NaCl'],K2=bestErr.loc['K2','NaCl'],R=minErr),xy=[0.7,0.1])
 
-#fTestK.savefig(templateFile[:-4]+' Fitted.png', dpi=600)
-fTestK.savefig('Example.svg', dpi=2400)
+# fTestK.savefig(templateFile[:-4]+' Fitted.png', dpi=600)
+# fTestK.savefig('Example.svg', dpi=2400)
 plt.show()
